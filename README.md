@@ -55,3 +55,8 @@ The daemon also supports:
 ## License
 
 MIT. See [LICENSE](LICENSE).
+
+
+## Author & Maintainer
+
+Created and maintained by **Alan Woodyard** ([@woodyardae](https://github.com/woodyardae)). Developed under the [Layline Digital](https://github.com/Layline-Digital) software umbrella.
