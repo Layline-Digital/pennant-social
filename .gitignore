@@ -1,0 +1,17 @@
+# Fail-Closed Security Policy
+*.env
+*.env.*
+!.env.broadcaster.example
+*.secret
+*.key
+*.pem
+*.sqlite
+*.db
+profiles.json
+credentials/
+tokens/
+export/
+*.base
+credentials.txt
+node_modules/
+.wrangler/

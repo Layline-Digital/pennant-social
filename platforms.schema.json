@@ -1,0 +1,80 @@
+﻿{
+    "schema_version":  "1.0.0",
+    "categories":  [
+                       "federated_activitypub",
+                       "atproto",
+                       "nostr",
+                       "developer_code",
+                       "maritime_telemetry",
+                       "photography_art",
+                       "mainstream_social"
+                   ],
+    "platforms":  [
+                      {
+                          "name":  "GoToSocial",
+                          "id":  "gotosocial",
+                          "class":  "federated_activitypub",
+                          "verification":  "well_known"
+                      },
+                      {
+                          "name":  "Mastodon",
+                          "id":  "mastodon",
+                          "class":  "federated_activitypub",
+                          "verification":  "webfinger"
+                      },
+                      {
+                          "name":  "Pixelfed",
+                          "id":  "pixelfed",
+                          "class":  "federated_activitypub",
+                          "verification":  "webfinger"
+                      },
+                      {
+                          "name":  "Bluesky",
+                          "id":  "bluesky",
+                          "class":  "atproto",
+                          "verification":  "dns_txt"
+                      },
+                      {
+                          "name":  "Nostr",
+                          "id":  "nostr",
+                          "class":  "nostr",
+                          "verification":  "nip05_http"
+                      },
+                      {
+                          "name":  "GitHub",
+                          "id":  "github",
+                          "class":  "developer_code",
+                          "verification":  "oauth"
+                      },
+                      {
+                          "name":  "Crates.io",
+                          "id":  "crates_io",
+                          "class":  "developer_code",
+                          "verification":  "api_token"
+                      },
+                      {
+                          "name":  "VDES Maritime",
+                          "id":  "vdes",
+                          "class":  "maritime_telemetry",
+                          "verification":  "mmsi_radio"
+                      },
+                      {
+                          "name":  "Fine Art America",
+                          "id":  "fineartamerica",
+                          "class":  "photography_art",
+                          "verification":  "vendor_id"
+                      },
+                      {
+                          "name":  "X / Twitter",
+                          "id":  "x_twitter",
+                          "class":  "mainstream_social",
+                          "verification":  "oauth"
+                      },
+                      {
+                          "name":  "LinkedIn",
+                          "id":  "linkedin",
+                          "class":  "mainstream_social",
+                          "verification":  "oauth"
+                      }
+                  ]
+}

@@ -1,0 +1,32 @@
+[
+  {
+    "id": "personal-brand",
+    "name": "Personal Brand",
+    "monogram": "PB",
+    "category": "Personal",
+    "handle": "@personal-brand",
+    "defaultUrl": "https://example.com",
+    "url": "https://example.com",
+    "outbound": true
+  },
+  {
+    "id": "studio-lab",
+    "name": "Studio Lab",
+    "monogram": "SL",
+    "category": "Studio",
+    "handle": "@studio-lab",
+    "defaultUrl": "https://example.net",
+    "url": "https://example.net",
+    "outbound": true
+  },
+  {
+    "id": "community-news",
+    "name": "Community News",
+    "monogram": "CN",
+    "category": "Community",
+    "handle": "@community-news",
+    "defaultUrl": "https://example.org",
+    "url": "https://example.org",
+    "outbound": true
+  }
+]

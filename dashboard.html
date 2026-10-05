@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="slate">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PENNANT :: SOCIAL BROADCASTER</title>
+  <style>
+    /* ========================================================
+       THEME DEFINITIONS: Slate Modern (Default), Paper Clean, CRT Retro
+       ======================================================== */
+    :root, [data-theme="slate"] {
+      --bg: #0b0f19;
+      --card-bg: #111827;
+      --border: #1f2937;
+      --border-focus: #38bdf8;
+      --text: #f3f4f6;
+      --dim: #9ca3af;
+      --primary: #38bdf8;
+      --primary-hover: #0284c7;
+      --primary-text: #0b0f19;
+      --amber: #f59e0b;
+      --red: #f43f5e;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", sans-serif;
+      --mono: "JetBrains Mono", "Courier New", monospace;
+      --scanlines: none;
+      --radius: 6px;
+    }
+
+    [data-theme="paper"] {
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --border: #e2e8f0;
+      --border-focus: #0284c7;
+      --text: #0f172a;
+      --dim: #64748b;
+      --primary: #0284c7;
+      --primary-hover: #0369a1;
+      --primary-text: #ffffff;
+      --amber: #d97706;
+      --red: #e11d48;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", sans-serif;
+      --mono: "JetBrains Mono", "Courier New", monospace;
+      --scanlines: none;
+      --radius: 6px;
+    }
+
+    [data-theme="crt"] {
+      --bg: #070a07;
+      --card-bg: #0b110b;
+      --border: #1a2e1a;
+      --border-focus: #70ff8b;
+      --text: #70ff8b;
+      --dim: #3d8c4d;
+      --primary: #70ff8b;
+      --primary-hover: #50cc6a;
+      --primary-text: #070a07;
+      --amber: #fca311;
+      --red: #ef476f;
+      --font: "JetBrains Mono", "Courier New", monospace;
+      --mono: "JetBrains Mono", "Courier New", monospace;
+      --scanlines: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+      --radius: 0px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      padding: 1.5rem;
+      line-height: 1.5;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    /* CRT Scanline Overlay */
+    body::after {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: var(--scanlines);
+      background-size: 100% 3px;
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.25rem 0.6rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 0.75rem;
+      font-family: var(--mono);
+      font-weight: 500;
+      color: var(--dim);
+    }
+    .badge-active { border-color: var(--primary); color: var(--primary); }
+    .badge-amber { border-color: var(--amber); color: var(--amber); }
+
+    .nav-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      overflow-x: auto;
+      padding-bottom: 0.25rem;
+    }
+    .tab-btn {
+      background: var(--card-bg);
+      color: var(--dim);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.6rem 1.1rem;
+      font-family: var(--mono);
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+    .tab-btn.active {
+      color: var(--text);
+      border-color: var(--primary);
+      background: var(--card-bg);
+    }
+
+    .deck-section { display: none; }
+    .deck-section.active { display: block; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1rem;
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      position: relative;
+    }
+    .card-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.25rem; color: var(--text); }
+    .card-meta { font-size: 0.8rem; color: var(--dim); margin-bottom: 0.75rem; font-family: var(--mono); }
+
+    .form-group { margin-bottom: 1rem; }
+    label { display: block; font-size: 0.75rem; font-family: var(--mono); color: var(--dim); margin-bottom: 0.35rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    input, select, textarea {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-family: var(--font);
+      padding: 0.65rem;
+      font-size: 0.9rem;
+      transition: border-color 0.15s ease;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--border-focus);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--primary);
+      color: var(--primary-text);
+      border: 1px solid var(--primary);
+      border-radius: var(--radius);
+      padding: 0.65rem 1.25rem;
+      font-family: var(--mono);
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      transition: background 0.15s ease;
+    }
+    .btn:hover { background: var(--primary-hover); }
+    .btn-secondary {
+      background: transparent;
+      color: var(--dim);
+      border-color: var(--border);
+    }
+    .btn-secondary:hover { color: var(--text); border-color: var(--text); background: transparent; }
+    .btn-danger { background: transparent; border-color: var(--red); color: var(--red); }
+    .btn-danger:hover { background: var(--red); color: #fff; }
+
+    .queue-item {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+    .status-pill {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      font-size: 0.7rem;
+      border: 1px solid var(--dim);
+      border-radius: var(--radius);
+      text-transform: uppercase;
+      font-family: var(--mono);
+      font-weight: 600;
+    }
+    .status-pending { border-color: var(--amber); color: var(--amber); }
+    .status-published { border-color: var(--primary); color: var(--primary); }
+    .status-failed { border-color: var(--red); color: var(--red); }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div>
+      <h1 style="font-size: 1.35rem; font-weight: 800; letter-spacing: -0.5px;">PENNANT <span style="font-size: 0.8rem; font-weight: 400; color: var(--dim);">:: SOVEREIGN BROADCASTER</span></h1>
+      <div style="font-size: 0.8rem; color: var(--dim); font-family: var(--mono);">ACTIVITYPUB / ATPROTO / NOSTR</div>
+    </div>
+
+    <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+      <!-- Theme Switcher -->
+      <select id="theme-selector" onchange="switchTheme(this.value)" style="width: auto; padding: 0.35rem 0.6rem; font-size: 0.75rem; font-family: var(--mono);">
+        <option value="slate">Theme: Slate Modern</option>
+        <option value="paper">Theme: Paper Clean</option>
+        <option value="crt">Theme: Retro Phosphor</option>
+      </select>
+
+      <span id="remote-badge" class="badge">INITIALIZING</span>
+      <span class="badge badge-active">PORT 7420</span>
+    </div>
+  </header>
+
+  <div class="nav-tabs">
+    <button class="tab-btn active" onclick="showTab('profiles-tab')">[1] Fleet Launch Deck</button>
+    <button class="tab-btn" onclick="showTab('scheduler-tab')">[2] Post Scheduler</button>
+    <button class="tab-btn" onclick="showTab('queue-tab')">[3] Active Queue (<span id="queue-count">0</span>)</button>
+    <button class="tab-btn" onclick="showTab('bulk-tab')">[4] Bulk Ingest</button>
+  </div>
+
+  <!-- Tab 1: Profiles -->
+  <section id="profiles-tab" class="deck-section active">
+    <div id="profiles-grid" class="grid"></div>
+  </section>
+
+  <!-- Tab 2: Scheduler Composer -->
+  <section id="scheduler-tab" class="deck-section">
+    <div class="card" style="max-width: 680px; margin: 0 auto;">
+      <h2 style="font-size: 1.05rem; margin-bottom: 1rem; font-weight: 700;">SCHEDULE OUTBOUND BROADCAST</h2>
+
+      <div class="form-group">
+        <label>Account</label>
+        <select id="sched-account"></select>
+      </div>
+
+      <div class="form-group">
+        <label>Dispatch Copy</label>
+        <textarea id="sched-message" rows="4" placeholder="Craft broadcast message..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Canonical URL (Optional)</label>
+        <input type="url" id="sched-url" placeholder="https://example.com/post">
+      </div>
+
+      <div class="form-group">
+        <label>Target Networks (comma-separated)</label>
+        <input type="text" id="sched-targets" value="mastodon,bluesky">
+      </div>
+
+      <div class="form-group">
+        <label>Schedule Time (Local)</label>
+        <input type="datetime-local" id="sched-time">
+        <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+          <button class="btn btn-secondary" type="button" style="padding: 0.25rem 0.55rem; font-size: 0.75rem;" onclick="addHours(1)">+1 Hr</button>
+          <button class="btn btn-secondary" type="button" style="padding: 0.25rem 0.55rem; font-size: 0.75rem;" onclick="addHours(4)">+4 Hrs</button>
+          <button class="btn btn-secondary" type="button" style="padding: 0.25rem 0.55rem; font-size: 0.75rem;" onclick="addDays(1)">Tomorrow 09:00</button>
+        </div>
+      </div>
+
+      <button class="btn" onclick="schedulePost()" style="width: 100%; margin-top: 1rem;">COMMIT TO QUEUE</button>
+    </div>
+  </section>
+
+  <!-- Tab 3: Active Queue -->
+  <section id="queue-tab" class="deck-section">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+      <h2 style="font-size: 1.05rem; font-weight: 700;">SCHEDULED QUEUE</h2>
+      <button class="btn btn-secondary" onclick="loadQueue()" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;">REFRESH</button>
+    </div>
+    <div id="queue-list"></div>
+  </section>
+
+  <!-- Tab 4: Bulk Ingest -->
+  <section id="bulk-tab" class="deck-section">
+    <div class="card" style="max-width: 680px; margin: 0 auto;">
+      <h2 style="font-size: 1.05rem; margin-bottom: 0.5rem; font-weight: 700;">BULK DISPATCH STAGING</h2>
+      <p style="font-size: 0.85rem; color: var(--dim); margin-bottom: 1rem;">
+        Paste a JSON array of dispatch objects to schedule batches of broadcasts in a single click:
+      </p>
+      <div class="form-group">
+        <textarea id="bulk-json" rows="10" style="font-family: var(--mono); font-size: 0.85rem;" placeholder='[
+  {
+    "account": "personal-brand",
+    "message": "First scheduled update.",
+    "url": "https://example.com/post",
+    "targets": "mastodon,bluesky",
+    "scheduled_at": "2026-10-06T14:00:00Z"
+  }
+]'></textarea>
+      </div>
+      <button class="btn" onclick="ingestBulk()" style="width: 100%;">INGEST BATCH INTO QUEUE</button>
+    </div>
+  </section>
+
+  <script>
+    // Theme Engine
+    function initTheme() {
+      const saved = localStorage.getItem('pennant_theme') || 'slate';
+      document.documentElement.setAttribute('data-theme', saved);
+      document.getElementById('theme-selector').value = saved;
+    }
+
+    function switchTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('pennant_theme', theme);
+    }
+
+    // Ingress Detection
+    const isLocal = window.location.hostname === 'localhost';
+    const remoteBadge = document.getElementById('remote-badge');
+    if (isLocal) {
+      remoteBadge.textContent = 'MODE: LOCAL';
+      remoteBadge.classList.add('badge-active');
+    } else {
+      remoteBadge.textContent = 'MODE: REMOTE';
+      remoteBadge.classList.add('badge-amber');
+    }
+
+    function showTab(id) {
+      document.querySelectorAll('.deck-section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      event.target.classList.add('active');
+      if (id === 'queue-tab') loadQueue();
+    }
+
+    function addHours(h) {
+      const d = new Date();
+      d.setHours(d.getHours() + h);
+      document.getElementById('sched-time').value = d.toISOString().slice(0, 16);
+    }
+
+    function addDays(days) {
+      const d = new Date();
+      d.setDate(d.getDate() + days);
+      d.setHours(9, 0, 0, 0);
+      document.getElementById('sched-time').value = d.toISOString().slice(0, 16);
+    }
+
+    async function loadProfiles() {
+      try {
+        const res = await fetch('/profiles');
+        const profiles = await res.json();
+
+        const grid = document.getElementById('profiles-grid');
+        const select = document.getElementById('sched-account');
+        grid.replaceChildren();
+        select.replaceChildren();
+
+        profiles.forEach(p => {
+          const opt = document.createElement('option');
+          opt.value = p.id;
+          opt.textContent = `${p.name} [${p.id}]`;
+          select.appendChild(opt);
+
+          const card = document.createElement('div');
+          card.className = 'card';
+          const title = document.createElement('div');
+          title.className = 'card-title';
+          title.textContent = p.name || '';
+
+          const meta = document.createElement('div');
+          meta.className = 'card-meta';
+          meta.textContent = `${p.category || 'Profile'} • ${p.handle || ''}`;
+
+          const actions = document.createElement('div');
+          actions.style.cssText = 'display: flex; gap: 0.5rem; margin-top: 0.75rem;';
+          const launchButton = document.createElement('button');
+          launchButton.className = 'btn';
+          launchButton.style.cssText = 'flex: 1; font-size: 0.75rem; padding: 0.45rem;';
+          launchButton.textContent = isLocal ? 'LAUNCH' : 'DESKTOP ONLY';
+          launchButton.disabled = !isLocal;
+          if (!isLocal) launchButton.title = 'Zen launching is workstation-only';
+          launchButton.addEventListener('click', () => launchProfile(p.id));
+          actions.appendChild(launchButton);
+
+          card.append(title, meta, actions);
+          grid.appendChild(card);
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    async function launchProfile(id) {
+      if (!isLocal) return alert('Zen Browser profiles can only be spawned directly on your desktop workstation.');
+      const response = await fetch(`/launch?profile=${encodeURIComponent(id)}`);
+      const result = await response.json();
+      if (!response.ok) alert(result.error || 'Unable to launch browser profile.');
+    }
+
+    async function schedulePost() {
+      const payload = {
+        account: document.getElementById('sched-account').value,
+        message: document.getElementById('sched-message').value,
+        url: document.getElementById('sched-url').value,
+        targets: document.getElementById('sched-targets').value,
+        scheduled_at: new Date(document.getElementById('sched-time').value).toISOString()
+      };
+
+      if (!payload.message || !document.getElementById('sched-time').value) {
+        return alert('Please enter both a message and a scheduled time.');
+      }
+
+      const res = await fetch('/schedule', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (res.ok) {
+        alert('Dispatched to SQLite Queue!');
+        document.getElementById('sched-message').value = '';
+        loadQueue();
+      } else {
+        alert('Error queuing dispatch.');
+      }
+    }
+
+    async function loadQueue() {
+      const res = await fetch('/schedule');
+      const items = await res.json();
+      document.getElementById('queue-count').textContent = items.filter(i => i.status === 'pending').length;
+
+      const list = document.getElementById('queue-list');
+      list.replaceChildren();
+      if (items.length === 0) {
+        const empty = document.createElement('div');
+        empty.style.cssText = 'color: var(--dim); padding: 1rem; font-family: var(--mono);';
+        empty.textContent = 'No queued dispatches found.';
+        list.appendChild(empty);
+        return;
+      }
+
+      items.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'queue-item';
+        const details = document.createElement('div');
+        const summary = document.createElement('div');
+        summary.style.cssText = 'font-weight: 700; color: var(--text);';
+        summary.textContent = `[${item.account}] ${(item.message || '').slice(0, 60)}...`;
+
+        const meta = document.createElement('div');
+        meta.style.cssText = 'font-size: 0.8rem; color: var(--dim); margin-top: 0.35rem; font-family: var(--mono);';
+        const status = ['pending', 'processing', 'published', 'failed'].includes(item.status) ? item.status : 'unknown';
+        const pill = document.createElement('span');
+        pill.className = `status-pill status-${status}`;
+        pill.textContent = status;
+        meta.append(pill, document.createTextNode(` Scheduled: ${new Date(item.scheduled_at).toLocaleString()} • Targets: ${item.targets}`));
+        details.append(summary, meta);
+        div.appendChild(details);
+
+        if (item.status === 'pending') {
+          const actions = document.createElement('div');
+          const cancelButton = document.createElement('button');
+          cancelButton.className = 'btn btn-danger';
+          cancelButton.style.cssText = 'padding: 0.35rem 0.75rem; font-size: 0.75rem;';
+          cancelButton.textContent = 'CANCEL';
+          cancelButton.addEventListener('click', () => cancelQueueItem(item.id));
+          actions.appendChild(cancelButton);
+          div.appendChild(actions);
+        }
+        list.appendChild(div);
+      });
+    }
+
+    async function cancelQueueItem(id) {
+      if (!confirm('Cancel this queued dispatch?')) return;
+      await fetch(`/schedule?id=${id}`, { method: 'DELETE' });
+      loadQueue();
+    }
+
+    async function ingestBulk() {
+      try {
+        const data = JSON.parse(document.getElementById('bulk-json').value);
+        const res = await fetch('/schedule', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        const out = await res.json();
+        alert(`Successfully queued ${out.count} dispatches!`);
+        document.getElementById('bulk-json').value = '';
+        loadQueue();
+      } catch (e) {
+        alert('Invalid JSON array: ' + e.message);
+      }
+    }
+
+    // Startup
+    initTheme();
+    loadProfiles();
+    loadQueue();
+    addHours(1);
+  </script>
+</body>
+</html>
