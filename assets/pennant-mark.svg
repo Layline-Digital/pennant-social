@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#070a0f" />
+    </linearGradient>
+    <linearGradient id="pennantGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="50%" stop-color="#0284c7" />
+      <stop offset="100%" stop-color="#0369a1" />
+    </linearGradient>
+    <filter id="cyanGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bgGrad)" stroke="#1e293b" stroke-width="6" />
+  <line x1="136" y1="104" x2="136" y2="408" stroke="#475569" stroke-width="12" stroke-linecap="round" />
+  <circle cx="136" cy="104" r="12" fill="#38bdf8" filter="url(#cyanGlow)" />
+  <path d="M 144 128 L 392 216 L 336 256 L 392 296 L 144 384 Z" fill="url(#pennantGrad)" stroke="#ffffff" stroke-width="5" stroke-linejoin="round" />
+  <path d="M 384 144 A 136 136 0 0 1 384 368" fill="none" stroke="#38bdf8" stroke-width="10" stroke-linecap="round" opacity="0.9" filter="url(#cyanGlow)" />
+  <path d="M 428 116 A 184 184 0 0 1 428 396" fill="none" stroke="#38bdf8" stroke-width="6" stroke-linecap="round" opacity="0.45" />
+  <circle cx="216" cy="256" r="20" fill="#070a0f" stroke="#ffffff" stroke-width="5" />
+  <circle cx="216" cy="256" r="8" fill="#38bdf8" />
+</svg>

@@ -9,7 +9,8 @@
   },
   "scripts": {
     "start": "node pennant-launcher.js",
-    "dev": "node pennant-launcher.js"
+    "dev": "node pennant-launcher.js",
+    "test": "node test/smoke.test.js"
   },
   "keywords": [
     "activitypub",
