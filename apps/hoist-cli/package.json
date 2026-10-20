@@ -1,0 +1,9 @@
+{
+  "name": "@pennant/hoist-cli",
+  "version": "0.1.0",
+  "description": "Pennant Hoist Terminal Dashboard (Ratatui style)",
+  "type": "module",
+  "main": "src/tui.ts",
+  "author": "Alan Woodyard <alan@alanwoodyard.com>",
+  "license": "MIT"
+}

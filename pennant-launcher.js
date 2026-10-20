@@ -567,4 +567,11 @@ server.listen(PORT, HOST, () => {
   console.log(`          Browser Path: ${BROWSER_PATH || 'None detected (Headless Mode)'}`);
   console.log(`          Profile Root: ${PROFILE_ROOT}`);
   console.log(`          Database:     ${DB_PATH}`);
+
+  if (process.argv.includes('--tui')) {
+    import('./apps/hoist-cli/src/tui.ts').then(({ HoistTUI }) => {
+      const tui = new HoistTUI({ db, vault: globalSessionVault, hub: globalStreamHub });
+      tui.startInteractive();
+    });
+  }
 });
