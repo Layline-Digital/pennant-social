@@ -114,7 +114,26 @@ export class BroadcastDaemon {
         last_error TEXT,
         created_at TEXT DEFAULT CURRENT_TIMESTAMP
       );
+    `);
 
+    // Backwards compatibility migration for pre-existing databases
+    try {
+      const columns = (this.db.pragma('table_info(broadcast_queue)') as any[]).map((c) => c.name);
+      if (!columns.includes('scheduled_for')) {
+        this.db.exec('ALTER TABLE broadcast_queue ADD COLUMN scheduled_for TEXT;');
+      }
+      if (!columns.includes('payload_json')) {
+        this.db.exec('ALTER TABLE broadcast_queue ADD COLUMN payload_json TEXT;');
+      }
+      if (!columns.includes('attempts')) {
+        this.db.exec('ALTER TABLE broadcast_queue ADD COLUMN attempts INTEGER NOT NULL DEFAULT 0;');
+      }
+      if (!columns.includes('last_error')) {
+        this.db.exec('ALTER TABLE broadcast_queue ADD COLUMN last_error TEXT;');
+      }
+    } catch {}
+
+    this.db.exec(`
       CREATE INDEX IF NOT EXISTS idx_broadcast_queue_due 
       ON broadcast_queue(status, scheduled_for);
 

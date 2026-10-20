@@ -12,13 +12,52 @@ import { BroadcastDaemon } from './packages/core/src/queue/broadcast-daemon.ts';
 import { globalStreamHub } from './packages/core/src/adapters/stream-hub.ts';
 
 const APP_ROOT = path.dirname(fileURLToPath(import.meta.url));
-const PORT = Number(process.env.PORT || 7420);
-const HOST = process.env.HOST || 'localhost';
+
+// Command-line flag parsing
+export function parseLauncherFlags(args = process.argv.slice(2), env = process.env) {
+  const isTui = args.includes('--tui');
+  const isDaemon = args.includes('--daemon');
+  const noBrowser = args.includes('--no-browser') || env.NO_BROWSER === '1' || env.HEADLESS === '1' || env.NODE_ENV === 'test';
+  const port = Number(env.PORT || 7420);
+  const host = env.HOST || (isDaemon ? '127.0.0.1' : 'localhost');
+
+  return {
+    isTui,
+    isDaemon,
+    noBrowser,
+    port,
+    host,
+  };
+}
+
+const flags = parseLauncherFlags();
+const IS_TUI_MODE = flags.isTui;
+const IS_DAEMON_MODE = flags.isDaemon;
+const NO_BROWSER = flags.noBrowser;
+const PORT = flags.port;
+const HOST = flags.host;
 const MAX_SCHEDULE_REQUEST_BYTES = 1024 * 1024;
 
 const DEFAULT_PROFILE_ROOT = path.join(os.homedir(), '.pennant', 'profiles');
 const PROFILE_ROOT = path.resolve(process.env.PROFILE_ROOT || DEFAULT_PROFILE_ROOT);
 fs.mkdirSync(PROFILE_ROOT, { recursive: true });
+
+export function openDefaultBrowser(targetUrl, spawnFn = spawn) {
+  const platform = os.platform();
+  try {
+    if (platform === 'win32') {
+      spawnFn('cmd.exe', ['/c', 'start', '', targetUrl], { detached: true, stdio: 'ignore' })?.unref?.();
+    } else if (platform === 'darwin') {
+      spawnFn('open', [targetUrl], { detached: true, stdio: 'ignore' })?.unref?.();
+    } else {
+      spawnFn('xdg-open', [targetUrl], { detached: true, stdio: 'ignore' })?.unref?.();
+    }
+    return true;
+  } catch (e) {
+    console.warn('[-] Could not auto-open default browser:', e.message);
+    return false;
+  }
+}
 
 function detectBrowser() {
   for (const configuredPath of [process.env.ZEN_PATH, process.env.FIREFOX_PATH]) {
@@ -548,12 +587,36 @@ const server = http.createServer((req, res) => {
     }
   }
 
-  // Dashboard HTML
+  // Serve built production web app from apps/hoist-web/dist if present, or dashboard.html fallback
   if (parsedUrl.pathname === '/' || parsedUrl.pathname === '/index.html') {
+    const distPath = path.join(APP_ROOT, 'apps', 'hoist-web', 'dist', 'index.html');
     const dashPath = path.join(APP_ROOT, 'dashboard.html');
-    if (fs.existsSync(dashPath)) {
+    const targetFile = fs.existsSync(distPath) ? distPath : dashPath;
+
+    if (fs.existsSync(targetFile)) {
       res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-      res.end(fs.readFileSync(dashPath, 'utf-8'));
+      res.end(fs.readFileSync(targetFile, 'utf-8'));
+      return;
+    }
+  }
+
+  // Serve static assets from apps/hoist-web/dist
+  if (parsedUrl.pathname.startsWith('/assets/')) {
+    const assetPath = path.join(APP_ROOT, 'apps', 'hoist-web', 'dist', parsedUrl.pathname);
+    if (fs.existsSync(assetPath)) {
+      const ext = path.extname(assetPath).toLowerCase();
+      const mimeTypes = {
+        '.js': 'application/javascript',
+        '.css': 'text/css',
+        '.svg': 'image/svg+xml',
+        '.png': 'image/png',
+        '.woff2': 'font/woff2',
+      };
+      res.writeHead(200, {
+        'Content-Type': mimeTypes[ext] || 'application/octet-stream',
+        'Cache-Control': 'public, max-age=31536000, immutable',
+      });
+      res.end(fs.readFileSync(assetPath));
       return;
     }
   }
@@ -562,16 +625,55 @@ const server = http.createServer((req, res) => {
   res.end(JSON.stringify({ error: 'Endpoint not found' }));
 });
 
-server.listen(PORT, HOST, () => {
-  console.log(`[PENNANT] Sovereign Fleet Console Active: http://${HOST}:${PORT}/`);
-  console.log(`          Browser Path: ${BROWSER_PATH || 'None detected (Headless Mode)'}`);
-  console.log(`          Profile Root: ${PROFILE_ROOT}`);
-  console.log(`          Database:     ${DB_PATH}`);
+export function startServer(customPort = PORT, customHost = HOST) {
+  return new Promise((resolve, reject) => {
+    server.listen(customPort, customHost, () => {
+      if (broadcastDaemon) {
+        broadcastDaemon.start();
+      }
 
-  if (process.argv.includes('--tui')) {
-    import('./apps/hoist-cli/src/tui.ts').then(({ HoistTUI }) => {
-      const tui = new HoistTUI({ db, vault: globalSessionVault, hub: globalStreamHub });
-      tui.startInteractive();
+      if (IS_DAEMON_MODE) {
+        console.log(`[PENNANT DAEMON] Headless Background Queue Daemon + StreamHub active on loopback: http://${customHost}:${customPort}/`);
+        console.log(`                 Database: ${DB_PATH}`);
+        console.log(`                 StreamHub live SSE: http://${customHost}:${customPort}/api/events/live`);
+        resolve(server);
+        return;
+      }
+
+      if (IS_TUI_MODE) {
+        console.log(`[PENNANT TUI] Starting interactive ASCII terminal dashboard on http://${customHost}:${customPort}/`);
+        import('./apps/hoist-cli/src/tui.ts').then(({ HoistTUI }) => {
+          const tui = new HoistTUI({ db, vault: globalSessionVault, hub: globalStreamHub });
+          tui.startInteractive();
+          resolve(server);
+        }).catch(reject);
+        return;
+      }
+
+      // Default mode: boot web console and open default browser
+      const webUrl = `http://${customHost === '0.0.0.0' ? 'localhost' : customHost}:${customPort}/`;
+      console.log(`[PENNANT] Sovereign Fleet Console Active: ${webUrl}`);
+      console.log(`          Browser Path: ${BROWSER_PATH || 'System Default'}`);
+      console.log(`          Profile Root: ${PROFILE_ROOT}`);
+      console.log(`          Database:     ${DB_PATH}`);
+
+      if (!NO_BROWSER) {
+        console.log(`[PENNANT] Launching default browser to ${webUrl}...`);
+        openDefaultBrowser(webUrl);
+      }
+      resolve(server);
     });
-  }
-});
+    server.on('error', reject);
+  });
+}
+
+export { server };
+
+const isDirectExecution = process.argv[1] && (
+  path.resolve(process.argv[1]).toLowerCase() === fileURLToPath(import.meta.url).toLowerCase() ||
+  path.resolve(process.argv[1]).toLowerCase() === path.resolve(APP_ROOT, 'pennant-launcher.js').toLowerCase()
+);
+
+if (isDirectExecution) {
+  startServer();
+}
