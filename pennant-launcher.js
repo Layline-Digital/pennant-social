@@ -8,6 +8,7 @@ import { fileURLToPath } from 'url';
 import Database from 'better-sqlite3';
 import { globalSessionVault } from './packages/core/src/crypto/session-vault.ts';
 import { MediaAirlock } from './packages/core/src/adapters/media-airlock.ts';
+import { BroadcastDaemon } from './packages/core/src/queue/broadcast-daemon.ts';
 
 const APP_ROOT = path.dirname(fileURLToPath(import.meta.url));
 const PORT = Number(process.env.PORT || 7420);
@@ -116,6 +117,21 @@ const mediaAirlock = new MediaAirlock({
   db,
   sessionVault: globalSessionVault,
 });
+
+// Initialize Pennant Hoist Broadcast Daemon with WAL SQLite schema
+let broadcastDaemon;
+if (db) {
+  try {
+    broadcastDaemon = new BroadcastDaemon({
+      db,
+      sessionVault: globalSessionVault,
+      mediaAirlock,
+    });
+    console.log('[DAEMON] SQLite Broadcast Queue & Ledger Daemon active');
+  } catch (e) {
+    console.warn('[DAEMON] Failed to initialize BroadcastDaemon:', e.message);
+  }
+}
 
 function getProfiles() {
   if (fs.existsSync(PROFILES_PATH)) {
@@ -242,6 +258,61 @@ const server = http.createServer((req, res) => {
   if (parsedUrl.pathname === '/api/vault/profiles') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(globalSessionVault.listPublicProfiles()));
+    return;
+  }
+
+  // Pennant Hoist Broadcast Queue API (Enqueue & Ledger Inspection)
+  if (parsedUrl.pathname === '/api/broadcast/queue') {
+    if (!broadcastDaemon) {
+      res.writeHead(503, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Broadcast Daemon is offline' }));
+      return;
+    }
+
+    if (req.method === 'POST') {
+      let body = '';
+      req.on('data', chunk => { body += chunk; });
+      req.on('end', async () => {
+        try {
+          const payload = JSON.parse(body);
+          const queueId = broadcastDaemon.enqueueBroadcast(payload, payload.scheduledFor);
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ queueId, status: 'pending', scheduledFor: payload.scheduledFor }));
+        } catch (err) {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: err.message }));
+        }
+      });
+      return;
+    }
+
+    if (req.method === 'GET') {
+      const id = parsedUrl.searchParams.get('id');
+      if (id) {
+        const job = broadcastDaemon.getJob(Number(id));
+        if (!job) {
+          res.writeHead(404, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: 'Job not found' }));
+          return;
+        }
+        const ledger = broadcastDaemon.getLedgerEntries(Number(id));
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ ...job, ledger }));
+        return;
+      }
+    }
+  }
+
+  if (parsedUrl.pathname === '/api/broadcast/ledger' && req.method === 'GET') {
+    if (!broadcastDaemon) {
+      res.writeHead(503, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Broadcast Daemon is offline' }));
+      return;
+    }
+    const id = parsedUrl.searchParams.get('id');
+    const entries = broadcastDaemon.getLedgerEntries(Number(id || 0));
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(entries));
     return;
   }
 

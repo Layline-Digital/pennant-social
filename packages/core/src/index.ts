@@ -7,3 +7,4 @@
 
 export * from './crypto/session-vault.ts';
 export * from './adapters/media-airlock.ts';
+export * from './queue/broadcast-daemon.ts';
