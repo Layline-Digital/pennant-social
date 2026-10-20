@@ -193,4 +193,44 @@ if ($targetList.Contains("nostr")) {
     }
 }
 
+
+# 6. MATRIX CLIENT-SERVER REST DISPATCH
+if ($targetList.Contains("matrix")) {
+    Write-Host "`n--> [MATRIX] Preparing room event dispatch..." -ForegroundColor Yellow
+    $hs    = if ($envData.ContainsKey("MATRIX_HOMESERVER_$uAcct")) { $envData["MATRIX_HOMESERVER_$uAcct"] } else { $envData["MATRIX_HOMESERVER"] }
+    $room  = if ($envData.ContainsKey("MATRIX_ROOM_ID_$uAcct")) { $envData["MATRIX_ROOM_ID_$uAcct"] } else { $envData["MATRIX_ROOM_ID"] }
+    $token = if ($envData.ContainsKey("MATRIX_TOKEN_$uAcct")) { $envData["MATRIX_TOKEN_$uAcct"] } else { $envData["MATRIX_TOKEN"] }
+
+    if (-not $hs -or -not $room -or -not$token) {
+        Write-Warning "[-] Incomplete Matrix credentials in .env.broadcaster. Skipping Matrix."
+    } else {
+        $statusMsg =$Message
+        if ($Url -and (-not $statusMsg.Contains($Url))) {
+            $statusMsg = "$statusMsg`n`n$Url"
+        }
+
+        if ($DryRun) {
+            Write-Host "    [DRY-RUN] Target Room: $room on$hs" -ForegroundColor Gray
+            Write-Host "    [DRY-RUN] Message Body: $statusMsg" -ForegroundColor Gray
+        } else {
+            $txId = [System.Guid]::NewGuid().ToString()
+            $escapedRoom = [System.Uri]::EscapeDataString($room)
+            $targetUrl = "$hs/_matrix/client/v3/rooms/$escapedRoom/send/m.room.message/$txId"
+            $postJson = @{
+                msgtype = "m.text"
+                body    = $statusMsg
+            } | ConvertTo-Json -Compress
+
+            try {
+                $resp = Invoke-RestMethod -Uri$targetUrl -Method Put `
+                    -Headers @{ Authorization = "Bearer $token"; "Content-Type" = "application/json" } `
+                    -Body $postJson
+                Write-Host "    [SUCCESS 200] Matrix Event Dispatched: $($resp.event_id)" -ForegroundColor Green
+            } catch {
+                Write-Error "[-] Matrix broadcast failed: $($_.Exception.Message)"
+            }
+        }
+    }
+}
+
 Write-Host "`n[OK] Broadcast dispatch routine complete.`n" -ForegroundColor Cyan
