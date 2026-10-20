@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Publish-FleetBroadcast.ps1 - Sovereign Fleet Multi-Protocol Broadcaster
 .DESCRIPTION
@@ -222,7 +222,7 @@ if ($targetList.Contains("matrix")) {
             } | ConvertTo-Json -Compress
 
             try {
-                $resp = Invoke-RestMethod -Uri$targetUrl -Method Put `
+                $resp = Invoke-RestMethod -Uri $targetUrl -Method Put `
                     -Headers @{ Authorization = "Bearer $token"; "Content-Type" = "application/json" } `
                     -Body $postJson
                 Write-Host "    [SUCCESS 200] Matrix Event Dispatched: $($resp.event_id)" -ForegroundColor Green
@@ -234,3 +234,4 @@ if ($targetList.Contains("matrix")) {
 }
 
 Write-Host "`n[OK] Broadcast dispatch routine complete.`n" -ForegroundColor Cyan
+
