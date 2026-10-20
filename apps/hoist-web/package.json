@@ -1,0 +1,9 @@
+{
+  "name": "@pennant/hoist-web",
+  "version": "0.1.0",
+  "description": "Pennant Hoist Command Deck - 2D Virtualized Multi-Column Monitoring Stream Engine",
+  "type": "module",
+  "main": "src/index.ts",
+  "author": "Alan Woodyard <alan@alanwoodyard.com>",
+  "license": "MIT"
+}
