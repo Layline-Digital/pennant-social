@@ -4,6 +4,11 @@
   "description": "Pennant Hoist Command Deck - 2D Virtualized Multi-Column Monitoring Stream Engine",
   "type": "module",
   "main": "src/index.ts",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
   "author": "Alan Woodyard <alan@alanwoodyard.com>",
   "license": "MIT"
 }
