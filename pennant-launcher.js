@@ -9,6 +9,7 @@ import Database from 'better-sqlite3';
 import { globalSessionVault } from './packages/core/src/crypto/session-vault.ts';
 import { MediaAirlock } from './packages/core/src/adapters/media-airlock.ts';
 import { BroadcastDaemon } from './packages/core/src/queue/broadcast-daemon.ts';
+import { globalStreamHub } from './packages/core/src/adapters/stream-hub.ts';
 
 const APP_ROOT = path.dirname(fileURLToPath(import.meta.url));
 const PORT = Number(process.env.PORT || 7420);
@@ -246,6 +247,18 @@ const server = http.createServer((req, res) => {
   if (parsedUrl.pathname === '/api/stream') {
     globalSessionVault.handleStreamRequest(req, res).catch((err) => {
       console.error('[-] Stream error:', err);
+      if (!res.headersSent) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: err.message }));
+      }
+    });
+    return;
+  }
+
+  // StreamHub Unified SSE Endpoint (Single connection multiplexer for all columns)
+  if (parsedUrl.pathname === '/api/events/live') {
+    globalStreamHub.handleLiveEventsRoute(req, res).catch((err) => {
+      console.error('[-] StreamHub live events error:', err);
       if (!res.headersSent) {
         res.writeHead(500, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ error: err.message }));
