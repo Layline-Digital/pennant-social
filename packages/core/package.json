@@ -1,0 +1,9 @@
+{
+  "name": "@pennant/core",
+  "version": "0.1.0",
+  "description": "Pennant Hoist Core Engine - Multi-identity session vault, adaptive media airlock, and queuing",
+  "type": "module",
+  "main": "src/index.ts",
+  "author": "Alan Woodyard <alan@alanwoodyard.com>",
+  "license": "MIT"
+}

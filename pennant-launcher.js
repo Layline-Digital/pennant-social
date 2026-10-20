@@ -6,6 +6,7 @@ import fs from 'fs';
 import os from 'os';
 import { fileURLToPath } from 'url';
 import Database from 'better-sqlite3';
+import { globalSessionVault } from './packages/core/src/crypto/session-vault.ts';
 
 const APP_ROOT = path.dirname(fileURLToPath(import.meta.url));
 const PORT = Number(process.env.PORT || 7420);
@@ -91,6 +92,22 @@ try {
   `);
 } catch (e) {
   console.error("[-] Failed to open SQLite database:", e.message);
+}
+
+// Initialize Pennant Hoist Session Vault from broadcaster configuration
+const broadcasterEnvPath = [
+  path.join(APP_ROOT, '.env.broadcaster'),
+  path.join(APP_ROOT, '..', '.env.broadcaster'),
+  path.resolve('.env.broadcaster'),
+].find(p => fs.existsSync(p));
+
+if (broadcasterEnvPath) {
+  try {
+    globalSessionVault.loadFromEnv(broadcasterEnvPath);
+    console.log(`[VAULT] Hydrated in-memory session vault from ${path.basename(broadcasterEnvPath)} (${globalSessionVault.getProfileCount()} profiles)`);
+  } catch (e) {
+    console.warn('[VAULT] Could not load .env.broadcaster:', e.message);
+  }
 }
 
 function getProfiles() {
@@ -195,8 +212,29 @@ const server = http.createServer((req, res) => {
       port: PORT,
       browserDetected: !!BROWSER_PATH,
       platform: os.platform(),
-      identitiesCount: getProfiles().length
+      identitiesCount: getProfiles().length,
+      vaultProfilesCount: globalSessionVault.getProfileCount(),
+      activeStreamsCount: globalSessionVault.getActiveStreamCount()
     }));
+    return;
+  }
+
+  // Stream API - Dynamic multi-identity upstream authorization proxy
+  if (parsedUrl.pathname === '/api/stream') {
+    globalSessionVault.handleStreamRequest(req, res).catch((err) => {
+      console.error('[-] Stream error:', err);
+      if (!res.headersSent) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: err.message }));
+      }
+    });
+    return;
+  }
+
+  // Sanitized public profiles in Session Vault (zero-knowledge view)
+  if (parsedUrl.pathname === '/api/vault/profiles') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(globalSessionVault.listPublicProfiles()));
     return;
   }
 

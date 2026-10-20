@@ -1,6 +1,6 @@
 // Pennant Smoke Test: Path Traversal & Security Guards
-const assert = require('assert');
-const path = require('path');
+import assert from 'node:assert';
+import path from 'node:path';
 
 function validateProfilePath(profileName, baseDir) {
     if (!profileName || typeof profileName !== 'string') return { valid: false, error: 'Invalid profile name' };
