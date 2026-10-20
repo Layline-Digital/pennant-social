@@ -7,3 +7,4 @@
 
 export * from './components/deck/deck-virtualizer.ts';
 export * from './components/deck/DeckGridDOM.ts';
+export * from './components/composer/composer-state.ts';
