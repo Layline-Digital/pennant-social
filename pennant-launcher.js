@@ -7,6 +7,7 @@ import os from 'os';
 import { fileURLToPath } from 'url';
 import Database from 'better-sqlite3';
 import { globalSessionVault } from './packages/core/src/crypto/session-vault.ts';
+import { MediaAirlock } from './packages/core/src/adapters/media-airlock.ts';
 
 const APP_ROOT = path.dirname(fileURLToPath(import.meta.url));
 const PORT = Number(process.env.PORT || 7420);
@@ -109,6 +110,12 @@ if (broadcasterEnvPath) {
     console.warn('[VAULT] Could not load .env.broadcaster:', e.message);
   }
 }
+
+// Initialize Pennant Hoist Adaptive Media Airlock with WAL SQLite cache
+const mediaAirlock = new MediaAirlock({
+  db,
+  sessionVault: globalSessionVault,
+});
 
 function getProfiles() {
   if (fs.existsSync(PROFILES_PATH)) {
@@ -235,6 +242,61 @@ const server = http.createServer((req, res) => {
   if (parsedUrl.pathname === '/api/vault/profiles') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(globalSessionVault.listPublicProfiles()));
+    return;
+  }
+
+  // Adaptive Background Media Airlock Staging
+  if (parsedUrl.pathname === '/api/media/stage' && req.method === 'POST') {
+    const contentType = (req.headers['content-type'] || '').toLowerCase();
+    const chunks = [];
+    let length = 0;
+    const maxMediaBytes = 50 * 1024 * 1024;
+    let tooLarge = false;
+
+    req.on('data', chunk => {
+      if (tooLarge) return;
+      length += chunk.length;
+      if (length > maxMediaBytes) {
+        tooLarge = true;
+        res.writeHead(413, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'File size exceeds 50MB limit' }));
+        return;
+      }
+      chunks.push(chunk);
+    });
+
+    req.on('end', async () => {
+      if (tooLarge) return;
+      const buffer = Buffer.concat(chunks);
+      try {
+        let fileBuffer = buffer;
+        let mimeType = contentType.split(';')[0].trim() || 'image/png';
+        let profileId = parsedUrl.searchParams.get('profile') || 'default';
+        let targets = (parsedUrl.searchParams.get('targets') || 'atproto,mastodon,nostr').split(',');
+
+        if (contentType.includes('application/json')) {
+          const payload = JSON.parse(buffer.toString('utf-8'));
+          if (payload.dataBase64) {
+            fileBuffer = Buffer.from(payload.dataBase64, 'base64');
+          }
+          if (payload.mimeType) mimeType = payload.mimeType;
+          if (payload.profileId) profileId = payload.profileId;
+          if (payload.targets) targets = payload.targets;
+        }
+
+        const staged = await mediaAirlock.stageMediaAsset(fileBuffer, mimeType, {
+          profileId,
+          targets,
+          altText: parsedUrl.searchParams.get('alt') || undefined,
+        });
+
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(staged));
+      } catch (e) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: e.message }));
+      }
+    });
     return;
   }
 

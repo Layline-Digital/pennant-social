@@ -6,3 +6,4 @@
  */
 
 export * from './crypto/session-vault.ts';
+export * from './adapters/media-airlock.ts';
