@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 import http from 'http';
 import { spawn } from 'child_process';
 import path from 'path';

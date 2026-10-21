@@ -2,29 +2,29 @@
 import type Database from 'better-sqlite3';
 import { BroadcastDaemon } from '../queue/broadcast-daemon.js';
 
-export interface FleetIngestPayload {
-  source: 'sailing-almanac' | 'postmodern-cereal' | 'fleet-worker' | string;
+export interface IngestBroadcastPayload {
+  source?: string; // Arbitrary source name (e.g. 'cms', 'rss-bot', 'ci-runner')
   profileId: string;
   targets?: ('mastodon' | 'bluesky' | 'nostr' | 'matrix')[];
   message: string;
   url?: string;
-  scheduledFor?: string;
+  scheduledFor?: string; // ISO-8601 string
   contentWarning?: string;
   tags?: string[];
 }
 
-export function handleFleetIngestRequest(
+export function handleBroadcastIngestRequest(
   req: IncomingMessage,
   res: ServerResponse,
   db: Database.Database,
   daemon?: BroadcastDaemon
 ): void {
   const authHeader = req.headers['authorization'] || '';
-  const expectedKey = process.env.PENNANT_FLEET_INGEST_KEY || 'ps_ingest_dev_key';
+  const expectedKey = process.env.PENNANT_INGEST_API_KEY || process.env.PENNANT_FLEET_INGEST_KEY || 'ps_ingest_dev_key';
 
   if (!authHeader.startsWith('Bearer ') || authHeader.slice(7).trim() !== expectedKey) {
     res.writeHead(401, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ error: 'Unauthorized: invalid or missing PENNANT_FLEET_INGEST_KEY' }));
+    res.end(JSON.stringify({ error: 'Unauthorized: invalid or missing PENNANT_INGEST_API_KEY' }));
     return;
   }
 
@@ -32,7 +32,7 @@ export function handleFleetIngestRequest(
   req.on('data', chunk => { rawBody += chunk; });
   req.on('end', () => {
     try {
-      const payload = JSON.parse(rawBody) as FleetIngestPayload;
+      const payload = JSON.parse(rawBody) as IngestBroadcastPayload;
       if (!payload.profileId || !payload.message) {
         res.writeHead(400, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ error: 'Bad Request: profileId and message are required' }));
@@ -41,7 +41,7 @@ export function handleFleetIngestRequest(
 
       const scheduledFor = payload.scheduledFor || new Date().toISOString();
       const payloadJson = JSON.stringify({
-        source: payload.source || 'fleet-worker',
+        source: payload.source || 'external-webhook',
         profileId: payload.profileId,
         targets: payload.targets || ['mastodon', 'bluesky', 'nostr'],
         message: payload.message,
@@ -74,3 +74,6 @@ export function handleFleetIngestRequest(
     }
   });
 }
+
+// Backwards-compatibility alias
+export const handleFleetIngestRequest = handleBroadcastIngestRequest;

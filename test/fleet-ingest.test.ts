@@ -1,9 +1,9 @@
 ﻿import assert from 'node:assert';
 import http from 'node:http';
 import Database from 'better-sqlite3';
-import { handleFleetIngestRequest } from '../packages/core/src/adapters/fleet-ingest.js';
+import { handleBroadcastIngestRequest } from '../packages/core/src/adapters/fleet-ingest.js';
 
-console.log('[*] Testing Fleet Ingest Handler...');
+console.log('[*] Testing Generic Broadcast Ingest Webhook...');
 
 const db = new Database(':memory:');
 db.exec(`
@@ -19,11 +19,11 @@ db.exec(`
   );
 `);
 
-process.env.PENNANT_FLEET_INGEST_KEY = 'test_secret_key_123';
+process.env.PENNANT_INGEST_API_KEY = 'test_secret_key_123';
 
 const server = http.createServer((req, res) => {
-  if (req.method === 'POST' && req.url === '/api/ingest/fleet') {
-    handleFleetIngestRequest(req, res, db);
+  if (req.method === 'POST' && (req.url === '/api/ingest/broadcast' || req.url === '/api/ingest/fleet')) {
+    handleBroadcastIngestRequest(req, res, db);
   } else {
     res.writeHead(404);
     res.end();
@@ -32,7 +32,7 @@ const server = http.createServer((req, res) => {
 
 server.listen(0, '127.0.0.1', async () => {
   const port = (server.address() as any).port;
-  const baseUrl = `http://127.0.0.1:${port}/api/ingest/fleet`;
+  const baseUrl = `http://127.0.0.1:${port}/api/ingest/broadcast`;
 
   // Test 1: Reject unauthorized
   const unauth = await fetch(baseUrl, {
@@ -43,7 +43,7 @@ server.listen(0, '127.0.0.1', async () => {
   assert.strictEqual(unauth.status, 401, 'Expected 401 Unauthorized');
   console.log('[+] PASS: 401 on missing auth token');
 
-  // Test 2: Successful enqueue
+  // Test 2: Successful enqueue from generic third-party CMS/webhook
   const success = await fetch(baseUrl, {
     method: 'POST',
     headers: {
@@ -51,9 +51,9 @@ server.listen(0, '127.0.0.1', async () => {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      source: 'sailing-almanac',
-      profileId: 'almanac_main',
-      message: 'Weekly Tide Report is live!',
+      source: 'headless-cms',
+      profileId: 'brand_announcements',
+      message: 'New product release live on production!',
       targets: ['bluesky', 'mastodon']
     })
   });
@@ -61,13 +61,13 @@ server.listen(0, '127.0.0.1', async () => {
   const resData = await success.json() as any;
   assert.strictEqual(resData.success, true);
   assert.strictEqual(resData.status, 'pending');
-  console.log('[+] PASS: Authorized fleet ingestion enqueued successfully');
+  console.log('[+] PASS: Generic webhook broadcast enqueued successfully');
 
   // Verify in SQLite
   const row = db.prepare('SELECT * FROM broadcast_queue WHERE id = ?').get(resData.queueId) as any;
   assert.ok(row, 'Row exists in SQLite');
-  assert.strictEqual(row.profile_id, 'almanac_main');
-  console.log('[+] PASS: SQLite record verified in WAL queue');
+  assert.strictEqual(row.profile_id, 'brand_announcements');
+  console.log('[+] PASS: Verified SQLite record persistence');
 
   server.close();
 });
