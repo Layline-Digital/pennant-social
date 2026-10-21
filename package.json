@@ -10,7 +10,7 @@
   "scripts": {
     "start": "node pennant-launcher.js",
     "dev": "node pennant-launcher.js",
-    "test": "node test/smoke.test.js && node test/session-vault.test.ts && node test/media-airlock.test.ts && node test/deck-grid.test.ts && node test/composer-state.test.ts && node test/broadcast-daemon.test.ts && node test/stream-hub.test.ts && node test/hoist-deck.test.ts && node test/launcher-cli.test.ts"
+    "test": "node test/smoke.test.js && node test/session-vault.test.ts && node test/media-airlock.test.ts && node test/deck-grid.test.ts && node test/composer-state.test.ts && node test/broadcast-daemon.test.ts && node test/stream-hub.test.ts && node test/hoist-deck.test.ts && node test/launcher-cli.test.ts && node test/fleet-ingest.test.ts"
   },
   "keywords": [
     "activitypub",
