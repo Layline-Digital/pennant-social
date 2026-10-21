@@ -10,6 +10,8 @@ import { globalSessionVault } from './packages/core/src/crypto/session-vault.ts'
 import { MediaAirlock } from './packages/core/src/adapters/media-airlock.ts';
 import { BroadcastDaemon } from './packages/core/src/queue/broadcast-daemon.ts';
 import { globalStreamHub } from './packages/core/src/adapters/stream-hub.ts';
+import { handleFleetIngestRequest } from './packages/core/src/adapters/fleet-ingest.ts';
+
 
 const APP_ROOT = path.dirname(fileURLToPath(import.meta.url));
 
@@ -145,6 +147,17 @@ const broadcasterEnvPath = [
 
 if (broadcasterEnvPath) {
   try {
+    const envLines = fs.readFileSync(broadcasterEnvPath, 'utf-8').split('\n');
+    for (const line of envLines) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith('#') || !trimmed.includes('=')) continue;
+      const idx = trimmed.indexOf('=');
+      const k = trimmed.substring(0, idx).trim();
+      const v = trimmed.substring(idx + 1).trim();
+      if (process.env[k] === undefined) {
+        process.env[k] = v;
+      }
+    }
     globalSessionVault.loadFromEnv(broadcasterEnvPath);
     console.log(`[VAULT] Hydrated in-memory session vault from ${path.basename(broadcasterEnvPath)} (${globalSessionVault.getProfileCount()} profiles)`);
   } catch (e) {
@@ -255,7 +268,7 @@ function runSchedulerTick() {
   }
 }
 
-setInterval(runSchedulerTick, 30000);
+setInterval(runSchedulerTick, 30000).unref();
 
 // 5. HTTP API & Dashboard Server
 const server = http.createServer((req, res) => {
@@ -310,6 +323,18 @@ const server = http.createServer((req, res) => {
   if (parsedUrl.pathname === '/api/vault/profiles') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(globalSessionVault.listPublicProfiles()));
+    return;
+  }
+
+  // Downstream Fleet Ingestion Harness Route
+  if (parsedUrl.pathname === '/api/ingest/fleet') {
+    handleFleetIngestRequest(req, res, db, broadcastDaemon).catch((err) => {
+      console.error('[-] Fleet ingest error:', err);
+      if (!res.headersSent) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: err.message }));
+      }
+    });
     return;
   }
 
