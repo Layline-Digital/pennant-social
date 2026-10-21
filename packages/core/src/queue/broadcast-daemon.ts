@@ -15,6 +15,8 @@ import path from 'node:path';
 import type Database from 'better-sqlite3';
 import { SessionVault, globalSessionVault } from '../crypto/session-vault.ts';
 import { MediaAirlock, globalMediaAirlock, type PreStagedMedia } from '../adapters/media-airlock.ts';
+import type { FleetIngestPayload } from '../adapters/fleet-ingest.ts';
+
 
 export type QueueStatus = 'pending' | 'staging' | 'dispatched' | 'partial' | 'failed';
 
@@ -89,6 +91,7 @@ export class BroadcastDaemon {
   private pollIntervalMs: number;
   private pollTimer: NodeJS.Timeout | null = null;
   private isProcessing = false;
+  private hasLegacyAccountColumn = false;
 
   constructor(options: BroadcastDaemonOptions) {
     this.db = options.db;
@@ -119,6 +122,7 @@ export class BroadcastDaemon {
     // Backwards compatibility migration for pre-existing databases
     try {
       const columns = (this.db.pragma('table_info(broadcast_queue)') as any[]).map((c) => c.name);
+      this.hasLegacyAccountColumn = columns.includes('account');
       if (!columns.includes('scheduled_for')) {
         this.db.exec('ALTER TABLE broadcast_queue ADD COLUMN scheduled_for TEXT;');
       }
@@ -159,12 +163,70 @@ export class BroadcastDaemon {
    */
   public enqueueBroadcast(payload: BroadcastPayload, scheduledFor?: string): number {
     const dueTime = scheduledFor ? new Date(scheduledFor).toISOString() : new Date().toISOString();
+
+    if (this.hasLegacyAccountColumn) {
+      const firstTarget = payload.targets?.[0];
+      const account = firstTarget?.profileId || (payload.metadata as any)?.profileId || 'default';
+      const message = firstTarget?.text || '';
+      const url = (payload.metadata as any)?.url || '';
+      const targets = payload.targets?.map((t) => t.protocol).join(',') || 'mastodon,bluesky';
+
+      const stmt = this.db.prepare(`
+        INSERT INTO broadcast_queue (account, message, url, targets, scheduled_at, status, scheduled_for, payload_json, attempts)
+        VALUES (?, ?, ?, ?, ?, 'pending', ?, ?, 0)
+      `);
+      const info = stmt.run(account, message, url, targets, dueTime, dueTime, JSON.stringify(payload));
+      return Number(info.lastInsertRowid);
+    }
+
     const stmt = this.db.prepare(`
       INSERT INTO broadcast_queue (status, scheduled_for, payload_json, attempts)
       VALUES ('pending', ?, ?, 0)
     `);
     const info = stmt.run(dueTime, JSON.stringify(payload));
     return Number(info.lastInsertRowid);
+  }
+
+  /**
+   * Enqueues a broadcast payload or fleet ingest payload for immediate or scheduled delivery
+   */
+  public enqueue(payload: BroadcastPayload | FleetIngestPayload, scheduledFor?: string): number {
+    if (payload && 'message' in payload && 'profileId' in payload) {
+      const fleet = payload as FleetIngestPayload;
+      const dueTime = scheduledFor || fleet.scheduledFor || new Date().toISOString();
+      const defaultTargets: ('mastodon' | 'bluesky' | 'nostr')[] = ['mastodon', 'bluesky', 'nostr'];
+      const targets = fleet.targets && fleet.targets.length > 0 ? fleet.targets : defaultTargets;
+
+      let fullText = fleet.message;
+      if (fleet.url && !fullText.includes(fleet.url)) {
+        fullText = `${fullText}\n\n${fleet.url}`;
+      }
+      if (fleet.tags && fleet.tags.length > 0) {
+        const tagStr = fleet.tags.map((t) => (t.startsWith('#') ? t : `#${t}`)).join(' ');
+        fullText = `${fullText}\n\n${tagStr}`;
+      }
+
+      const broadcastTargets: BroadcastTargetPayload[] = targets.map((proto) => ({
+        profileId: fleet.profileId,
+        protocol: proto,
+        text: fullText,
+        contentWarning: proto === 'mastodon' ? fleet.contentWarning : undefined,
+      }));
+
+      const broadcastPayload: BroadcastPayload = {
+        targets: broadcastTargets,
+        metadata: {
+          source: fleet.source,
+          url: fleet.url,
+          tags: fleet.tags,
+          contentWarning: fleet.contentWarning,
+        },
+      };
+
+      return this.enqueueBroadcast(broadcastPayload, dueTime);
+    }
+
+    return this.enqueueBroadcast(payload as BroadcastPayload, scheduledFor);
   }
 
   public getJob(id: number): QueueItem | null {
