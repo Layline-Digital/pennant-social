@@ -1,4 +1,19 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
+function getMimeType(filePath) {
+  const ext = path.extname(filePath).toLowerCase();
+  switch (ext) {
+    case '.js':
+    case '.mjs': return 'application/javascript; charset=utf-8';
+    case '.css': return 'text/css; charset=utf-8';
+    case '.json': return 'application/json; charset=utf-8';
+    case '.png': return 'image/png';
+    case '.jpg':
+    case '.jpeg': return 'image/jpeg';
+    case '.svg': return 'image/svg+xml';
+    case '.html': return 'text/html; charset=utf-8';
+    default: return 'application/octet-stream';
+  }
+}
 import http from 'http';
 import { spawn } from 'child_process';
 import path from 'path';
@@ -702,3 +717,4 @@ const isDirectExecution = process.argv[1] && (
 if (isDirectExecution) {
   startServer();
 }
+
