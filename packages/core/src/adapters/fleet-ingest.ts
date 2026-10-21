@@ -1,6 +1,6 @@
 ﻿import type { IncomingMessage, ServerResponse } from 'node:http';
 import type Database from 'better-sqlite3';
-import { BroadcastDaemon } from '../queue/broadcast-daemon.js';
+import { BroadcastDaemon } from '../queue/broadcast-daemon.ts';
 
 export interface IngestBroadcastPayload {
   source?: string; // Arbitrary source name (e.g. 'cms', 'rss-bot', 'ci-runner')
@@ -77,3 +77,4 @@ export function handleBroadcastIngestRequest(
 
 // Backwards-compatibility alias
 export const handleFleetIngestRequest = handleBroadcastIngestRequest;
+

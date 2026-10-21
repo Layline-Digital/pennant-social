@@ -1,7 +1,7 @@
 ﻿import assert from 'node:assert';
 import http from 'node:http';
 import Database from 'better-sqlite3';
-import { handleBroadcastIngestRequest } from '../packages/core/src/adapters/fleet-ingest.js';
+import { handleBroadcastIngestRequest } from '../packages/core/src/adapters/fleet-ingest.ts';
 
 console.log('[*] Testing Generic Broadcast Ingest Webhook...');
 
@@ -71,3 +71,4 @@ server.listen(0, '127.0.0.1', async () => {
 
   server.close();
 });
+
