@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 function getMimeType(filePath) {
   const ext = path.extname(filePath).toLowerCase();
   switch (ext) {
@@ -717,4 +717,6 @@ const isDirectExecution = process.argv[1] && (
 if (isDirectExecution) {
   startServer();
 }
+
+
 
