@@ -11,33 +11,38 @@ console.log('    [1/5] Edge Case: Indivisible URLs & Grapheme cluster boundaries
 function splitIntoThreadChunks(text, maxLen = 300) {
   if (!text || text.length <= maxLen) return [text];
   
-  // URL preservation regex
-  const urlRegex = /https?:\/\/[^\s]+/g;
-  const urls = [];
-  let match;
-  while ((match = urlRegex.exec(text)) !== null) {
-    urls.push({ url: match[0], start: match.index, end: match.index + match[0].length });
-  }
-
-  const segmenter = new Intl.Segmenter(undefined, { granularity: 'word' });
-  const segments = Array.from(segmenter.segment(text)).map(s => s.segment);
+  // Tokenize preserving whitespace, words, and full URLs as atomic units
+  const tokens = text.match(/https?:\/\/[^\s]+|\s+|[^\s]+/g) || [];
   
   const chunks = [];
   let currentChunk = '';
 
-  for (const seg of segments) {
-    const candidate = currentChunk + seg;
-    if (candidate.length > maxLen) {
+  for (const token of tokens) {
+    if ((currentChunk + token).length > maxLen) {
       if (currentChunk.trim().length > 0) {
         chunks.push(currentChunk.trim());
-        currentChunk = seg;
+        currentChunk = token.trimStart();
       } else {
-        // Segment itself exceeds maxLen (e.g. unbreakable giant string or URL)
-        chunks.push(candidate.trim());
-        currentChunk = '';
+        // Token itself exceeds maxLen (e.g. standalone giant URL or unbreakable string)
+        if (/^https?:\/\//.test(token)) {
+          chunks.push(token.trim());
+          currentChunk = '';
+        } else {
+          // Unbreakable word/emoji block: segment strictly by grapheme clusters
+          const segmenter = new Intl.Segmenter(undefined, { granularity: 'grapheme' });
+          const graphemes = Array.from(segmenter.segment(token)).map(s => s.segment);
+          for (const g of graphemes) {
+            if ((currentChunk + g).length > maxLen) {
+              if (currentChunk.trim().length > 0) chunks.push(currentChunk.trim());
+              currentChunk = g;
+            } else {
+              currentChunk += g;
+            }
+          }
+        }
       }
     } else {
-      currentChunk = candidate;
+      currentChunk += token;
     }
   }
   if (currentChunk.trim().length > 0) {
@@ -51,14 +56,16 @@ const textWithLongUrl = 'Important release dispatch for Pennant Hoist operations
 
 const chunks = splitIntoThreadChunks(textWithLongUrl, 160);
 assert.ok(chunks.length >= 2, 'Must split text exceeding max length');
-const fullRejoined = chunks.join(' ');
-assert.ok(fullRejoined.includes(longUrl), 'URL must not be severed or mutated across chunks');
 
-// Multi-byte cluster test
+// Verify that the URL remains completely unbroken inside one of the chunks
+const foundIntactUrl = chunks.some(c => c.includes(longUrl));
+assert.strictEqual(foundIntactUrl, true, 'URL must not be severed or mutated across chunks');
+
+// Multi-byte emoji cluster test
 const familyEmoji = '👨‍👩‍👧‍👦'.repeat(30);
 const emojiChunks = splitIntoThreadChunks(familyEmoji + ' message', 50);
 assert.ok(emojiChunks.length > 0);
-assert.strictEqual(emojiChunks[0].includes(''), false, 'Grapheme clusters must never split into invalid replacement chars');
+assert.strictEqual(emojiChunks[0].includes('\uFFFD'), false, 'Grapheme clusters must never split into invalid replacement chars');
 
 // ---------------------------------------------------------------------------
 // 2. Media Airlock Fault Tolerance & Path Traversal Rejection
@@ -74,13 +81,11 @@ function validateMediaUpload(fileName, bufferSize, mimeType) {
     return { valid: false, reason: 'Payload exceeds 50MB ceiling' };
   }
 
-  // Dangerous MIME types & extension check
   const dangerousMimes = ['application/x-msdownload', 'application/x-sh', 'application/x-bat', 'application/javascript'];
   if (dangerousMimes.includes(mimeType.toLowerCase())) {
     return { valid: false, reason: 'Executable payload rejected' };
   }
 
-  // Path traversal sanitization
   const safeBaseName = path.basename(fileName).replace(/[^a-zA-Z0-9._-]/g, '_');
   if (fileName.includes('..') || fileName.includes('/') || fileName.includes('\\')) {
     return { valid: true, sanitizedName: safeBaseName, note: 'Path traversal sanitized' };
@@ -104,7 +109,6 @@ console.log('    [3/5] Edge Case: SessionVault profile injection & poison null-b
 
 function validateProfileIdentifier(profileId) {
   if (!profileId || typeof profileId !== 'string') return false;
-  // Reject null-bytes, slashes, backslashes, directory dots
   if (profileId.includes('\0') || profileId.includes('/') || profileId.includes('\\') || profileId.includes('..')) {
     return false;
   }
@@ -160,7 +164,6 @@ assert.strictEqual(res1.status, 'enqueued');
 assert.strictEqual(res2.status, 'deduplicated');
 assert.strictEqual(res1.jobId, res2.jobId, 'Deduplicated post must return existing job ID');
 
-// Max 5 attempts
 for (let i = 0; i < 5; i++) {
   scheduler.failJob(hash, 'HTTP 503 Upstream Gateway Timeout');
 }
