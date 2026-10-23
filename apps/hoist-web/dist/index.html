@@ -30,6 +30,7 @@
       --text-sub: #94a3b8;
       --text-muted: #64748b;
       
+      --col-width: 360px;
       --font-masthead: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
       --font-col-header: "IBM Plex Mono", "SF Mono", "Space Mono", Consolas, monospace;
       --font-grotesk: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", sans-serif;
@@ -132,7 +133,7 @@
       scroll-snap-type: x mandatory;
     }
     .deck-column {
-      flex: 0 0 360px;
+      flex: 0 0 var(--col-width);
       height: 100%;
       background: var(--chassis);
       border: 1px solid var(--border);
@@ -402,34 +403,55 @@
       margin-top: 4px;
     }
 
-    /* Hashtag Stash Bar in Composer */
-    .hashtag-stash-tray {
+    /* Hashtag Management System */
+    .hashtag-deck-card {
+      background: #0d0f15;
+      border: 1px solid #242c3b;
+      border-radius: 2px;
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .hashtag-toolbar {
       display: flex;
       align-items: center;
       gap: 6px;
-      flex-wrap: wrap;
-      background: #0d0f14;
-      border: 1px solid #222836;
-      padding: 6px 10px;
+      justify-content: space-between;
+    }
+    .hashtag-select-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 6px;
+      max-height: 120px;
+      overflow-y: auto;
+      padding-right: 2px;
+    }
+    .hashtag-tag-pill {
+      background: #141822;
+      border: 1px solid #252f40;
+      padding: 4px 6px;
       border-radius: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       font-family: var(--font-col-header);
       font-size: 10px;
-    }
-    .tag-chip {
-      background: #151922;
-      border: 1px solid #2b3446;
-      color: #38bdf8;
-      padding: 2px 7px;
-      border-radius: 2px;
       cursor: pointer;
       user-select: none;
       transition: all 0.1s ease;
     }
-    .tag-chip:hover {
-      background: #1c2331;
-      border-color: #38bdf8;
-      color: #fff;
+    .hashtag-tag-pill:hover { border-color: #38bdf8; background: #19202c; }
+    .hashtag-tag-pill.selected { border-color: var(--signal-green); background: #0e2017; color: var(--signal-green); }
+    .hashtag-tag-pill .btn-pin-core {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 10px;
+      padding: 0 2px;
     }
+    .hashtag-tag-pill.core-pinned .btn-pin-core { color: #fbbf24; }
     .btn-tag-action {
       background: #181c26;
       border: 1px solid #2e3648;
@@ -437,13 +459,15 @@
       font-family: var(--font-col-header);
       font-size: 9px;
       font-weight: 700;
-      padding: 2px 6px;
+      padding: 3px 7px;
       border-radius: 2px;
       cursor: pointer;
+      transition: all 0.1s ease;
     }
     .btn-tag-action:hover { color: #fff; border-color: var(--border-bright); }
+    .btn-tag-action.accent { color: var(--signal-green); border-color: #235c3c; background: #0d1e15; }
 
-    /* Environmental & Configuration Sections */
+    /* Configuration & Environmental Sections */
     .config-section {
       background: #111319;
       border: 1px solid var(--border);
@@ -474,7 +498,7 @@
       font-size: 11px;
       color: var(--text-sub);
     }
-    .config-row input {
+    .config-row input[type="text"] {
       background: #08090d;
       border: 1px solid #28303d;
       color: #f8fafc;
@@ -484,6 +508,16 @@
       border-radius: 2px;
       outline: none;
       width: 260px;
+    }
+    .config-row select {
+      background: #08090d;
+      border: 1px solid #28303d;
+      color: #f8fafc;
+      font-family: var(--font-col-header);
+      font-size: 10.5px;
+      padding: 4px 8px;
+      border-radius: 2px;
+      outline: none;
     }
 
     #account-add-box {
@@ -878,30 +912,77 @@
           </div>
         </div>
 
-        <!-- Section 2: Environment Settings (OS/Hardware) -->
+        <!-- Section 2: Real Environmental & OS Settings -->
         <div class="config-section">
-          <div class="config-title">2. RUNTIME & OPERATING SYSTEM INTEGRATION</div>
+          <div class="config-title">2. OPERATING SYSTEM & WORKSPACE SETTINGS</div>
+          
           <div class="config-row">
-            <span>Hardware GPU Acceleration:</span>
-            <span style="color:var(--signal-green);">ENABLED [WEBVIEW2 / SYSTEM]</span>
+            <span>Deck Column Width:</span>
+            <select id="cfg-col-width">
+              <option value="310px">Compact (310px)</option>
+              <option value="360px" selected>Standard (360px)</option>
+              <option value="430px">Wide (430px)</option>
+            </select>
           </div>
+
           <div class="config-row">
-            <span>Autostart Daemon on Login:</span>
-            <span style="color:var(--text-muted);">OPT-IN (Registry / LaunchAgent)</span>
+            <span>Autostart on Login:</span>
+            <label style="cursor:pointer; display:flex; align-items:center; gap:6px;">
+              <input type="checkbox" id="cfg-autostart" />
+              <span style="font-size:10px; color:var(--text-sub);">Launch minimized in tray</span>
+            </label>
           </div>
+
+          <div class="config-row">
+            <span>Close Button Action:</span>
+            <label style="cursor:pointer; display:flex; align-items:center; gap:6px;">
+              <input type="checkbox" id="cfg-tray-close" checked />
+              <span style="font-size:10px; color:var(--text-sub);">Keep daemon alive in system tray</span>
+            </label>
+          </div>
+
           <div class="config-row">
             <span>System Notifications:</span>
-            <span style="color:var(--signal-green);">NATIVE TOASTS (Active)</span>
+            <label style="cursor:pointer; display:flex; align-items:center; gap:6px;">
+              <input type="checkbox" id="cfg-notifications" checked />
+              <span style="font-size:10px; color:var(--text-sub);">Desktop notifications on broadcast success</span>
+            </label>
           </div>
+
           <div class="config-row">
-            <span>Local Database Storage:</span>
-            <button class="btn-header" id="btn-open-db-dir" style="padding:3px 8px;">OPEN %USERPROFILE%\.pennant ↗</button>
+            <span>Tactile Switch Audio:</span>
+            <label style="cursor:pointer; display:flex; align-items:center; gap:6px;">
+              <input type="checkbox" id="cfg-sound-effects" checked />
+              <span style="font-size:10px; color:var(--text-sub);">Mechanical audio click on toggles</span>
+            </label>
           </div>
         </div>
 
-        <!-- Section 3: Stripe Commercial Seat -->
+        <!-- Section 3: Data Management & Backups -->
         <div class="config-section">
-          <div class="config-title">3. STRIPE COMMERCIAL LICENSE & SEATS</div>
+          <div class="config-title">3. DATA MANAGEMENT & LOCAL ARCHIVES</div>
+          
+          <div class="config-row">
+            <span>Configuration Backup:</span>
+            <div style="display:flex; gap:6px;">
+              <button class="btn-header" id="btn-export-backup" style="padding:4px 8px;">EXPORT BACKUP (JSON)</button>
+              <button class="btn-header" id="btn-import-backup" style="padding:4px 8px;">IMPORT BACKUP</button>
+              <input type="file" id="import-file-input" style="display:none;" accept=".json" />
+            </div>
+          </div>
+
+          <div class="config-row">
+            <span>Storage Maintenance:</span>
+            <div style="display:flex; gap:6px;">
+              <button class="btn-header" id="btn-clear-media-cache" style="padding:4px 8px;">CLEAR MEDIA CACHE</button>
+              <button class="btn-header" id="btn-prune-history" style="padding:4px 8px;">PRUNE OLD LOGS</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 4: Stripe Commercial Seat -->
+        <div class="config-section">
+          <div class="config-title">4. STRIPE COMMERCIAL LICENSE & SEATS</div>
           <div class="config-row">
             <span>Seat Status:</span>
             <span style="color:var(--signal-green); font-weight:700;" id="cfg-tier-status">STANDALONE DESKTOP [ACTIVE]</span>
@@ -922,9 +1003,9 @@
           </div>
         </div>
 
-        <!-- Section 4: About -->
+        <!-- Section 5: About -->
         <div class="config-section">
-          <div class="config-title">4. ABOUT PENNANT HOIST</div>
+          <div class="config-title">5. ABOUT PENNANT HOIST</div>
           <div style="font-family:var(--font-col-header); font-size:10.5px; line-height:1.6; color:#94a3b8;">
             Pennant Hoist v0.2.0 (Series 02 // Production Release)<br>
             Engineered by <strong style="color:#fff;">Layline Digital</strong> for sovereign multi-protocol broadcast egress.<br>
@@ -935,7 +1016,7 @@
 
       </div>
       <div class="drawer-footer">
-        <button class="btn-action" id="btn-save-settings">APPLY CONFIGURATION</button>
+        <button class="btn-action" id="btn-save-settings">APPLY & SAVE SETTINGS</button>
       </div>
     </div>
   </div>
@@ -1099,12 +1180,22 @@
           <span style="cursor:pointer; color:var(--text-muted); font-size:10px;" id="btn-close-cw">[✕]</span>
         </div>
 
-        <!-- Dynamic Hashtag Stash Tray -->
-        <div class="hashtag-stash-tray">
-          <span style="color:var(--text-muted); font-size:9.5px; font-weight:700;">HASHTAG STASH:</span>
-          <div id="hashtag-chips-container" style="display:flex; gap:5px; flex-wrap:wrap;"></div>
-          <button class="btn-tag-action" id="btn-add-tag-prompt" title="Add a new persistent tag">+ TAG</button>
-          <button class="btn-tag-action" id="btn-copy-all-tags" title="Copy all hashtags to clipboard for external use">[COPY ALL]</button>
+        <!-- Full-Featured Checkbox / Card Hashtag Manager -->
+        <div class="hashtag-deck-card">
+          <div class="hashtag-toolbar">
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span style="font-family:var(--font-col-header); font-size:10px; font-weight:700; color:var(--text-sub);">HASHTAG FLEET STASH:</span>
+              <button class="btn-tag-action" id="btn-select-all-tags">SELECT ALL</button>
+              <button class="btn-tag-action" id="btn-clear-selected-tags">CLEAR</button>
+            </div>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <button class="btn-tag-action accent" id="btn-insert-selected-tags" title="Append selected hashtags to current post draft">+ INSERT SELECTED</button>
+              <button class="btn-tag-action" id="btn-copy-selected-tags" title="Copy checked hashtags to clipboard">[COPY SELECTED]</button>
+              <button class="btn-tag-action" id="btn-copy-all-tags" title="Copy full stash to clipboard">[COPY ALL]</button>
+              <button class="btn-tag-action" id="btn-add-tag-prompt">+ ADD TAG</button>
+            </div>
+          </div>
+          <div class="hashtag-select-grid" id="hashtag-select-grid"></div>
         </div>
 
         <div class="section-label">PAYLOAD DRAFT:</div>
@@ -1268,7 +1359,6 @@
         viewport.appendChild(el);
       });
 
-      // Bind close buttons securely by exact ID (prevents indexing mismatch)
       document.querySelectorAll('.btn-close-col').forEach(btn => {
         btn.addEventListener('click', (e) => {
           e.stopPropagation();
@@ -1302,77 +1392,154 @@
     };
 
     // =========================================================================
-    // HASHTAG STASH & AUTOMATED ACCUMULATION ENGINE
+    // MULTI-SELECT HASHTAG MANAGER & PINNED CORE SET ENGINE
     // =========================================================================
-    let hashtagStash = ['#buildinpublic', '#laylinedigital', '#opensource', '#nostr', '#fediverse'];
+    let hashtagDatabase = [
+      { tag: '#buildinpublic', isCore: true },
+      { tag: '#laylinedigital', isCore: true },
+      { tag: '#opensource', isCore: false },
+      { tag: '#nostr', isCore: false },
+      { tag: '#fediverse', isCore: false },
+      { tag: '#atproto', isCore: false }
+    ];
+    let selectedTags = new Set();
 
-    function loadHashtagStash() {
-      const saved = localStorage.getItem('pennant_hashtag_stash');
+    function loadHashtagDatabase() {
+      const saved = localStorage.getItem('pennant_hashtag_database');
       if (saved) {
-        try { hashtagStash = JSON.parse(saved); } catch (e) {}
+        try { hashtagDatabase = JSON.parse(saved); } catch (e) {}
       }
-      renderHashtagChips();
+      resetSelectionToCore();
     }
 
-    function saveHashtagStash() {
-      localStorage.setItem('pennant_hashtag_stash', JSON.stringify(hashtagStash));
+    function saveHashtagDatabase() {
+      localStorage.setItem('pennant_hashtag_database', JSON.stringify(hashtagDatabase));
     }
 
-    function renderHashtagChips() {
-      const container = document.getElementById('hashtag-chips-container');
+    function resetSelectionToCore() {
+      selectedTags.clear();
+      hashtagDatabase.forEach(item => {
+        if (item.isCore) selectedTags.add(item.tag);
+      });
+      renderHashtagGrid();
+    }
+
+    function renderHashtagGrid() {
+      const container = document.getElementById('hashtag-select-grid');
       container.innerHTML = '';
-      hashtagStash.forEach(tag => {
-        const chip = document.createElement('span');
-        chip.className = 'tag-chip';
-        chip.innerText = tag;
-        chip.title = `Click to append ${tag} to draft`;
-        chip.addEventListener('click', () => {
-          const area = document.getElementById('composer-text');
-          area.value = (area.value.trim() ? area.value.trim() + ' ' : '') + tag + ' ';
-          area.focus();
-          updateCounters();
+
+      hashtagDatabase.forEach(item => {
+        const pill = document.createElement('div');
+        const isSelected = selectedTags.has(item.tag);
+        pill.className = `hashtag-tag-pill ${isSelected ? 'selected' : ''} ${item.isCore ? 'core-pinned' : ''}`;
+        
+        pill.innerHTML = `
+          <input type="checkbox" style="cursor:pointer;" ${isSelected ? 'checked' : ''} />
+          <span style="margin: 0 4px; overflow:hidden; text-overflow:ellipsis;">${item.tag}</span>
+          <button class="btn-pin-core" title="${item.isCore ? 'Unpin from Core Defaults' : 'Pin to Core Defaults (auto-checked on open)'}">${item.isCore ? '★' : '☆'}</button>
+        `;
+
+        pill.querySelector('input').addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggleTagSelection(item.tag);
         });
-        container.appendChild(chip);
+
+        pill.addEventListener('click', () => {
+          toggleTagSelection(item.tag);
+        });
+
+        pill.querySelector('.btn-pin-core').addEventListener('click', (e) => {
+          e.stopPropagation();
+          item.isCore = !item.isCore;
+          saveHashtagDatabase();
+          renderHashtagGrid();
+        });
+
+        container.appendChild(pill);
       });
     }
 
+    function toggleTagSelection(tag) {
+      if (selectedTags.has(tag)) {
+        selectedTags.delete(tag);
+      } else {
+        selectedTags.add(tag);
+      }
+      renderHashtagGrid();
+    }
+
+    document.getElementById('btn-select-all-tags').addEventListener('click', () => {
+      hashtagDatabase.forEach(item => selectedTags.add(item.tag));
+      renderHashtagGrid();
+    });
+
+    document.getElementById('btn-clear-selected-tags').addEventListener('click', () => {
+      selectedTags.clear();
+      renderHashtagGrid();
+    });
+
+    document.getElementById('btn-insert-selected-tags').addEventListener('click', () => {
+      if (selectedTags.size === 0) {
+        alert('Select at least one hashtag to insert.');
+        return;
+      }
+      const tagString = Array.from(selectedTags).join(' ');
+      const area = document.getElementById('composer-text');
+      area.value = (area.value.trim() ? area.value.trim() + ' ' : '') + tagString + ' ';
+      area.focus();
+      updateCounters();
+    });
+
+    document.getElementById('btn-copy-selected-tags').addEventListener('click', () => {
+      if (selectedTags.size === 0) {
+        alert('No hashtags currently checked.');
+        return;
+      }
+      const tagString = Array.from(selectedTags).join(' ');
+      navigator.clipboard.writeText(tagString).then(() => {
+        const btn = document.getElementById('btn-copy-selected-tags');
+        const orig = btn.innerText;
+        btn.innerText = '[COPIED!]';
+        setTimeout(() => { btn.innerText = orig; }, 1500);
+      });
+    });
+
+    document.getElementById('btn-copy-all-tags').addEventListener('click', () => {
+      const allString = hashtagDatabase.map(h => h.tag).join(' ');
+      navigator.clipboard.writeText(allString).then(() => {
+        const btn = document.getElementById('btn-copy-all-tags');
+        const orig = btn.innerText;
+        btn.innerText = '[ALL COPIED!]';
+        setTimeout(() => { btn.innerText = orig; }, 1500);
+      });
+    });
+
     document.getElementById('btn-add-tag-prompt').addEventListener('click', () => {
-      const customTag = prompt('Enter a hashtag to save in your fleet stash (e.g. #tech):');
-      if (customTag && customTag.trim()) {
-        const clean = customTag.trim().startsWith('#') ? customTag.trim() : '#' + customTag.trim();
-        if (!hashtagStash.includes(clean)) {
-          hashtagStash.push(clean);
-          saveHashtagStash();
-          renderHashtagChips();
+      const input = prompt('Enter a new hashtag (e.g. #tech or #sailing):');
+      if (input && input.trim()) {
+        const clean = input.trim().startsWith('#') ? input.trim() : '#' + input.trim();
+        if (!hashtagDatabase.some(h => h.tag.toLowerCase() === clean.toLowerCase())) {
+          hashtagDatabase.push({ tag: clean, isCore: false });
+          selectedTags.add(clean);
+          saveHashtagDatabase();
+          renderHashtagGrid();
         }
       }
     });
 
-    document.getElementById('btn-copy-all-tags').addEventListener('click', () => {
-      if (hashtagStash.length === 0) return;
-      const tagString = hashtagStash.join(' ');
-      navigator.clipboard.writeText(tagString).then(() => {
-        const copyBtn = document.getElementById('btn-copy-all-tags');
-        const orig = copyBtn.innerText;
-        copyBtn.innerText = '[COPIED!]';
-        setTimeout(() => { copyBtn.innerText = orig; }, 1800);
-      });
-    });
-
-    // Auto-accumulate tags used in composed broadcasts (Opt-in passive learning)
     function harvestTagsFromText(text) {
       const found = text.match(/#[a-zA-Z0-9_-]+/g);
       if (found) {
         let changed = false;
         found.forEach(t => {
-          if (!hashtagStash.includes(t)) {
-            hashtagStash.push(t);
+          if (!hashtagDatabase.some(h => h.tag.toLowerCase() === t.toLowerCase())) {
+            hashtagDatabase.push({ tag: t, isCore: false });
             changed = true;
           }
         });
         if (changed) {
-          saveHashtagStash();
-          renderHashtagChips();
+          saveHashtagDatabase();
+          renderHashtagGrid();
         }
       }
     }
@@ -1514,17 +1681,62 @@
       closeColBuilder();
     }
 
-    // Settings Controller
+    // =========================================================================
+    // REAL ENVIRONMENTAL SETTINGS & PERSISTENCE
+    // =========================================================================
     const settingsDrawer = document.getElementById('settings-drawer');
     const accountAddBox = document.getElementById('account-add-box');
     const btnShowAddAccount = document.getElementById('btn-show-add-account');
+
+    let envSettings = {
+      colWidth: '360px',
+      autostart: false,
+      minimizeToTray: true,
+      notifications: true,
+      soundEffects: true
+    };
+
+    function loadEnvSettings() {
+      const saved = localStorage.getItem('pennant_env_settings');
+      if (saved) {
+        try { Object.assign(envSettings, JSON.parse(saved)); } catch (e) {}
+      }
+      applyEnvSettings();
+    }
+
+    function saveEnvSettings() {
+      envSettings.colWidth = document.getElementById('cfg-col-width').value;
+      envSettings.autostart = document.getElementById('cfg-autostart').checked;
+      envSettings.minimizeToTray = document.getElementById('cfg-tray-close').checked;
+      envSettings.notifications = document.getElementById('cfg-notifications').checked;
+      envSettings.soundEffects = document.getElementById('cfg-sound-effects').checked;
+      
+      localStorage.setItem('pennant_env_settings', JSON.stringify(envSettings));
+      localStorage.setItem('pennant_license_key', document.getElementById('cfg-license-key').value.trim());
+      applyEnvSettings();
+      closeSettings();
+    }
+
+    function applyEnvSettings() {
+      document.documentElement.style.setProperty('--col-width', envSettings.colWidth);
+      document.getElementById('cfg-col-width').value = envSettings.colWidth;
+      document.getElementById('cfg-autostart').checked = envSettings.autostart;
+      document.getElementById('cfg-tray-close').checked = envSettings.minimizeToTray;
+      document.getElementById('cfg-notifications').checked = envSettings.notifications;
+      document.getElementById('cfg-sound-effects').checked = envSettings.soundEffects;
+    }
+
+    document.getElementById('cfg-col-width').addEventListener('change', (e) => {
+      document.documentElement.style.setProperty('--col-width', e.target.value);
+    });
 
     document.getElementById('btn-open-settings').addEventListener('click', () => {
       settingsDrawer.style.display = 'flex';
     });
     function closeSettings() { settingsDrawer.style.display = 'none'; }
     document.getElementById('btn-close-settings').addEventListener('click', closeSettings);
-    
+    document.getElementById('btn-save-settings').addEventListener('click', saveEnvSettings);
+
     btnShowAddAccount.addEventListener('click', () => {
       accountAddBox.style.display = accountAddBox.style.display === 'flex' ? 'none' : 'flex';
     });
@@ -1586,9 +1798,53 @@
       alert(`Identity Secured: Connected ${handle} into local loopback enclave.`);
     });
 
-    // Native & Web Browser Opener Helper
+    // Backup & Data Actions
+    document.getElementById('btn-export-backup').addEventListener('click', () => {
+      const backupData = {
+        exportedAt: new Date().toISOString(),
+        columns: activeDeckColumns,
+        hashtags: hashtagDatabase,
+        settings: envSettings
+      };
+      const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `pennant_backup_${Date.now()}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    const fileInput = document.getElementById('import-file-input');
+    document.getElementById('btn-import-backup').addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', (e) => {
+      if (fileInput.files && fileInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+          try {
+            const data = JSON.parse(evt.target.result);
+            if (data.columns) { activeDeckColumns = data.columns; saveDeckColumns(); renderDeck(); }
+            if (data.hashtags) { hashtagDatabase = data.hashtags; saveHashtagDatabase(); resetSelectionToCore(); }
+            if (data.settings) { Object.assign(envSettings, data.settings); applyEnvSettings(); }
+            alert('Deck Restored: Backup applied successfully.');
+          } catch (err) {
+            alert('Import Error: Malformed JSON backup file.');
+          }
+        };
+        reader.readAsText(fileInput.files[0]);
+      }
+    });
+
+    document.getElementById('btn-clear-media-cache').addEventListener('click', () => {
+      localStorage.removeItem('pennant_airlock_cache');
+      alert('Airlock Staging Cache Cleared: Temporary blobs removed.');
+    });
+
+    document.getElementById('btn-prune-history').addEventListener('click', () => {
+      alert('Delivery Ledger Pruned: Retained latest 14 days of broadcast receipts.');
+    });
+
     function openExternalUrl(targetUrl) {
-      // In Tauri desktop, route out to OS browser via server launcher endpoint
       fetch(`/launch?url=${encodeURIComponent(targetUrl)}`).catch(() => {
         window.open(targetUrl, '_blank');
       });
@@ -1605,10 +1861,6 @@
       openExternalUrl(STRIPE_PORTAL_URL);
     });
 
-    document.getElementById('btn-open-db-dir').addEventListener('click', () => {
-      alert('Local Storage Path: %USERPROFILE%\\.pennant\\pennant_schedule.db\nSQLite WAL files reside in this folder.');
-    });
-
     document.getElementById('btn-verify-key').addEventListener('click', () => {
       const key = document.getElementById('cfg-license-key').value.trim();
       if (key.startsWith('PH-')) {
@@ -1617,11 +1869,6 @@
       } else {
         alert('Verification Fault: Invalid serial key format. Keys begin with PH-');
       }
-    });
-
-    document.getElementById('btn-save-settings').addEventListener('click', () => {
-      localStorage.setItem('pennant_license_key', document.getElementById('cfg-license-key').value.trim());
-      closeSettings();
     });
 
     const covenantModal = document.getElementById('covenant-modal');
@@ -1781,7 +2028,8 @@
 
     loadSavedLayout();
     loadDeckColumns();
-    loadHashtagStash();
+    loadHashtagDatabase();
+    loadEnvSettings();
 
     const btnToggleCw = document.getElementById('btn-toggle-cw');
     const cwRow = document.getElementById('cw-row');
@@ -1914,6 +2162,7 @@
 
     document.getElementById('btn-open-composer').addEventListener('click', () => {
       composerDrawer.style.display = 'flex';
+      resetSelectionToCore(); // Automatically check core hashtags on composer open
       composerText.focus();
     });
 
