@@ -16,17 +16,14 @@
       --border: #2a303b;
       --border-bright: #3d4654;
       
-      /* Color Semiotics */
       --accent-orange: #e0562d;
       --accent-orange-glow: rgba(224, 86, 45, 0.45);
       
-      /* High-Luminance P1 Cathode Phosphor Green */
       --signal-green: #2cee88;
       --signal-green-core: #e8ffef;
       --signal-green-glow: rgba(44, 238, 136, 0.75);
       --signal-green-halo: rgba(44, 238, 136, 0.35);
       
-      /* Typography Palette */
       --text-header-pop: #ffffff;
       --text-col-pop: #f8fafc;
       --text-main: #cbd5e1;
@@ -53,7 +50,6 @@
       position: relative;
     }
 
-    /* Masthead Header */
     header {
       background: #16181f;
       border-bottom: 2px solid #0a0b0e;
@@ -66,11 +62,7 @@
       flex-shrink: 0;
       z-index: 20;
     }
-    .brand-section {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
+    .brand-section { display: flex; align-items: center; gap: 14px; }
     .flag-mark {
       width: 22px;
       height: 22px;
@@ -96,11 +88,7 @@
       border-radius: 2px;
       background: var(--socket);
     }
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+    .header-actions { display: flex; align-items: center; gap: 12px; }
     .btn-toggle-col {
       background: #14171e;
       border: 1px solid var(--border);
@@ -116,7 +104,6 @@
     .btn-toggle-col:hover { color: var(--text-col-pop); border-color: var(--border-bright); }
     .btn-toggle-col.active { color: var(--signal-green); border-color: #235c3c; background: #11241a; }
 
-    /* Milled Action Button */
     .btn-action {
       background: linear-gradient(180deg, #e55c32 0%, #b8401c 100%);
       border: 1px solid #7c2409;
@@ -134,7 +121,6 @@
     .btn-action:hover { background: linear-gradient(180deg, #f0683e 0%, #c44621 100%); }
     .btn-action:active { transform: translateY(1px); box-shadow: inset 0 1px 3px rgba(0,0,0,0.9); }
 
-    /* Column Deck */
     #deck-viewport {
       flex: 1;
       display: flex;
@@ -155,7 +141,6 @@
       flex-direction: column;
       box-shadow: 0 6px 18px rgba(0,0,0,0.45);
       scroll-snap-align: start;
-      transition: opacity 0.15s ease;
     }
     .deck-column.hidden-col { display: none; }
     .column-header {
@@ -214,6 +199,7 @@
       line-height: 1.5;
       box-shadow: 0 1px 3px rgba(0,0,0,0.3);
       transition: border-color 0.12s ease;
+      position: relative;
     }
     .card:hover { border-color: var(--border-bright); }
     .card-meta {
@@ -238,26 +224,32 @@
       font-size: 10.5px;
       color: var(--text-muted);
     }
-    .card-actions {
+    
+    /* In-Deck Interactive Actions */
+    .in-deck-actions {
       display: flex;
-      gap: 8px;
-      margin-top: 6px;
+      gap: 6px;
+      margin-top: 8px;
+      padding-top: 6px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
     }
-    .btn-card-act {
-      background: #151921;
+    .btn-deck-act {
+      background: #161920;
       border: 1px solid var(--border);
       color: var(--text-sub);
       font-family: var(--font-col-header);
-      font-size: 9.5px;
+      font-size: 9px;
       font-weight: 700;
-      padding: 2px 6px;
+      padding: 3px 8px;
       border-radius: 2px;
       cursor: pointer;
+      transition: all 0.1s ease;
     }
-    .btn-card-act:hover { color: #fff; border-color: var(--border-bright); }
-    .btn-card-act.danger:hover { color: #ef4444; border-color: #ef4444; }
+    .btn-deck-act:hover { color: var(--text-header-pop); border-color: var(--border-bright); }
+    .btn-deck-act.liked { color: #f43f5e; border-color: #9f1239; background: #2c0b14; }
+    .btn-deck-act.boosted { color: var(--signal-green); border-color: #166534; background: #0c2317; }
 
-    /* Responsive Composer Chassis */
+    /* Modal Chassis */
     #composer-drawer {
       position: fixed;
       inset: 0;
@@ -321,7 +313,6 @@
       align-items: center;
     }
 
-    /* 4-Protocol Quad-Cluster Grid */
     .protocol-cluster {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -351,11 +342,7 @@
       user-select: none;
       position: relative;
     }
-    .rocker-title-row {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
+    .rocker-title-row { display: flex; align-items: center; gap: 4px; }
     .rocker-title {
       font-family: var(--font-col-header);
       font-size: 10px;
@@ -534,7 +521,7 @@
     }
     .station-key.active .key-label { color: var(--text-col-pop); text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
 
-    /* Content Warning (CW) Input Flap */
+    /* Content Warning Flap */
     #cw-row {
       display: none;
       align-items: center;
@@ -557,7 +544,6 @@
     }
     #cw-input:focus { border-color: #fbbf24; }
 
-    /* Composer Textarea */
     textarea {
       width: 100%;
       height: 90px;
@@ -579,7 +565,30 @@
     textarea:focus { border-color: var(--accent-orange); }
     textarea.drag-over { border-color: var(--signal-green) !important; background: #0e141a !important; }
 
-    /* Staged Media Bar & Alt-Text Tray */
+    /* Thread Splitter Tray */
+    #thread-split-bar {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 10px;
+      background: #131922;
+      border: 1px solid #253347;
+      border-radius: 2px;
+      font-family: var(--font-col-header);
+      font-size: 10.5px;
+    }
+    .btn-thread-split {
+      background: #1e293b;
+      border: 1px solid #38bdf8;
+      color: #38bdf8;
+      font-family: var(--font-col-header);
+      font-size: 9.5px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+
     #media-preview-bar {
       display: none;
       flex-direction: column;
@@ -618,7 +627,6 @@
       width: 100%;
     }
 
-    /* Scheduler Bay with Agency Timezone Selector */
     .schedule-control-bay {
       background: #101318;
       border: 1px solid var(--border);
@@ -664,7 +672,6 @@
     .schedule-inputs-box select { cursor: pointer; color: #38bdf8; font-weight: 700; }
     .schedule-inputs-box input:focus, .schedule-inputs-box select:focus { border-color: var(--accent-orange); }
 
-    /* Telemetry HUD Footer */
     .telemetry-row {
       display: flex;
       justify-content: space-between;
@@ -727,9 +734,6 @@
     }
     .btn-cancel:hover { color: var(--text-col-pop); border-color: var(--border-bright); }
 
-    /* =========================================================================
-       NOSTR SOVEREIGN KEY COVENANT MODAL
-       ========================================================================= */
     #covenant-modal {
       position: fixed;
       inset: 0;
@@ -852,10 +856,8 @@
           <span style="cursor:pointer; color:var(--text-muted); font-size:9px;" id="btn-toggle-cw">[+ ADD CW / SPOILER]</span>
         </div>
 
-        <!-- 4 Protocol Instrument Bays (ATProto, ActivityPub, Nostr, Matrix) -->
+        <!-- 4 Protocol Instrument Bays -->
         <div class="protocol-cluster">
-          
-          <!-- ATPROTO BAY -->
           <div class="protocol-bay" id="bay-atproto">
             <div class="rocker-unit active" data-bus="atproto">
               <div class="rocker-title-row"><span class="rocker-title">ATPROTO</span></div>
@@ -867,7 +869,6 @@
               </div>
               <span class="rocker-state-badge">[ ARMED ]</span>
             </div>
-            
             <div class="station-key-rack" id="rack-atproto">
               <div class="station-key active" data-handle="@pennant.layline" data-bus="atproto">
                 <div class="key-lamp-slit"></div>
@@ -884,7 +885,6 @@
             </div>
           </div>
 
-          <!-- ACTIVITYPUB BAY -->
           <div class="protocol-bay" id="bay-activitypub">
             <div class="rocker-unit active" data-bus="activitypub">
               <div class="rocker-title-row"><span class="rocker-title">ACTIVITYPUB</span></div>
@@ -896,7 +896,6 @@
               </div>
               <span class="rocker-state-badge">[ ARMED ]</span>
             </div>
-            
             <div class="station-key-rack" id="rack-activitypub">
               <div class="station-key active" data-handle="@signal@social.pennant" data-bus="activitypub">
                 <div class="key-lamp-slit"></div>
@@ -909,7 +908,6 @@
             </div>
           </div>
 
-          <!-- NOSTR BAY WITH COVENANT HOOK -->
           <div class="protocol-bay" id="bay-nostr">
             <div class="rocker-unit active" data-bus="nostr">
               <div class="rocker-title-row">
@@ -929,7 +927,6 @@
               </div>
               <span class="rocker-state-badge">[ ARMED ]</span>
             </div>
-            
             <div class="station-key-rack" id="rack-nostr">
               <div class="station-key active" data-handle="npub1...damus" data-bus="nostr">
                 <div class="key-lamp-slit"></div>
@@ -942,7 +939,6 @@
             </div>
           </div>
 
-          <!-- MATRIX READ-ONLY ANNOUNCEMENT BAY -->
           <div class="protocol-bay" id="bay-matrix">
             <div class="rocker-unit active" data-bus="matrix">
               <div class="rocker-title-row">
@@ -962,7 +958,6 @@
               </div>
               <span class="rocker-state-badge">[ ARMED ]</span>
             </div>
-            
             <div class="station-key-rack" id="rack-matrix">
               <div class="station-key active" data-handle="!announcements:matrix.org" data-bus="matrix">
                 <div class="key-lamp-slit"></div>
@@ -974,10 +969,8 @@
               </div>
             </div>
           </div>
-
         </div>
 
-        <!-- Optional Content Warning Flap -->
         <div id="cw-row">
           <span style="font-family:var(--font-col-header); font-size:10px; font-weight:700; color:#fbbf24;">CW / SPOILER:</span>
           <input type="text" id="cw-input" placeholder="e.g. Sensitive content, politics, tech spoilers..." />
@@ -988,8 +981,13 @@
         <div class="composer-drop-zone">
           <textarea id="composer-text" placeholder="Draft transmission record for authenticated fleet egress... (Drag image file here)"></textarea>
         </div>
+
+        <!-- Thread Splitter Bar -->
+        <div id="thread-split-bar">
+          <span style="color:#38bdf8;">✂ Thread break detected (> 300 chars)</span>
+          <button class="btn-thread-split" id="btn-split-thread">PREVIEW THREAD (1/N)</button>
+        </div>
         
-        <!-- Contextual Staged File Bar with Alt-Text Input -->
         <div id="media-preview-bar">
           <div class="media-top-line">
             <span class="media-badge">STAGED BLOB</span>
@@ -1000,7 +998,6 @@
           <input type="text" id="alt-text-input" placeholder="Describe image for screen readers & federated accessibility..." />
         </div>
 
-        <!-- Precision Scheduler Bay with Agency Timezone Selector -->
         <div class="schedule-control-bay">
           <div class="schedule-mode-toggle">
             <button class="schedule-mode-btn active" id="btn-mode-now">TRANSMIT NOW</button>
@@ -1029,7 +1026,6 @@
             <span class="counter-pill" id="cnt-targets">Targets: 6 Armed</span>
           </div>
           
-          <!-- Contextual Media Trigger -->
           <div class="staging-group">
             <input type="file" id="media-file-input" style="display:none;" accept="image/*,video/*" />
             <div class="staging-status-trigger active" id="staging-trigger">
@@ -1055,19 +1051,14 @@
   </div>
 
   <script>
-    // 1:1 Hardware Micro-Grain Generator
     (function applyTactileTexture() {
       const c = document.createElement('canvas');
-      c.width = 64;
-      c.height = 64;
+      c.width = 64; c.height = 64;
       const ctx = c.getContext('2d');
       const img = ctx.createImageData(64, 64);
       for (let i = 0; i < img.data.length; i += 4) {
         const noise = (Math.random() * 255) | 0;
-        img.data[i] = noise;
-        img.data[i + 1] = noise;
-        img.data[i + 2] = noise;
-        img.data[i + 3] = 18;
+        img.data[i] = noise; img.data[i + 1] = noise; img.data[i + 2] = noise; img.data[i + 3] = 18;
       }
       ctx.putImageData(img, 0, 0);
       const dataUrl = c.toDataURL('image/png');
@@ -1102,6 +1093,11 @@
               <span>10:46 PM</span>
             </div>
             <div>2D virtualized channel attached. Zero memory leakage across 35 monitoring streams.</div>
+            <div class="in-deck-actions">
+              <button class="btn-deck-act" onclick="openReply('${col.label}')">↩ REPLY</button>
+              <button class="btn-deck-act" onclick="toggleBoost(this)">⟳ BOOST</button>
+              <button class="btn-deck-act" onclick="toggleLike(this)">★ LIKE</button>
+            </div>
             <div class="card-footer">
               <span>● SYNCHRONIZED</span>
               <span style="cursor: pointer;">INSPECT &#8599;</span>
@@ -1112,7 +1108,23 @@
       viewport.appendChild(el);
     });
 
-    // Column Toggle Controller
+    window.openReply = function(author) {
+      document.getElementById('composer-drawer').style.display = 'flex';
+      const text = document.getElementById('composer-text');
+      text.value = `${author} `;
+      text.focus();
+    };
+
+    window.toggleBoost = function(btn) {
+      btn.classList.toggle('boosted');
+      btn.innerText = btn.classList.contains('boosted') ? '⟳ BOOSTED' : '⟳ BOOST';
+    };
+
+    window.toggleLike = function(btn) {
+      btn.classList.toggle('liked');
+      btn.innerText = btn.classList.contains('liked') ? '★ LIKED' : '★ LIKE';
+    };
+
     const btnToggleOutbox = document.getElementById('btn-toggle-outbox');
     btnToggleOutbox.addEventListener('click', () => {
       const outboxCol = document.getElementById('col-queue_col');
@@ -1135,7 +1147,6 @@
       '!announcements:matrix.org'
     ]);
 
-    // Nostr Sovereign Covenant Controller
     const covenantModal = document.getElementById('covenant-modal');
     function checkNostrCovenant() {
       if (!localStorage.getItem('pennant_nostr_covenant_accepted')) {
@@ -1149,20 +1160,15 @@
       covenantModal.style.display = 'none';
     });
 
-    // Master Rocker Switches
     document.querySelectorAll('.rocker-unit').forEach(unit => {
       unit.addEventListener('click', (e) => {
         if (e.target.closest('.telemetry-help-dot')) return;
         const bus = unit.getAttribute('data-bus');
-        
-        // Trigger covenant check if opening Nostr
         if (bus === 'nostr' && !busState[bus]) {
           if (!checkNostrCovenant()) return;
         }
-
         const badge = unit.querySelector('.rocker-state-badge');
         const bay = document.getElementById('bay-' + bus);
-        
         busState[bus] = !busState[bus];
         if (busState[bus]) {
           unit.classList.add('active');
@@ -1177,16 +1183,13 @@
       });
     });
 
-    // Station Keys
     document.querySelectorAll('.station-key').forEach(key => {
       key.addEventListener('click', () => {
         const handle = key.getAttribute('data-handle');
         const bus = key.getAttribute('data-bus');
-
         if (bus === 'nostr') {
           if (!checkNostrCovenant()) return;
         }
-        
         if (!busState[bus]) {
           const unit = document.querySelector(`.rocker-unit[data-bus="${bus}"]`);
           const bay = document.getElementById('bay-' + bus);
@@ -1195,7 +1198,6 @@
           unit.querySelector('.rocker-state-badge').innerText = '[ ARMED ]';
           bay.classList.remove('bypassed');
         }
-
         if (activeTargets.has(handle)) {
           activeTargets.delete(handle);
           key.classList.remove('active');
@@ -1224,7 +1226,6 @@
       document.getElementById('cnt-targets').innerText = `Targets: ${effective.length} Armed`;
     }
 
-    // Content Warning (CW) Toggle
     const btnToggleCw = document.getElementById('btn-toggle-cw');
     const cwRow = document.getElementById('cw-row');
     const cwInput = document.getElementById('cw-input');
@@ -1237,7 +1238,6 @@
       cwInput.value = '';
     });
 
-    // Scheduler Mechanics with Timezone Conversion
     let isScheduledMode = false;
     const btnModeNow = document.getElementById('btn-mode-now');
     const btnModeSchedule = document.getElementById('btn-mode-schedule');
@@ -1280,6 +1280,8 @@
     const stagedFileName = document.getElementById('staged-file-name');
     const btnToggleAlt = document.getElementById('btn-toggle-alt');
     const altTextInput = document.getElementById('alt-text-input');
+    const threadSplitBar = document.getElementById('thread-split-bar');
+    const btnSplitThread = document.getElementById('btn-split-thread');
     let stagedMediaFile = null;
 
     btnToggleAlt.addEventListener('click', () => {
@@ -1291,7 +1293,26 @@
       }
     });
 
-    // Drag-and-Drop Handling
+    btnSplitThread.addEventListener('click', () => {
+      const fullText = composerText.value.trim();
+      if (fullText.length <= 300) return;
+      const chunks = [];
+      const words = fullText.split(' ');
+      let cur = '';
+      words.forEach(w => {
+        if ((cur + ' ' + w).length > 270) {
+          chunks.push(cur.trim());
+          cur = w;
+        } else {
+          cur += (cur ? ' ' : '') + w;
+        }
+      });
+      if (cur) chunks.push(cur.trim());
+      const total = chunks.length;
+      composerText.value = chunks.map((c, i) => `[${i + 1}/${total}] ${c}`).join('\n\n---\n\n');
+      threadSplitBar.style.display = 'none';
+    });
+
     ['dragenter', 'dragover'].forEach(name => {
       composerText.addEventListener(name, (e) => {
         e.preventDefault();
@@ -1350,6 +1371,7 @@
       altTextInput.value = '';
       cwRow.style.display = 'none';
       cwInput.value = '';
+      threadSplitBar.style.display = 'none';
       stagingLabel.innerText = 'STAGING READY';
       updateCounters();
     }
@@ -1372,10 +1394,13 @@
 
       if (len > 300) {
         bskyPill.style.color = '#ef4444';
+        threadSplitBar.style.display = 'flex';
       } else if (len >= 280) {
         bskyPill.style.color = '#fbbf24';
+        threadSplitBar.style.display = 'none';
       } else {
         bskyPill.style.color = 'var(--text-sub)';
+        threadSplitBar.style.display = 'none';
       }
 
       mastoPill.style.color = len > 500 ? '#ef4444' : 'var(--text-sub)';
@@ -1422,7 +1447,7 @@
 
         const chosenTz = schedTz.value;
         const targetDate = new Date(`${schedDate.value}T${schedTime.value}`);
-        
+
         if (isNaN(targetDate.getTime()) || targetDate <= new Date()) {
           alert('Scheduler Invariant: Target dispatch time must be in the future.');
           return;
