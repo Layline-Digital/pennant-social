@@ -10,7 +10,7 @@
     "scripts":  {
                     "start":  "node pennant-launcher.js",
                     "dev":  "node pennant-launcher.js",
-                    "test":  "node test/smoke.test.js \u0026\u0026 node test/session-vault.test.ts \u0026\u0026 node test/media-airlock.test.ts \u0026\u0026 node test/deck-grid.test.ts \u0026\u0026 node test/composer-state.test.ts \u0026\u0026 node test/broadcast-daemon.test.ts \u0026\u0026 node test/stream-hub.test.ts \u0026\u0026 node test/hoist-deck.test.ts \u0026\u0026 node test/launcher-cli.test.ts \u0026\u0026 node test/fleet-ingest.test.ts \u0026\u0026 node test/license-verifier.test.ts \u0026\u0026 node test/matrix-sanitization.test.ts \u0026\u0026 node test/institutional-edge-cases.test.mjs"
+                    "test":  "node test/smoke.test.js \u0026\u0026 node test/session-vault.test.ts \u0026\u0026 node test/media-airlock.test.ts \u0026\u0026 node test/deck-grid.test.ts \u0026\u0026 node test/composer-state.test.ts \u0026\u0026 node test/broadcast-daemon.test.ts \u0026\u0026 node test/stream-hub.test.ts \u0026\u0026 node test/hoist-deck.test.ts \u0026\u0026 node test/launcher-cli.test.ts \u0026\u0026 node test/fleet-ingest.test.ts \u0026\u0026 node test/license-verifier.test.ts \u0026\u0026 node test/matrix-sanitization.test.ts \u0026\u0026 node test/signer-enclave-edge-cases.test.ts \u0026\u0026 node test/institutional-edge-cases.test.mjs"
                 },
     "keywords":  [
                      "activitypub",

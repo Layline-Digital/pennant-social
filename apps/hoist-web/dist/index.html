@@ -225,7 +225,6 @@
       color: var(--text-muted);
     }
     
-    /* In-Deck Interactive Actions */
     .in-deck-actions {
       display: flex;
       gap: 6px;
@@ -249,7 +248,6 @@
     .btn-deck-act.liked { color: #f43f5e; border-color: #9f1239; background: #2c0b14; }
     .btn-deck-act.boosted { color: var(--signal-green); border-color: #166534; background: #0c2317; }
 
-    /* Modal Chassis */
     #composer-drawer {
       position: fixed;
       inset: 0;
@@ -331,7 +329,7 @@
       transition: opacity 0.15s ease;
       position: relative;
     }
-    .protocol-bay.bypassed { opacity: 0.4; }
+    .protocol-bay.bypassed { opacity: 0.38; }
 
     .rocker-unit {
       display: flex;
@@ -350,6 +348,18 @@
       letter-spacing: 0.06em;
       color: var(--text-col-pop);
     }
+    .btn-review-covenant {
+      font-family: var(--font-col-header);
+      font-size: 8px;
+      color: #fbbf24;
+      background: #231b07;
+      border: 1px solid #78350f;
+      padding: 1px 4px;
+      border-radius: 2px;
+      cursor: pointer;
+      margin-left: 2px;
+    }
+    .btn-review-covenant:hover { background: #3b2a0c; color: #fff; }
 
     .telemetry-help-dot {
       width: 12px;
@@ -521,7 +531,6 @@
     }
     .station-key.active .key-label { color: var(--text-col-pop); text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
 
-    /* Content Warning Flap */
     #cw-row {
       display: none;
       align-items: center;
@@ -565,7 +574,6 @@
     textarea:focus { border-color: var(--accent-orange); }
     textarea.drag-over { border-color: var(--signal-green) !important; background: #0e141a !important; }
 
-    /* Thread Splitter Tray */
     #thread-split-bar {
       display: none;
       align-items: center;
@@ -734,6 +742,7 @@
     }
     .btn-cancel:hover { color: var(--text-col-pop); border-color: var(--border-bright); }
 
+    /* Covenant Modal */
     #covenant-modal {
       position: fixed;
       inset: 0;
@@ -822,7 +831,7 @@
   <div id="covenant-modal">
     <div class="covenant-chassis">
       <div class="covenant-title">
-        <span>⚠ // PROTOCOL NOTICE: CRYPTOGRAPHIC SOVEREIGNTY</span>
+        <span>⚠ // PROTOCOL NOTICE // NOSTR KEY CUSTODY</span>
       </div>
       <div class="covenant-body">
         <div class="covenant-point">
@@ -838,7 +847,7 @@
           Your nsec is the master private key to your entire decentralized identity. Pennant signs events locally and will strictly never transmit your key across any network.
         </div>
       </div>
-      <button class="btn-covenant-accept" id="btn-accept-covenant">[ I ACCEPT CRYPTOGRAPHIC CUSTODY ]</button>
+      <button class="btn-covenant-accept" id="btn-accept-covenant">[ I ACKNOWLEDGE KEY CUSTODY ]</button>
     </div>
   </div>
 
@@ -858,6 +867,7 @@
 
         <!-- 4 Protocol Instrument Bays -->
         <div class="protocol-cluster">
+          <!-- ATPROTO BAY -->
           <div class="protocol-bay" id="bay-atproto">
             <div class="rocker-unit active" data-bus="atproto">
               <div class="rocker-title-row"><span class="rocker-title">ATPROTO</span></div>
@@ -885,6 +895,7 @@
             </div>
           </div>
 
+          <!-- ACTIVITYPUB BAY -->
           <div class="protocol-bay" id="bay-activitypub">
             <div class="rocker-unit active" data-bus="activitypub">
               <div class="rocker-title-row"><span class="rocker-title">ACTIVITYPUB</span></div>
@@ -908,10 +919,12 @@
             </div>
           </div>
 
+          <!-- NOSTR BAY: WITH COVENANT REVIEW BUTTON -->
           <div class="protocol-bay" id="bay-nostr">
-            <div class="rocker-unit active" data-bus="nostr">
+            <div class="rocker-unit" data-bus="nostr">
               <div class="rocker-title-row">
                 <span class="rocker-title">NOSTR</span>
+                <span class="btn-review-covenant" id="btn-review-covenant" title="Review Cryptographic Key Custody Rules">[KEY CUSTODY]</span>
                 <div class="telemetry-help-dot">?
                   <div class="tooltip-card">
                     <strong style="color: #fbbf24;">// NOSTR MEDIA ROUTING</strong><br>
@@ -928,17 +941,18 @@
               <span class="rocker-state-badge">[ ARMED ]</span>
             </div>
             <div class="station-key-rack" id="rack-nostr">
-              <div class="station-key active" data-handle="npub1...damus" data-bus="nostr">
+              <div class="station-key" data-handle="npub1...damus" data-bus="nostr">
                 <div class="key-lamp-slit"></div>
                 <span class="key-label">DAMUS POOL</span>
               </div>
-              <div class="station-key active" data-handle="npub1...relays" data-bus="nostr">
+              <div class="station-key" data-handle="npub1...relays" data-bus="nostr">
                 <div class="key-lamp-slit"></div>
                 <span class="key-label">FLEET RELAYS</span>
               </div>
             </div>
           </div>
 
+          <!-- MATRIX BAY -->
           <div class="protocol-bay" id="bay-matrix">
             <div class="rocker-unit active" data-bus="matrix">
               <div class="rocker-title-row">
@@ -982,7 +996,6 @@
           <textarea id="composer-text" placeholder="Draft transmission record for authenticated fleet egress... (Drag image file here)"></textarea>
         </div>
 
-        <!-- Thread Splitter Bar -->
         <div id="thread-split-bar">
           <span style="color:#38bdf8;">✂ Thread break detected (> 300 chars)</span>
           <button class="btn-thread-split" id="btn-split-thread">PREVIEW THREAD (1/N)</button>
@@ -1139,37 +1152,52 @@
       }
     });
 
-    const busState = { atproto: true, activitypub: true, nostr: true, matrix: true };
-    const activeTargets = new Set([
+    // =========================================================================
+    // STATE PERSISTENCE & COVENANT ARCHITECTURE
+    // =========================================================================
+    const covenantModal = document.getElementById('covenant-modal');
+    function hasAcceptedCovenant() {
+      return localStorage.getItem('pennant_nostr_covenant_accepted') === 'true';
+    }
+
+    // Default or Hydrate layout from localStorage
+    let busState = { atproto: true, activitypub: true, nostr: false, matrix: true };
+    let activeTargets = new Set([
       '@pennant.layline', '@personal.bsky', '@brand.bsky',
       '@signal@social.pennant', '@wood@mastodon.social',
-      'npub1...damus', 'npub1...relays',
       '!announcements:matrix.org'
     ]);
 
-    const covenantModal = document.getElementById('covenant-modal');
-    function checkNostrCovenant() {
-      if (!localStorage.getItem('pennant_nostr_covenant_accepted')) {
-        covenantModal.style.display = 'flex';
-        return false;
+    function loadSavedLayout() {
+      const saved = localStorage.getItem('pennant_composer_layout');
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          if (parsed.busState) busState = parsed.busState;
+          if (Array.isArray(parsed.activeTargets)) activeTargets = new Set(parsed.activeTargets);
+        } catch (e) {}
+      } else if (hasAcceptedCovenant()) {
+        // If covenant already accepted on first run, enable Nostr by default
+        busState.nostr = true;
+        activeTargets.add('npub1...damus');
       }
-      return true;
+      applyDOMState();
     }
-    document.getElementById('btn-accept-covenant').addEventListener('click', () => {
-      localStorage.setItem('pennant_nostr_covenant_accepted', 'true');
-      covenantModal.style.display = 'none';
-    });
 
-    document.querySelectorAll('.rocker-unit').forEach(unit => {
-      unit.addEventListener('click', (e) => {
-        if (e.target.closest('.telemetry-help-dot')) return;
-        const bus = unit.getAttribute('data-bus');
-        if (bus === 'nostr' && !busState[bus]) {
-          if (!checkNostrCovenant()) return;
-        }
-        const badge = unit.querySelector('.rocker-state-badge');
+    function saveLayout() {
+      localStorage.setItem('pennant_composer_layout', JSON.stringify({
+        busState,
+        activeTargets: Array.from(activeTargets)
+      }));
+    }
+
+    function applyDOMState() {
+      // Synchronize protocol bays & master rockers
+      Object.keys(busState).forEach(bus => {
         const bay = document.getElementById('bay-' + bus);
-        busState[bus] = !busState[bus];
+        if (!bay) return;
+        const unit = bay.querySelector('.rocker-unit');
+        const badge = unit.querySelector('.rocker-state-badge');
         if (busState[bus]) {
           unit.classList.add('active');
           badge.innerText = '[ ARMED ]';
@@ -1179,33 +1207,96 @@
           badge.innerText = '[ BYPASS ]';
           bay.classList.add('bypassed');
         }
-        updateTargetCount();
+      });
+
+      // Synchronize station keys
+      document.querySelectorAll('.station-key').forEach(key => {
+        const handle = key.getAttribute('data-handle');
+        if (activeTargets.has(handle)) {
+          key.classList.add('active');
+        } else {
+          key.classList.remove('active');
+        }
+      });
+
+      updateTargetCount();
+    }
+
+    function armNostrBus() {
+      busState.nostr = true;
+      activeTargets.add('npub1...damus');
+      applyDOMState();
+      saveLayout();
+    }
+
+    function disarmNostrBus() {
+      busState.nostr = false;
+      applyDOMState();
+      saveLayout();
+    }
+
+    // Explicit Covenant Review Button in Nostr bay header
+    document.getElementById('btn-review-covenant').addEventListener('click', (e) => {
+      e.stopPropagation();
+      covenantModal.style.display = 'flex';
+    });
+
+    document.getElementById('btn-accept-covenant').addEventListener('click', () => {
+      localStorage.setItem('pennant_nostr_covenant_accepted', 'true');
+      covenantModal.style.display = 'none';
+      armNostrBus();
+    });
+
+    // Master Rocker Click Handlers
+    document.querySelectorAll('.rocker-unit').forEach(unit => {
+      unit.addEventListener('click', (e) => {
+        if (e.target.closest('.telemetry-help-dot') || e.target.closest('.btn-review-covenant')) return;
+        const bus = unit.getAttribute('data-bus');
+        
+        if (bus === 'nostr') {
+          if (!busState.nostr) {
+            if (!hasAcceptedCovenant()) {
+              covenantModal.style.display = 'flex';
+              return;
+            }
+            armNostrBus();
+          } else {
+            disarmNostrBus();
+          }
+          return;
+        }
+
+        busState[bus] = !busState[bus];
+        applyDOMState();
+        saveLayout();
       });
     });
 
+    // Station Key Click Handlers
     document.querySelectorAll('.station-key').forEach(key => {
       key.addEventListener('click', () => {
         const handle = key.getAttribute('data-handle');
         const bus = key.getAttribute('data-bus');
+
         if (bus === 'nostr') {
-          if (!checkNostrCovenant()) return;
-        }
-        if (!busState[bus]) {
-          const unit = document.querySelector(`.rocker-unit[data-bus="${bus}"]`);
-          const bay = document.getElementById('bay-' + bus);
+          if (!hasAcceptedCovenant()) {
+            covenantModal.style.display = 'flex';
+            return;
+          }
+          if (!busState.nostr) {
+            busState.nostr = true;
+          }
+        } else if (!busState[bus]) {
           busState[bus] = true;
-          unit.classList.add('active');
-          unit.querySelector('.rocker-state-badge').innerText = '[ ARMED ]';
-          bay.classList.remove('bypassed');
         }
+
         if (activeTargets.has(handle)) {
           activeTargets.delete(handle);
-          key.classList.remove('active');
         } else {
           activeTargets.add(handle);
-          key.classList.add('active');
         }
-        updateTargetCount();
+        applyDOMState();
+        saveLayout();
       });
     });
 
@@ -1225,6 +1316,9 @@
       const effective = getEffectiveTargets();
       document.getElementById('cnt-targets').innerText = `Targets: ${effective.length} Armed`;
     }
+
+    // Hydrate layout on boot
+    loadSavedLayout();
 
     const btnToggleCw = document.getElementById('btn-toggle-cw');
     const cwRow = document.getElementById('cw-row');
@@ -1527,3 +1621,4 @@
   </script>
 </body>
 </html>
+
