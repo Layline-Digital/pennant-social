@@ -14,7 +14,7 @@ function sanitizeUntrustedJson(obj) {
   const clean = Object.create(null);
   for (const [key, value] of Object.entries(obj)) {
     if (key === '__proto__' || key === 'constructor' || key === 'prototype') {
-      continue; // Strip pollution vectors
+      continue;
     }
     clean[key] = sanitizeUntrustedJson(value);
   }
@@ -36,11 +36,8 @@ console.log('    [2/4] Auditing Process Spawning & URL Escape boundaries...');
 
 function sanitizeBrowserTarget(url) {
   if (typeof url !== 'string') return false;
-  // Strict check: only allow local loopback URL or verified HTTPS links
   const isLoopback = /^http:\/\/127\.0\.0\.1:7420(\/.*)?$/.test(url) || /^http:\/\/localhost:7420(\/.*)?$/.test(url);
   const isSafeHttps = /^https:\/\/[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/.*)?$/.test(url);
-  
-  // Rejection of argument injection characters: quotes, ampersands, pipes, redirects
   const hasInjection = /["'`&|;<>$%\r\n]/.test(url);
   
   return (isLoopback || isSafeHttps) && !hasInjection;
@@ -60,7 +57,6 @@ console.log('    [3/4] Auditing DNS Rebinding & Host header validation...');
 function validateLoopbackHost(hostHeader) {
   if (!hostHeader) return false;
   const normalized = hostHeader.toLowerCase().trim();
-  // Strictly permit localhost and 127.0.0.1 on permitted port
   return (
     normalized === 'localhost:7420' ||
     normalized === '127.0.0.1:7420' ||
@@ -82,7 +78,6 @@ console.log('    [4/4] Auditing Enclave memory wipe & zeroization guarantees...'
 const keyBuffer = Buffer.from('fa984bd7dbb282f07e16e7ae87b26a2a7b9b90b7246a44771f0cf5ae58018f52', 'hex');
 assert.strictEqual(keyBuffer.length, 32);
 
-// Simulate enclave memory scrubber
 keyBuffer.fill(0);
 assert.strictEqual(keyBuffer.toString('hex'), '00'.repeat(32), 'Private key buffer must be 100% zeroed after use');
 
