@@ -324,6 +324,42 @@
     .window-body::-webkit-scrollbar-track { background: #0c0e12; }
     .window-body::-webkit-scrollbar-thumb { background: #2b313d; border-radius: 2px; }
 
+    /* Custom File Selector Styling (Industrial Theme) */
+    .custom-file-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+      padding: 6px 8px;
+      background: #0d0f15;
+      border: 1px dashed var(--border);
+      border-radius: 2px;
+    }
+    .custom-file-row input[type="file"] {
+      font-family: var(--font-col-header);
+      font-size: 10px;
+      color: var(--text-sub);
+      outline: none;
+    }
+    .custom-file-row input[type="file"]::file-selector-button {
+      background: #161922;
+      border: 1px solid var(--border-bright);
+      color: var(--text-col-pop);
+      font-family: var(--font-col-header);
+      font-size: 9.5px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 2px;
+      cursor: pointer;
+      margin-right: 8px;
+      transition: all 0.1s ease;
+    }
+    .custom-file-row input[type="file"]::file-selector-button:hover {
+      background: #232938;
+      border-color: var(--accent-orange);
+      color: #fff;
+    }
+
     /* Column Wizard Layout */
     .builder-preset-grid {
       display: grid;
@@ -588,21 +624,31 @@
     }
     .btn-stripe:hover { background: #534be8; }
 
-    /* Social Fleet Icons Grid */
-    .social-fleet-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
+    /* Section 5: Centered Multi-Row Grid Layout */
+    .centered-sub-banner {
+      text-align: center;
+      font-family: var(--font-col-header);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--accent-orange);
+      padding-top: 4px;
+      border-top: 1px dashed rgba(255, 255, 255, 0.08);
       margin-top: 4px;
+    }
+    .social-2col-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
     }
     .social-card-btn {
       background: #141720;
       border: 1px solid #28303e;
       border-radius: 2px;
-      padding: 8px 10px;
+      padding: 8px 12px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       cursor: pointer;
       text-decoration: none;
       color: var(--text-main);
@@ -612,30 +658,28 @@
       background: #1b212d;
       border-color: var(--accent-orange);
       color: #fff;
+      transform: translateY(-1px);
     }
     .social-icon-glyph {
-      width: 16px;
-      height: 16px;
+      width: 22px;
+      height: 22px;
       border-radius: 2px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-family: var(--font-masthead);
-      font-size: 9px;
+      font-size: 11px;
       font-weight: 800;
+      flex-shrink: 0;
     }
     .icon-bsky { background: #0c2035; color: #60a5fa; border: 1px solid #1a4d7d; }
     .icon-masto { background: #241438; color: #c084fc; border: 1px solid #55278c; }
     .icon-nostr { background: #2d1d06; color: #fbbf24; border: 1px solid #694109; }
     .icon-matrix { background: #0c2a20; color: #34d399; border: 1px solid #176346; }
-
-    .doc-link-item {
-      color: #38bdf8;
-      text-decoration: none;
-      cursor: pointer;
-      font-weight: 600;
-    }
-    .doc-link-item:hover { text-decoration: underline; color: #7dd3fc; }
+    .icon-web { background: #13241b; color: var(--signal-green); border: 1px solid #235c3c; }
+    .icon-git { background: #261f18; color: #fb923c; border: 1px solid #7c2d12; }
+    .icon-doc { background: #121c2e; color: #38bdf8; border: 1px solid #1e3a5f; }
+    .icon-mail { background: #2d1622; color: #f43f5e; border: 1px solid #881337; }
 
     .composer-chassis { width: 740px; max-width: 100%; max-height: calc(100vh - 40px); }
     .settings-chassis { width: 680px; max-width: 100%; max-height: calc(100vh - 40px); }
@@ -967,7 +1011,7 @@
           <div class="config-title">2. OPERATING SYSTEM & WORKSPACE SETTINGS</div>
           
           <div class="config-row">
-            <span>Deck Column Width:</span>
+            <span>Deck Column Width / Density:</span>
             <select id="cfg-col-width">
               <option value="310px">Compact (310px)</option>
               <option value="360px" selected>Standard (360px)</option>
@@ -1008,24 +1052,34 @@
           </div>
         </div>
 
-        <!-- Section 3: Data Management & Backups -->
+        <!-- Section 3: Data Management & Styled Backups -->
         <div class="config-section">
           <div class="config-title">3. DATA MANAGEMENT & LOCAL ARCHIVES</div>
           
-          <div class="config-row">
-            <span>Configuration Backup:</span>
-            <div style="display:flex; gap:6px;">
-              <button class="btn-header" id="btn-export-backup" style="padding:4px 8px;">EXPORT BACKUP (JSON)</button>
-              <button class="btn-header" id="btn-import-backup" style="padding:4px 8px;">IMPORT BACKUP</button>
-              <input type="file" id="import-file-input" style="display:none;" accept=".json" />
+          <div class="config-row" style="align-items:flex-start;">
+            <div style="display:flex; flex-direction:column; gap:3px;">
+              <span style="font-weight:600; color:var(--text-col-pop);">Configuration Backup:</span>
+              <span style="font-size:9.5px; color:var(--text-muted);">Export or restore your active column layouts, accounts, and hashtag sets.</span>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:8px; align-items:flex-end;">
+              <div style="display:flex; gap:6px;">
+                <button class="btn-header" id="btn-export-backup">EXPORT BACKUP (JSON)</button>
+                <button class="btn-header" id="btn-import-backup-btn">IMPORT BACKUP</button>
+              </div>
             </div>
           </div>
 
-          <div class="config-row">
+          <!-- Integrated Industrial Theme File Selector -->
+          <div class="custom-file-row">
+            <span style="font-family:var(--font-col-header); font-size:9.5px; color:var(--text-muted); text-transform:uppercase;">Select File:</span>
+            <input type="file" id="import-file-input" accept=".json" />
+          </div>
+
+          <div class="config-row" style="margin-top:4px; padding-top:6px; border-top:1px dashed rgba(255,255,255,0.06);">
             <span>Storage Maintenance:</span>
             <div style="display:flex; gap:6px;">
-              <button class="btn-header" id="btn-clear-media-cache" style="padding:4px 8px;">CLEAR MEDIA CACHE</button>
-              <button class="btn-header" id="btn-prune-history" style="padding:4px 8px;">PRUNE OLD LOGS</button>
+              <button class="btn-header" id="btn-clear-media-cache">CLEAR MEDIA CACHE</button>
+              <button class="btn-header" id="btn-prune-history">PRUNE OLD LOGS</button>
             </div>
           </div>
         </div>
@@ -1053,68 +1107,88 @@
           </div>
         </div>
 
-        <!-- Section 5: Official Channels & Documentation -->
+        <!-- Section 5: Official Channels & Documentation (Multi-Row Responsive Layout) -->
         <div class="config-section">
           <div class="config-title">5. OFFICIAL CHANNELS & DOCUMENTATION</div>
           
-          <div class="config-row">
-            <span>Pennant Home:</span>
-            <a href="https://pennant.layline.digital" target="_blank" class="doc-link-item">https://pennant.layline.digital ↗</a>
+          <div class="centered-sub-banner" style="border-top:none; margin-top:0;">// OFFICIAL FLEET NETWORK CHANNELS //</div>
+          <div class="social-2col-grid">
+            <a href="https://bsky.app/profile/pennant.layline.digital" target="_blank" class="social-card-btn">
+              <div class="social-icon-glyph icon-bsky">🦋</div>
+              <div style="display:flex; flex-direction:column; overflow:hidden;">
+                <span style="font-weight:700; font-size:10px;">Bluesky ATProto</span>
+                <span style="font-size:9px; color:var(--text-muted); text-overflow:ellipsis; overflow:hidden;">@pennant.layline.digital ↗</span>
+              </div>
+            </a>
+            <a href="https://social.pennant.layline.digital/@signal" target="_blank" class="social-card-btn">
+              <div class="social-icon-glyph icon-masto">🐘</div>
+              <div style="display:flex; flex-direction:column; overflow:hidden;">
+                <span style="font-weight:700; font-size:10px;">Mastodon Fediverse</span>
+                <span style="font-size:9px; color:var(--text-muted); text-overflow:ellipsis; overflow:hidden;">@signal@social.pennant ↗</span>
+              </div>
+            </a>
+            <a href="https://primal.net/p/npub1pennant" target="_blank" class="social-card-btn">
+              <div class="social-icon-glyph icon-nostr">⚡</div>
+              <div style="display:flex; flex-direction:column; overflow:hidden;">
+                <span style="font-weight:700; font-size:10px;">Nostr Enclave Pool</span>
+                <span style="font-size:9px; color:var(--text-muted); text-overflow:ellipsis; overflow:hidden;">npub1pennant (Damus/Primal) ↗</span>
+              </div>
+            </a>
+            <a href="https://matrix.to/#/#announcements:matrix.org" target="_blank" class="social-card-btn">
+              <div class="social-icon-glyph icon-matrix">[m]</div>
+              <div style="display:flex; flex-direction:column; overflow:hidden;">
+                <span style="font-weight:700; font-size:10px;">Matrix Room Stream</span>
+                <span style="font-size:9px; color:var(--text-muted); text-overflow:ellipsis; overflow:hidden;">#announcements:matrix.org ↗</span>
+              </div>
+            </a>
           </div>
 
-          <div class="config-row">
-            <span>GitHub Repository:</span>
-            <a href="https://github.com/Layline-Digital/pennant-social" target="_blank" class="doc-link-item">Layline-Digital/pennant-social ↗</a>
-          </div>
-
-          <div class="config-row">
-            <span>Documentation & Support:</span>
-            <div style="display:flex; gap:10px;">
-              <a href="https://github.com/Layline-Digital/pennant-social#readme" target="_blank" class="doc-link-item">User Manual ↗</a>
-              <span style="color:var(--border-bright);">|</span>
-              <a href="https://github.com/Layline-Digital/pennant-social/wiki/FAQ" target="_blank" class="doc-link-item">FAQ ↗</a>
-              <span style="color:var(--border-bright);">|</span>
-              <a href="mailto:support@laylinedigital.com" class="doc-link-item">support@laylinedigital.com ✉</a>
+          <div class="centered-sub-banner">// DOCUMENTATION & SUPPORT DIRECTORY //</div>
+          <div class="social-2col-grid">
+            <a href="https://pennant.layline.digital" target="_blank" class="social-card-btn">
+              <div class="social-icon-glyph icon-web">🌐</div>
+              <div style="display:flex; flex-direction:column; overflow:hidden;">
+                <span style="font-weight:700; font-size:10px;">Pennant Hoist Home</span>
+                <span style="font-size:9px; color:var(--text-muted);">https://pennant.layline.digital ↗</span>
+              </div>
+            </a>
+            <a href="https://github.com/Layline-Digital/pennant-social" target="_blank" class="social-card-btn">
+              <div class="social-icon-glyph icon-git">🐙</div>
+              <div style="display:flex; flex-direction:column; overflow:hidden;">
+                <span style="font-weight:700; font-size:10px;">GitHub Repository</span>
+                <span style="font-size:9px; color:var(--text-muted);">Layline-Digital/pennant-social ↗</span>
+              </div>
+            </a>
+            <a href="https://github.com/Layline-Digital/pennant-social#readme" target="_blank" class="social-card-btn">
+              <div class="social-icon-glyph icon-doc">📖</div>
+              <div style="display:flex; flex-direction:column; overflow:hidden;">
+                <span style="font-weight:700; font-size:10px;">Operations User Manual</span>
+                <span style="font-size:9px; color:var(--text-muted);">Setup, Airlock & Relays ↗</span>
+              </div>
+            </a>
+            <a href="https://github.com/Layline-Digital/pennant-social/wiki/FAQ" target="_blank" class="social-card-btn">
+              <div class="social-icon-glyph icon-doc">❓</div>
+              <div style="display:flex; flex-direction:column; overflow:hidden;">
+                <span style="font-weight:700; font-size:10px;">Frequently Asked Questions</span>
+                <span style="font-size:9px; color:var(--text-muted);">Troubleshooting & FAQ ↗</span>
+              </div>
+            </a>
+            <a href="mailto:support@laylinedigital.com" class="social-card-btn">
+              <div class="social-icon-glyph icon-mail">✉</div>
+              <div style="display:flex; flex-direction:column; overflow:hidden;">
+                <span style="font-weight:700; font-size:10px;">Fleet Support Mail</span>
+                <span style="font-size:9px; color:var(--text-muted);">support@laylinedigital.com</span>
+              </div>
+            </a>
+            <div class="social-card-btn" style="cursor:default;">
+              <div class="social-icon-glyph" style="background:#171a22; border:1px solid #2e3442; color:#94a3b8;">⚖</div>
+              <div style="display:flex; flex-direction:column; overflow:hidden;">
+                <span style="font-weight:700; font-size:10px;">License & Integrity</span>
+                <span style="font-size:9px; color:var(--text-muted);">MIT Open Source • Layline Digital</span>
+              </div>
             </div>
           </div>
 
-          <div class="config-row" style="flex-direction:column; align-items:flex-start; gap:6px; margin-top:2px;">
-            <span style="font-size:10px; color:var(--text-sub);">OFFICIAL FLEET SOCIAL CHANNELS:</span>
-            <div class="social-fleet-grid" style="width:100%;">
-              <a href="https://bsky.app/profile/pennant.layline.digital" target="_blank" class="social-card-btn">
-                <div class="social-icon-glyph icon-bsky">🦋</div>
-                <div style="display:flex; flex-direction:column;">
-                  <span style="font-weight:700; font-size:10px;">Bluesky</span>
-                  <span style="font-size:8.5px; color:var(--text-muted);">@pennant.layline</span>
-                </div>
-              </a>
-              <a href="https://social.pennant.layline.digital/@signal" target="_blank" class="social-card-btn">
-                <div class="social-icon-glyph icon-masto">🐘</div>
-                <div style="display:flex; flex-direction:column;">
-                  <span style="font-weight:700; font-size:10px;">Mastodon</span>
-                  <span style="font-size:8.5px; color:var(--text-muted);">@signal@social</span>
-                </div>
-              </a>
-              <a href="https://primal.net/p/npub1pennant" target="_blank" class="social-card-btn">
-                <div class="social-icon-glyph icon-nostr">⚡</div>
-                <div style="display:flex; flex-direction:column;">
-                  <span style="font-weight:700; font-size:10px;">Nostr</span>
-                  <span style="font-size:8.5px; color:var(--text-muted);">npub1pennant</span>
-                </div>
-              </a>
-              <a href="https://matrix.to/#/#announcements:matrix.org" target="_blank" class="social-card-btn">
-                <div class="social-icon-glyph icon-matrix">[m]</div>
-                <div style="display:flex; flex-direction:column;">
-                  <span style="font-weight:700; font-size:10px;">Matrix</span>
-                  <span style="font-size:8.5px; color:var(--text-muted);">#announcements</span>
-                </div>
-              </a>
-            </div>
-          </div>
-
-          <div style="font-family:var(--font-col-header); font-size:9.5px; line-height:1.5; color:var(--text-muted); margin-top:4px;">
-            Pennant Hoist v0.2.0 • Engineered by <strong style="color:#fff;">Layline Digital</strong> • Licensed under MIT
-          </div>
         </div>
 
       </div>
@@ -1297,6 +1371,9 @@
               <button class="btn-tag-action" id="btn-copy-all-tags" title="Copy full stash to clipboard">[COPY ALL]</button>
               <button class="btn-tag-action" id="btn-add-tag-prompt">+ ADD TAG</button>
             </div>
+          </div>
+          <div style="font-family:var(--font-col-header); font-size:9px; color:var(--text-muted); margin-bottom:2px;">
+            [ Click tag/checkbox to select • Click ★ to toggle Core Default (auto-checked on open) ]
           </div>
           <div class="hashtag-select-grid" id="hashtag-select-grid"></div>
         </div>
@@ -1919,7 +1996,7 @@
     });
 
     const fileInput = document.getElementById('import-file-input');
-    document.getElementById('btn-import-backup').addEventListener('click', () => fileInput.click());
+    document.getElementById('btn-import-backup-btn').addEventListener('click', () => fileInput.click());
     fileInput.addEventListener('change', (e) => {
       if (fileInput.files && fileInput.files[0]) {
         const reader = new FileReader();
