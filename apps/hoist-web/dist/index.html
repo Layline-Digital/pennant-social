@@ -328,9 +328,9 @@
     .custom-file-row {
       display: flex;
       align-items: center;
-      gap: 8px;
-      margin-top: 8px;
-      padding: 6px 8px;
+      gap: 10px;
+      margin-top: 10px;
+      padding: 8px 12px;
       background: #0d0f15;
       border: 1px dashed var(--border);
       border-radius: 2px;
@@ -348,10 +348,10 @@
       font-family: var(--font-col-header);
       font-size: 9.5px;
       font-weight: 700;
-      padding: 4px 10px;
+      padding: 5px 12px;
       border-radius: 2px;
       cursor: pointer;
-      margin-right: 8px;
+      margin-right: 10px;
       transition: all 0.1s ease;
     }
     .custom-file-row input[type="file"]::file-selector-button:hover {
@@ -624,35 +624,35 @@
     }
     .btn-stripe:hover { background: #534be8; }
 
-    /* Section 5: Centered Multi-Row Grid Layout */
+    /* Section 5: Branded Vectors & Centered Multi-Row Grid */
     .centered-sub-banner {
       text-align: center;
       font-family: var(--font-col-header);
-      font-size: 10px;
+      font-size: 9.5px;
       font-weight: 700;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.14em;
       color: var(--accent-orange);
-      padding-top: 4px;
+      padding-top: 6px;
       border-top: 1px dashed rgba(255, 255, 255, 0.08);
       margin-top: 4px;
     }
     .social-2col-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 8px;
+      gap: 10px;
     }
     .social-card-btn {
       background: #141720;
       border: 1px solid #28303e;
       border-radius: 2px;
-      padding: 8px 12px;
+      padding: 10px 14px;
       display: flex;
       align-items: center;
-      gap: 10px;
       cursor: pointer;
       text-decoration: none;
       color: var(--text-main);
       transition: all 0.12s ease;
+      position: relative;
     }
     .social-card-btn:hover {
       background: #1b212d;
@@ -661,42 +661,63 @@
       transform: translateY(-1px);
     }
     .social-icon-glyph {
-      width: 22px;
-      height: 22px;
+      width: 28px;
+      height: 28px;
       border-radius: 2px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: var(--font-masthead);
-      font-size: 11px;
-      font-weight: 800;
       flex-shrink: 0;
+      background: #0d0f15;
+      border: 1px solid;
     }
-    .icon-bsky { background: #0c2035; color: #60a5fa; border: 1px solid #1a4d7d; }
-    .icon-masto { background: #241438; color: #c084fc; border: 1px solid #55278c; }
-    .icon-nostr { background: #2d1d06; color: #fbbf24; border: 1px solid #694109; }
-    .icon-matrix { background: #0c2a20; color: #34d399; border: 1px solid #176346; }
-    .icon-web { background: #13241b; color: var(--signal-green); border: 1px solid #235c3c; }
-    .icon-git { background: #261f18; color: #fb923c; border: 1px solid #7c2d12; }
-    .icon-doc { background: #121c2e; color: #38bdf8; border: 1px solid #1e3a5f; }
-    .icon-mail { background: #2d1622; color: #f43f5e; border: 1px solid #881337; }
+    .social-icon-glyph svg {
+      width: 16px;
+      height: 16px;
+      display: block;
+    }
+    .icon-bsky { border-color: #1a4d7d; color: #60a5fa; fill: #60a5fa; }
+    .icon-masto { border-color: #55278c; color: #c084fc; fill: #c084fc; }
+    .icon-nostr { border-color: #694109; color: #fbbf24; fill: #fbbf24; }
+    .icon-matrix { border-color: #176346; color: #34d399; fill: #34d399; }
+    .icon-web { border-color: #235c3c; color: var(--signal-green); fill: var(--signal-green); }
+    .icon-git { border-color: #7c2d12; color: #fb923c; fill: #fb923c; }
+    .icon-doc { border-color: #1e3a5f; color: #38bdf8; fill: #38bdf8; }
+    .icon-mail { border-color: #881337; color: #f43f5e; fill: #f43f5e; }
+
+    /* Centered Text Info Slot inside link cards */
+    .card-text-slot {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 8px;
+      overflow: hidden;
+    }
+    .card-title-line {
+      font-family: var(--font-grotesk);
+      font-size: 11px;
+      font-weight: 700;
+      color: #f8fafc;
+      letter-spacing: 0.02em;
+    }
+    .card-handle-line {
+      font-family: var(--font-masthead);
+      font-size: 9.5px;
+      color: #94a3b8;
+      text-transform: lowercase;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 100%;
+    }
 
     .composer-chassis { width: 740px; max-width: 100%; max-height: calc(100vh - 40px); }
     .settings-chassis { width: 680px; max-width: 100%; max-height: calc(100vh - 40px); }
     .builder-chassis { width: 640px; max-width: 100%; max-height: calc(100vh - 40px); }
-
-    .section-label {
-      font-family: var(--font-col-header);
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      color: var(--text-sub);
-      text-transform: uppercase;
-      margin-bottom: 8px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
 
     .protocol-cluster { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
     .protocol-bay {
@@ -1069,13 +1090,13 @@
             </div>
           </div>
 
-          <!-- Integrated Industrial Theme File Selector -->
+          <!-- Integrated Industrial Theme File Selector with ample spacing -->
           <div class="custom-file-row">
-            <span style="font-family:var(--font-col-header); font-size:9.5px; color:var(--text-muted); text-transform:uppercase;">Select File:</span>
+            <span style="font-family:var(--font-col-header); font-size:9.5px; color:var(--text-muted); text-transform:uppercase;">Select Backup JSON:</span>
             <input type="file" id="import-file-input" accept=".json" />
           </div>
 
-          <div class="config-row" style="margin-top:4px; padding-top:6px; border-top:1px dashed rgba(255,255,255,0.06);">
+          <div class="config-row" style="margin-top:4px; padding-top:8px; border-top:1px dashed rgba(255,255,255,0.06);">
             <span>Storage Maintenance:</span>
             <div style="display:flex; gap:6px;">
               <button class="btn-header" id="btn-clear-media-cache">CLEAR MEDIA CACHE</button>
@@ -1107,84 +1128,122 @@
           </div>
         </div>
 
-        <!-- Section 5: Official Channels & Documentation (Multi-Row Responsive Layout) -->
+        <!-- Section 5: Official Channels & Documentation (Custom Brand Vectors & Centered Typography) -->
         <div class="config-section">
           <div class="config-title">5. OFFICIAL CHANNELS & DOCUMENTATION</div>
           
           <div class="centered-sub-banner" style="border-top:none; margin-top:0;">// OFFICIAL FLEET NETWORK CHANNELS //</div>
           <div class="social-2col-grid">
-            <a href="https://bsky.app/profile/pennant.layline.digital" target="_blank" class="social-card-btn">
-              <div class="social-icon-glyph icon-bsky">🦋</div>
-              <div style="display:flex; flex-direction:column; overflow:hidden;">
-                <span style="font-weight:700; font-size:10px;">Bluesky ATProto</span>
-                <span style="font-size:9px; color:var(--text-muted); text-overflow:ellipsis; overflow:hidden;">@pennant.layline.digital ↗</span>
+            <!-- Bluesky ATProto -->
+            <div class="social-card-btn" data-url="https://bsky.app/profile/pennant.layline.digital">
+              <div class="social-icon-glyph icon-bsky">
+                <svg viewBox="0 0 568 501"><path d="M123.121 33.664C188.241 82.553 258.281 181.68 284 234.873c25.719-53.192 95.759-152.32 160.879-201.21C491.875-1.472 568-28.877 568 57.868c0 17.345-9.92 145.713-15.748 166.529-20.259 72.36-93.81 90.871-158.423 79.914 112.923 19.222 141.517 82.809 79.625 146.45-117.585 120.91-177.309-30.347-189.454-73.493-12.145 43.146-71.869 194.403-189.454 73.493-61.892-63.641-33.298-127.228 79.625-146.45-64.613 10.957-138.164-7.554-158.423-79.914C9.92 203.581 0 75.213 0 57.868 0-28.877 76.125-1.472 123.121 33.664Z"/></svg>
               </div>
-            </a>
-            <a href="https://social.pennant.layline.digital/@signal" target="_blank" class="social-card-btn">
-              <div class="social-icon-glyph icon-masto">🐘</div>
-              <div style="display:flex; flex-direction:column; overflow:hidden;">
-                <span style="font-weight:700; font-size:10px;">Mastodon Fediverse</span>
-                <span style="font-size:9px; color:var(--text-muted); text-overflow:ellipsis; overflow:hidden;">@signal@social.pennant ↗</span>
+              <div class="card-text-slot">
+                <div class="card-title-line">Bluesky ATProto</div>
+                <div class="card-handle-line">@pennant.layline.digital ↗</div>
               </div>
-            </a>
-            <a href="https://primal.net/p/npub1pennant" target="_blank" class="social-card-btn">
-              <div class="social-icon-glyph icon-nostr">⚡</div>
-              <div style="display:flex; flex-direction:column; overflow:hidden;">
-                <span style="font-weight:700; font-size:10px;">Nostr Enclave Pool</span>
-                <span style="font-size:9px; color:var(--text-muted); text-overflow:ellipsis; overflow:hidden;">npub1pennant (Damus/Primal) ↗</span>
+            </div>
+
+            <!-- Mastodon Fediverse -->
+            <div class="social-card-btn" data-url="https://social.pennant.layline.digital/@signal">
+              <div class="social-icon-glyph icon-masto">
+                <svg viewBox="0 0 24 24"><path d="M23.268 5.313c-.35-2.578-2.617-4.61-5.304-5.004C16.495.093 14.54 0 12 0c-2.54 0-4.495.093-5.964.31-2.687.394-4.954 2.426-5.304 5.004C.35 8.162 0 12.008 0 12.008s.35 3.846.732 6.695c.29 2.137 1.884 3.948 4.024 4.54 2.213.613 4.707.757 7.244.757 2.052 0 4.14-.112 5.952-.45 1.706-.319 3.23-1.42 3.654-3.136.425-1.716.394-4.043.394-4.043s-2.07.728-4.526.963c-2.457.235-5.088-.046-5.088-.046v-1.636s2.585.127 5.088-.127c2.502-.255 5.518-1.579 5.86-5.04.053-.538.086-1.12.086-1.758 0-2.348-.15-4.413-.15-4.413zm-3.66 8.354h-2.553v-5.46c0-1.205-.515-1.82-1.545-1.82-1.144 0-1.715.738-1.715 2.216v3.138h-2.59V8.603c0-1.478-.57-2.216-1.715-2.216-1.03 0-1.545.615-1.545 1.82v5.46H5.392V8.04c0-1.205.312-2.164.936-2.877.625-.713 1.455-1.077 2.49-1.077 1.2 0 2.115.46 2.744 1.38L12 6.273l.438-.807c.63-.92 1.544-1.38 2.744-1.38 1.035 0 1.865.364 2.49 1.077.624.713.936 1.672.936 2.877v5.627z"/></svg>
               </div>
-            </a>
-            <a href="https://matrix.to/#/#announcements:matrix.org" target="_blank" class="social-card-btn">
-              <div class="social-icon-glyph icon-matrix">[m]</div>
-              <div style="display:flex; flex-direction:column; overflow:hidden;">
-                <span style="font-weight:700; font-size:10px;">Matrix Room Stream</span>
-                <span style="font-size:9px; color:var(--text-muted); text-overflow:ellipsis; overflow:hidden;">#announcements:matrix.org ↗</span>
+              <div class="card-text-slot">
+                <div class="card-title-line">Mastodon Fediverse</div>
+                <div class="card-handle-line">@signal@social.pennant ↗</div>
               </div>
-            </a>
+            </div>
+
+            <!-- Nostr Relay Pool -->
+            <div class="social-card-btn" data-url="https://primal.net/p/npub1pennant">
+              <div class="social-icon-glyph icon-nostr">
+                <svg viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              </div>
+              <div class="card-text-slot">
+                <div class="card-title-line">Nostr Relay Pool</div>
+                <div class="card-handle-line">npub1pennant (primal/damus) ↗</div>
+              </div>
+            </div>
+
+            <!-- Matrix Room Egress -->
+            <div class="social-card-btn" data-url="https://matrix.to/#/#announcements:matrix.org">
+              <div class="social-icon-glyph icon-matrix">
+                <svg viewBox="0 0 24 24"><path d="M.632.55v22.9H2.28V24H0V0h2.28v.55zm7.043 7.26v1.157h.033c.309-.424.717-.77 1.222-1.038.505-.269 1.096-.403 1.772-.403.717 0 1.344.146 1.882.44.537.293.92.733 1.15 1.32.325-.456.757-.822 1.295-1.099.537-.277 1.14-.415 1.808-.415.652 0 1.23.114 1.735.342.505.228.912.546 1.222.953.309.407.53.888.66 1.442.13.554.196 1.148.196 1.784v7.358h-2.574v-6.626c0-.521-.033-.977-.098-1.368-.065-.391-.187-.709-.366-.953-.18-.245-.424-.424-.733-.538-.31-.114-.7-.171-1.173-.171-.489 0-.896.065-1.222.195-.326.13-.586.326-.782.587-.195.26-.334.586-.415.977-.082.391-.122.847-.122 1.368v6.529h-2.574v-6.626c0-.521-.033-.977-.098-1.368-.065-.391-.187-.709-.366-.953-.18-.245-.424-.424-.733-.538-.31-.114-.7-.171-1.173-.171-.489 0-.904.065-1.246.195-.342.13-.611.326-.806.587-.196.26-.334.586-.415.977-.082.391-.122.847-.122 1.368v6.529H5.101V7.81h2.574zm15.693 15.64V.55H21.72V0H24v24h-2.28v-.55z"/></svg>
+              </div>
+              <div class="card-text-slot">
+                <div class="card-title-line">Matrix Announcement</div>
+                <div class="card-handle-line">#announcements:matrix.org ↗</div>
+              </div>
+            </div>
           </div>
 
           <div class="centered-sub-banner">// DOCUMENTATION & SUPPORT DIRECTORY //</div>
           <div class="social-2col-grid">
-            <a href="https://pennant.layline.digital" target="_blank" class="social-card-btn">
-              <div class="social-icon-glyph icon-web">🌐</div>
-              <div style="display:flex; flex-direction:column; overflow:hidden;">
-                <span style="font-weight:700; font-size:10px;">Pennant Hoist Home</span>
-                <span style="font-size:9px; color:var(--text-muted);">https://pennant.layline.digital ↗</span>
+            <!-- Pennant Hoist Home -->
+            <div class="social-card-btn" data-url="https://pennant.layline.digital">
+              <div class="social-icon-glyph icon-web">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
               </div>
-            </a>
-            <a href="https://github.com/Layline-Digital/pennant-social" target="_blank" class="social-card-btn">
-              <div class="social-icon-glyph icon-git">🐙</div>
-              <div style="display:flex; flex-direction:column; overflow:hidden;">
-                <span style="font-weight:700; font-size:10px;">GitHub Repository</span>
-                <span style="font-size:9px; color:var(--text-muted);">Layline-Digital/pennant-social ↗</span>
+              <div class="card-text-slot">
+                <div class="card-title-line">Pennant Hoist Home</div>
+                <div class="card-handle-line">https://pennant.layline.digital ↗</div>
               </div>
-            </a>
-            <a href="https://github.com/Layline-Digital/pennant-social#readme" target="_blank" class="social-card-btn">
-              <div class="social-icon-glyph icon-doc">📖</div>
-              <div style="display:flex; flex-direction:column; overflow:hidden;">
-                <span style="font-weight:700; font-size:10px;">Operations User Manual</span>
-                <span style="font-size:9px; color:var(--text-muted);">Setup, Airlock & Relays ↗</span>
+            </div>
+
+            <!-- GitHub Repo -->
+            <div class="social-card-btn" data-url="https://github.com/Layline-Digital/pennant-social">
+              <div class="social-icon-glyph icon-git">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
               </div>
-            </a>
-            <a href="https://github.com/Layline-Digital/pennant-social/wiki/FAQ" target="_blank" class="social-card-btn">
-              <div class="social-icon-glyph icon-doc">❓</div>
-              <div style="display:flex; flex-direction:column; overflow:hidden;">
-                <span style="font-weight:700; font-size:10px;">Frequently Asked Questions</span>
-                <span style="font-size:9px; color:var(--text-muted);">Troubleshooting & FAQ ↗</span>
+              <div class="card-text-slot">
+                <div class="card-title-line">GitHub Repository</div>
+                <div class="card-handle-line">layline-digital/pennant-social ↗</div>
               </div>
-            </a>
-            <a href="mailto:support@laylinedigital.com" class="social-card-btn">
-              <div class="social-icon-glyph icon-mail">✉</div>
-              <div style="display:flex; flex-direction:column; overflow:hidden;">
-                <span style="font-weight:700; font-size:10px;">Fleet Support Mail</span>
-                <span style="font-size:9px; color:var(--text-muted);">support@laylinedigital.com</span>
+            </div>
+
+            <!-- Operations User Manual -->
+            <div class="social-card-btn" data-url="https://github.com/Layline-Digital/pennant-social#readme">
+              <div class="social-icon-glyph icon-doc">
+                <svg viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
               </div>
-            </a>
-            <div class="social-card-btn" style="cursor:default;">
-              <div class="social-icon-glyph" style="background:#171a22; border:1px solid #2e3442; color:#94a3b8;">⚖</div>
-              <div style="display:flex; flex-direction:column; overflow:hidden;">
-                <span style="font-weight:700; font-size:10px;">License & Integrity</span>
-                <span style="font-size:9px; color:var(--text-muted);">MIT Open Source • Layline Digital</span>
+              <div class="card-text-slot">
+                <div class="card-title-line">Operations Manual</div>
+                <div class="card-handle-line">setup, airlock & relays ↗</div>
+              </div>
+            </div>
+
+            <!-- FAQ & Troubleshooting -->
+            <div class="social-card-btn" data-url="https://github.com/Layline-Digital/pennant-social/wiki/FAQ">
+              <div class="social-icon-glyph icon-doc">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 16h-2v-2h2v2zm1.07-7.75-.9.92C12.45 11.9 12 12.5 12 14h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z"/></svg>
+              </div>
+              <div class="card-text-slot">
+                <div class="card-title-line">FAQ & Diagnostics</div>
+                <div class="card-handle-line">troubleshooting & answers ↗</div>
+              </div>
+            </div>
+
+            <!-- Fleet Support Email -->
+            <div class="social-card-btn" data-url="mailto:support@laylinedigital.com">
+              <div class="social-icon-glyph icon-mail">
+                <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
+              </div>
+              <div class="card-text-slot">
+                <div class="card-title-line">Fleet Support Mail</div>
+                <div class="card-handle-line">support@laylinedigital.com ✉</div>
+              </div>
+            </div>
+
+            <!-- License & Integrity -->
+            <div class="social-card-btn" style="cursor:default;" data-url="https://github.com/Layline-Digital/pennant-social/blob/main/LICENSE">
+              <div class="social-icon-glyph" style="border-color:#334155; color:#94a3b8; fill:#94a3b8;">
+                <svg viewBox="0 0 24 24"><path d="M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+              </div>
+              <div class="card-text-slot">
+                <div class="card-title-line">MIT Sovereign License</div>
+                <div class="card-handle-line">layline digital © 2026 ↗</div>
               </div>
             </div>
           </div>
@@ -2024,11 +2083,25 @@
       alert('Delivery Ledger Pruned: Retained latest 14 days of broadcast receipts.');
     });
 
+    // Bulletproof External Link Dispatcher (Tauri Desktop & Web Safe)
     function openExternalUrl(targetUrl) {
-      fetch(`/launch?url=${encodeURIComponent(targetUrl)}`).catch(() => {
-        window.open(targetUrl, '_blank');
-      });
+      if (window.__TAURI__ && window.__TAURI__.opener && typeof window.__TAURI__.opener.openUrl === 'function') {
+        window.__TAURI__.opener.openUrl(targetUrl);
+        return;
+      }
+      fetch(`/launch?url=${encodeURIComponent(targetUrl)}`)
+        .catch(() => {
+          window.open(targetUrl, '_blank', 'noopener,noreferrer');
+        });
     }
+
+    document.querySelectorAll('.social-card-btn').forEach(card => {
+      card.addEventListener('click', (e) => {
+        e.preventDefault();
+        const url = card.getAttribute('data-url');
+        if (url) openExternalUrl(url);
+      });
+    });
 
     const STRIPE_CHECKOUT_URL = 'https://pay.laylinedigital.com/pennant-desktop';
     const STRIPE_PORTAL_URL   = 'https://billing.laylinedigital.com';
