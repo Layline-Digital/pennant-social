@@ -1445,17 +1445,17 @@
       alert(`Identity Secured: Connected ${handle} into local loopback enclave.`);
     });
 
-    // Integrated Stripe Actions
+    // Integrated Branded Stripe Actions
+    const STRIPE_CHECKOUT_URL = 'https://pay.laylinedigital.com/pennant-desktop';
+    const STRIPE_PORTAL_URL   = 'https://billing.laylinedigital.com';
+
     document.getElementById('btn-stripe-checkout').addEventListener('click', () => {
-      const email = prompt('Enter your billing email for Stripe Checkout:');
-      if (email && email.includes('@')) {
-        alert(`Redirecting to Layline Digital Stripe Checkout for ${email}... (In test mode, serial key PH-SOLO-2026-X892-F891 will activate instantly)`);
-        document.getElementById('cfg-tier-status').innerText = 'STANDALONE DESKTOP [SOLO ACTIVE]';
-      }
+      // In production desktop/web, opens your custom branded checkout link
+      window.open(STRIPE_CHECKOUT_URL, '_blank');
     });
 
     document.getElementById('btn-stripe-portal').addEventListener('click', () => {
-      alert('Opening Stripe Billing Customer Portal: manage subscriptions, invoices, and payment methods.');
+      window.open(STRIPE_PORTAL_URL, '_blank');
     });
 
     document.getElementById('btn-verify-key').addEventListener('click', () => {
@@ -1940,5 +1940,6 @@
   </script>
 </body>
 </html>
+
 
 
