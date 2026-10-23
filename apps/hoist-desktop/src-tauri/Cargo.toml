@@ -1,0 +1,21 @@
+﻿[package]
+name = "pennant-hoist"
+version = "0.2.0"
+description = "Sovereign Quad-Protocol Social Broadcasting Console"
+authors = ["Alan Woodyard <alan@alanwoodyard.com>"]
+edition = "2021"
+
+[build-dependencies]
+tauri-build = { version = "2.0.0", features = [] }
+
+[dependencies]
+tauri = { version = "2.0.0", features = [] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+[profile.release]
+panic = "abort"
+codegen-units = 1
+lto = true
+opt-level = "s"
+strip = true

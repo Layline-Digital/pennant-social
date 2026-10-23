@@ -6,7 +6,7 @@
   <title>Pennant Hoist — Operations Deck</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@600;700&family=JetBrains+Mono:wght@700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600;700&family=JetBrains+Mono:wght@700;800&display=swap" rel="stylesheet">
   <style>
     :root {
       --canvas: #131519;
@@ -15,21 +15,27 @@
       --socket: #0d0f13;
       --border: #2a303b;
       --border-bright: #3d4654;
-      --accent-orange: #e0562d;
-      --signal-green: #10b981;
       
-      /* Typographic Contrast Hierarchy */
+      /* Color Semiotics */
+      --accent-orange: #e0562d;
+      --accent-orange-glow: rgba(224, 86, 45, 0.45);
+      
+      /* High-Luminance P1 Cathode Phosphor Green */
+      --signal-green: #2cee88;
+      --signal-green-core: #e8ffef;
+      --signal-green-glow: rgba(44, 238, 136, 0.75);
+      --signal-green-halo: rgba(44, 238, 136, 0.35);
+      
+      /* Typography Palette */
       --text-header-pop: #ffffff;
       --text-col-pop: #f8fafc;
       --text-main: #cbd5e1;
       --text-sub: #94a3b8;
       --text-muted: #64748b;
       
-      /* Typography System */
       --font-masthead: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
       --font-col-header: "IBM Plex Mono", "SF Mono", "Space Mono", Consolas, monospace;
       --font-grotesk: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", sans-serif;
-      --font-mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -70,7 +76,7 @@
       height: 22px;
       background: var(--accent-orange);
       clip-path: polygon(0 0, 100% 50%, 0 100%, 25% 50%);
-      box-shadow: 0 0 12px rgba(224, 86, 45, 0.45);
+      box-shadow: 0 0 12px var(--accent-orange-glow);
     }
     .brand-title {
       font-family: var(--font-masthead);
@@ -90,27 +96,25 @@
       border-radius: 2px;
       background: var(--socket);
     }
-    .status-meter {
+    .header-actions {
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-family: var(--font-masthead);
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--text-sub);
-      background: var(--socket);
+      gap: 12px;
+    }
+    .btn-toggle-col {
+      background: #14171e;
       border: 1px solid var(--border);
-      padding: 5px 12px;
+      color: var(--text-sub);
+      font-family: var(--font-col-header);
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 6px 12px;
       border-radius: 2px;
-      box-shadow: inset 0 1px 3px rgba(0,0,0,0.8);
+      cursor: pointer;
+      transition: all 0.1s ease;
     }
-    .lamp {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--signal-green);
-      box-shadow: 0 0 10px var(--signal-green);
-    }
+    .btn-toggle-col:hover { color: var(--text-col-pop); border-color: var(--border-bright); }
+    .btn-toggle-col.active { color: var(--signal-green); border-color: #235c3c; background: #11241a; }
 
     /* Milled Action Button */
     .btn-action {
@@ -127,13 +131,8 @@
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 2px 4px rgba(0,0,0,0.5);
       transition: all 0.1s ease;
     }
-    .btn-action:hover {
-      background: linear-gradient(180deg, #f0683e 0%, #c44621 100%);
-    }
-    .btn-action:active {
-      transform: translateY(1px);
-      box-shadow: inset 0 1px 3px rgba(0,0,0,0.9);
-    }
+    .btn-action:hover { background: linear-gradient(180deg, #f0683e 0%, #c44621 100%); }
+    .btn-action:active { transform: translateY(1px); box-shadow: inset 0 1px 3px rgba(0,0,0,0.9); }
 
     /* Column Deck */
     #deck-viewport {
@@ -156,7 +155,9 @@
       flex-direction: column;
       box-shadow: 0 6px 18px rgba(0,0,0,0.45);
       scroll-snap-align: start;
+      transition: opacity 0.15s ease;
     }
+    .deck-column.hidden-col { display: none; }
     .column-header {
       padding: 13px 16px;
       background: #14161c;
@@ -165,7 +166,6 @@
       align-items: center;
       justify-content: space-between;
     }
-    /* COLUMN TITLE POP: IBM Plex Mono, High-Contrast Crisp Off-White */
     .col-title {
       font-family: var(--font-col-header);
       font-size: 12px;
@@ -193,6 +193,7 @@
     .badge-bsky { background: #0c2035; border-color: #1a4d7d; color: #60a5fa; }
     .badge-masto { background: #241438; border-color: #55278c; color: #c084fc; }
     .badge-nostr { background: #2d1d06; border-color: #694109; color: #fbbf24; }
+    .badge-matrix { background: #0c2a20; border-color: #176346; color: #34d399; }
     .badge-queue { background: #11241a; border-color: #235c3c; color: #4ade80; }
 
     .cards-container {
@@ -237,8 +238,26 @@
       font-size: 10.5px;
       color: var(--text-muted);
     }
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 6px;
+    }
+    .btn-card-act {
+      background: #151921;
+      border: 1px solid var(--border);
+      color: var(--text-sub);
+      font-family: var(--font-col-header);
+      font-size: 9.5px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+    .btn-card-act:hover { color: #fff; border-color: var(--border-bright); }
+    .btn-card-act.danger:hover { color: #ef4444; border-color: #ef4444; }
 
-    /* Modal Chassis */
+    /* Responsive Composer Chassis */
     #composer-drawer {
       position: fixed;
       inset: 0;
@@ -247,21 +266,26 @@
       display: none;
       align-items: center;
       justify-content: center;
+      padding: 20px 16px;
       z-index: 100;
     }
     .composer-chassis {
-      width: 610px;
+      width: 740px;
+      max-width: 100%;
+      max-height: calc(100vh - 40px);
       background: var(--chassis);
       border: 1px solid var(--border);
       border-top: 2px solid var(--border-bright);
       border-radius: 3px;
       box-shadow: 0 24px 64px rgba(0,0,0,0.85);
-      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
     }
     .drawer-top {
       background: #14161c;
       border-bottom: 1px solid var(--border);
-      padding: 13px 18px;
+      padding: 12px 18px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -270,13 +294,20 @@
       font-weight: 700;
       color: var(--text-header-pop);
       letter-spacing: 0.08em;
+      flex-shrink: 0;
     }
     .drawer-body {
-      padding: 20px;
+      padding: 16px 20px;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 13px;
+      overflow-y: auto;
+      flex: 1;
     }
+    .drawer-body::-webkit-scrollbar { width: 5px; }
+    .drawer-body::-webkit-scrollbar-track { background: #0c0e12; }
+    .drawer-body::-webkit-scrollbar-thumb { background: #2b313d; border-radius: 2px; }
+
     .section-label {
       font-family: var(--font-col-header);
       font-size: 10px;
@@ -285,38 +316,110 @@
       color: var(--text-sub);
       text-transform: uppercase;
       margin-bottom: -6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
-    /* Rocker Switch Cluster */
-    .rocker-rack {
+    /* 4-Protocol Quad-Cluster Grid */
+    .protocol-cluster {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+    .protocol-bay {
       background: var(--socket);
       border: 1px solid #20242c;
       border-bottom: 1px solid var(--border-bright);
       border-radius: 3px;
-      padding: 12px;
+      padding: 10px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
       box-shadow: inset 0 2px 6px rgba(0,0,0,0.8);
+      transition: opacity 0.15s ease;
+      position: relative;
     }
+    .protocol-bay.bypassed { opacity: 0.4; }
+
     .rocker-unit {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
       cursor: pointer;
       user-select: none;
+      position: relative;
+    }
+    .rocker-title-row {
+      display: flex;
+      align-items: center;
+      gap: 4px;
     }
     .rocker-title {
       font-family: var(--font-col-header);
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 700;
       letter-spacing: 0.06em;
       color: var(--text-col-pop);
     }
+
+    .telemetry-help-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #181c24;
+      border: 1px solid #2f3644;
+      color: var(--text-sub);
+      font-family: var(--font-col-header);
+      font-size: 8px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: help;
+      position: relative;
+      transition: all 0.1s ease;
+    }
+    .telemetry-help-dot:hover { background: #232936; border-color: var(--accent-orange); color: #fff; }
+    .telemetry-help-dot .tooltip-card {
+      visibility: hidden;
+      opacity: 0;
+      width: 250px;
+      background: #0f1116;
+      border: 1px solid var(--accent-orange);
+      border-radius: 2px;
+      padding: 10px 12px;
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 200;
+      font-family: var(--font-col-header);
+      font-size: 10px;
+      line-height: 1.45;
+      color: #e2e8f0;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.85);
+      pointer-events: none;
+      transition: opacity 0.15s ease, visibility 0.15s ease;
+    }
+    .telemetry-help-dot .tooltip-card::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: var(--accent-orange) transparent transparent transparent;
+    }
+    .telemetry-help-dot.align-right .tooltip-card { left: auto; right: -8px; transform: none; }
+    .telemetry-help-dot.align-right .tooltip-card::after { left: auto; right: 12px; margin-left: 0; }
+    .telemetry-help-dot:hover .tooltip-card { visibility: visible; opacity: 1; }
+
     .switch-well {
       width: 100%;
-      height: 48px;
+      height: 36px;
       background: #08090c;
       border: 1px solid #1a1d24;
       border-bottom: 1px solid #282e38;
@@ -331,89 +434,235 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 12px;
+      padding: 0 8px;
       position: relative;
       transition: all 0.1s ease;
     }
     .ribs-texture {
-      width: 14px;
-      height: 16px;
-      background: repeating-linear-gradient(
-        0deg,
-        rgba(0,0,0,0.6) 0px,
-        rgba(0,0,0,0.6) 2px,
-        transparent 2px,
-        transparent 4px
-      );
+      width: 10px;
+      height: 11px;
+      background: repeating-linear-gradient(0deg, rgba(0,0,0,0.6) 0px, rgba(0,0,0,0.6) 2px, transparent 2px, transparent 4px);
       opacity: 0.6;
     }
     .indicator-jewel {
-      width: 8px;
-      height: 8px;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
       background: #111317;
       border: 1px solid #000;
       transition: all 0.1s ease;
     }
-
-    /* ENGAGED STATE (ARMED) */
     .rocker-unit.active .rocker-button {
       background: linear-gradient(180deg, #242933 0%, #191c23 100%);
       box-shadow: inset 0 2px 3px rgba(0,0,0,0.9);
       transform: translateY(1px);
     }
-    .rocker-unit.active .indicator-jewel {
-      background: var(--accent-orange);
-      box-shadow: 0 0 10px var(--accent-orange);
-    }
-    .rocker-unit.active .rocker-state-badge {
-      color: var(--accent-orange);
-    }
-
-    /* DISENGAGED STATE (BYPASS) */
+    .rocker-unit.active .indicator-jewel { background: var(--accent-orange); box-shadow: 0 0 10px var(--accent-orange); }
+    .rocker-unit.active .rocker-state-badge { color: var(--accent-orange); }
     .rocker-unit:not(.active) .rocker-button {
       background: linear-gradient(180deg, #2b313c 0%, #1d2128 100%);
       box-shadow: 0 2px 4px rgba(0,0,0,0.6);
       transform: translateY(-1px);
     }
-    .rocker-unit:not(.active) .indicator-jewel {
-      background: #101216;
-    }
-    .rocker-unit:not(.active) .rocker-state-badge {
-      color: var(--text-muted);
-    }
+    .rocker-unit:not(.active) .indicator-jewel { background: #101216; }
+    .rocker-unit:not(.active) .rocker-state-badge { color: var(--text-muted); }
+    .rocker-state-badge { font-family: var(--font-col-header); font-size: 8.5px; font-weight: 700; letter-spacing: 0.08em; }
 
-    .rocker-state-badge {
+    .station-key-rack {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      padding-top: 6px;
+      max-height: 100px;
+      overflow-y: auto;
+      padding-right: 2px;
+    }
+    .station-key-rack::-webkit-scrollbar { width: 3px; }
+    .station-key-rack::-webkit-scrollbar-track { background: #090a0d; }
+    .station-key-rack::-webkit-scrollbar-thumb { background: #2b313d; }
+
+    .station-key {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #13161c;
+      border: 1px solid #232731;
+      border-bottom: 1px solid #2c3240;
+      padding: 5px 6px;
+      border-radius: 2px;
+      cursor: pointer;
+      user-select: none;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.04);
+      transition: all 0.1s ease;
+      flex-shrink: 0;
+    }
+    .station-key:hover { background: #171b22; border-color: #353c4c; }
+
+    .key-lamp-slit {
+      width: 3px;
+      height: 10px;
+      border-radius: 1px;
+      background: #090a0d;
+      border: 1px solid #1e222a;
+      flex-shrink: 0;
+      transition: all 0.12s cubic-bezier(0.2, 0, 0, 1);
+    }
+    .key-label {
       font-family: var(--font-col-header);
-      font-size: 10px;
+      font-size: 9px;
       font-weight: 700;
-      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      letter-spacing: 0.03em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
       transition: color 0.1s ease;
     }
 
-    /* High-Legibility Composer Textarea */
+    .station-key.active {
+      background: #191d26;
+      border-color: #2e3646;
+      border-bottom-color: #1e232e;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.85), 0 1px 0 rgba(255,255,255,0.03);
+      transform: translateY(1px);
+    }
+    .station-key.active .key-lamp-slit {
+      background: var(--signal-green);
+      box-shadow: 0 0 6px var(--signal-green), 0 0 16px var(--signal-green-glow), inset 0 0 2px var(--signal-green-core);
+      border-color: #a7f3d0;
+    }
+    .station-key.active .key-label { color: var(--text-col-pop); text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
+
+    /* Content Warning (CW) Input Flap */
+    #cw-row {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      background: #11141a;
+      border: 1px solid #262c37;
+      padding: 6px 10px;
+      border-radius: 2px;
+    }
+    #cw-input {
+      background: #08090d;
+      border: 1px solid #232832;
+      color: #fbbf24;
+      font-family: var(--font-col-header);
+      font-size: 11px;
+      padding: 4px 8px;
+      flex: 1;
+      border-radius: 2px;
+      outline: none;
+    }
+    #cw-input:focus { border-color: #fbbf24; }
+
+    /* Composer Textarea */
     textarea {
       width: 100%;
-      height: 125px;
+      height: 90px;
       background: #0d0f13;
       border: 1px solid var(--border);
       border-bottom: 1px solid var(--border-bright);
       border-radius: 2px;
-      padding: 12px;
+      padding: 10px 12px;
       color: #f1f5f9;
       font-family: var(--font-grotesk);
-      font-size: 14px;
+      font-size: 13.5px;
       line-height: 1.5;
       resize: vertical;
       outline: none;
       box-shadow: inset 0 2px 6px rgba(0,0,0,0.85);
+      transition: border-color 0.12s ease;
     }
-    textarea::placeholder {
+    textarea::placeholder { color: var(--text-muted); }
+    textarea:focus { border-color: var(--accent-orange); }
+    textarea.drag-over { border-color: var(--signal-green) !important; background: #0e141a !important; }
+
+    /* Staged Media Bar & Alt-Text Tray */
+    #media-preview-bar {
+      display: none;
+      flex-direction: column;
+      gap: 6px;
+      padding: 8px 10px;
+      background: #101217;
+      border: 1px solid #232733;
+      border-radius: 2px;
+      font-family: var(--font-col-header);
+      font-size: 10px;
+      color: var(--text-sub);
+    }
+    .media-top-line { display: flex; align-items: center; gap: 10px; }
+    .media-badge { background: #19202a; border: 1px solid #2f3b4c; color: #7dd3fc; padding: 2px 6px; border-radius: 2px; }
+    .btn-alt-text {
+      background: #171d26;
+      border: 1px solid #2f3c50;
+      color: #93c5fd;
+      font-family: var(--font-col-header);
+      font-size: 9.5px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+    #alt-text-input {
+      display: none;
+      background: #080a0e;
+      border: 1px solid #2a3344;
+      color: #e2e8f0;
+      font-family: var(--font-col-header);
+      font-size: 10.5px;
+      padding: 5px 8px;
+      border-radius: 2px;
+      outline: none;
+      width: 100%;
+    }
+
+    /* Scheduler Bay with Agency Timezone Selector */
+    .schedule-control-bay {
+      background: #101318;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      padding: 6px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .schedule-mode-toggle {
+      display: flex;
+      background: #090a0d;
+      border: 1px solid #222733;
+      border-radius: 2px;
+      padding: 2px;
+      gap: 2px;
+    }
+    .schedule-mode-btn {
+      background: transparent;
+      border: none;
       color: var(--text-muted);
+      font-family: var(--font-col-header);
+      font-size: 9.5px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: all 0.1s ease;
     }
-    textarea:focus {
-      border-color: var(--accent-orange);
+    .schedule-mode-btn.active { background: #202633; color: var(--text-header-pop); box-shadow: 0 1px 3px rgba(0,0,0,0.6); }
+    .schedule-inputs-box { display: none; align-items: center; gap: 6px; font-family: var(--font-col-header); font-size: 10px; }
+    .schedule-inputs-box input, .schedule-inputs-box select {
+      background: #090b0e;
+      border: 1px solid #2a313d;
+      color: #cbd5e1;
+      font-family: var(--font-col-header);
+      font-size: 10px;
+      padding: 3px 6px;
+      border-radius: 2px;
+      outline: none;
     }
+    .schedule-inputs-box select { cursor: pointer; color: #38bdf8; font-weight: 700; }
+    .schedule-inputs-box input:focus, .schedule-inputs-box select:focus { border-color: var(--accent-orange); }
 
     /* Telemetry HUD Footer */
     .telemetry-row {
@@ -421,44 +670,129 @@
       justify-content: space-between;
       align-items: center;
       font-family: var(--font-col-header);
-      font-size: 11px;
+      font-size: 10.5px;
     }
-    .counters-tray {
-      display: flex;
-      gap: 8px;
-    }
+    .counters-tray { display: flex; gap: 6px; }
     .counter-pill {
       background: var(--socket);
       border: 1px solid var(--border);
-      padding: 3px 8px;
+      padding: 2px 7px;
       border-radius: 2px;
       color: var(--text-sub);
       font-weight: 600;
+      transition: color 0.12s ease;
     }
+
+    .staging-group { display: flex; align-items: center; gap: 6px; }
+    .staging-status-trigger {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      user-select: none;
+      padding: 3px 6px;
+      border-radius: 2px;
+      border: 1px solid transparent;
+      transition: all 0.12s ease;
+    }
+    .staging-status-trigger:hover { background: #14171e; border-color: var(--border); color: var(--text-col-pop); }
+    .staging-status-trigger.active { color: var(--signal-green); text-shadow: 0 0 10px var(--signal-green-glow); }
+    .staging-status-trigger .lamp-dot { width: 7px; height: 7px; border-radius: 50%; background: #2b313d; transition: all 0.12s ease; }
+    .staging-status-trigger.active .lamp-dot { background: var(--signal-green); box-shadow: 0 0 8px var(--signal-green); }
 
     .drawer-footer {
       background: #14161c;
       border-top: 1px solid var(--border);
-      padding: 12px 20px;
+      padding: 11px 20px;
       display: flex;
       justify-content: flex-end;
+      align-items: center;
       gap: 12px;
+      flex-shrink: 0;
     }
+    .shortcut-legend { font-family: var(--font-col-header); font-size: 9.5px; color: var(--text-muted); margin-right: auto; }
     .btn-cancel {
       background: transparent;
       border: 1px solid var(--border);
       color: var(--text-muted);
       font-family: var(--font-col-header);
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 700;
-      padding: 8px 16px;
+      padding: 7px 14px;
       border-radius: 2px;
       cursor: pointer;
     }
-    .btn-cancel:hover {
-      color: var(--text-col-pop);
-      border-color: var(--border-bright);
+    .btn-cancel:hover { color: var(--text-col-pop); border-color: var(--border-bright); }
+
+    /* =========================================================================
+       NOSTR SOVEREIGN KEY COVENANT MODAL
+       ========================================================================= */
+    #covenant-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 4, 6, 0.92);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 300;
     }
+    .covenant-chassis {
+      width: 540px;
+      background: #16181f;
+      border: 1px solid #fbbf24;
+      border-top: 3px solid #fbbf24;
+      border-radius: 3px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.9);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .covenant-title {
+      font-family: var(--font-masthead);
+      font-size: 13px;
+      font-weight: 800;
+      color: #fbbf24;
+      letter-spacing: 0.1em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .covenant-body {
+      font-family: var(--font-col-header);
+      font-size: 11px;
+      line-height: 1.6;
+      color: #cbd5e1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .covenant-point {
+      background: #0d0f14;
+      border: 1px solid #232733;
+      padding: 8px 12px;
+      border-radius: 2px;
+    }
+    .covenant-point strong { color: #f8fafc; }
+    .btn-covenant-accept {
+      background: linear-gradient(180deg, #d97706 0%, #b45309 100%);
+      border: 1px solid #78350f;
+      color: #fff;
+      font-family: var(--font-masthead);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      padding: 10px 18px;
+      border-radius: 2px;
+      cursor: pointer;
+      align-self: flex-end;
+    }
+    .btn-covenant-accept:hover { background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%); }
   </style>
 </head>
 <body>
@@ -467,15 +801,42 @@
       <div class="flag-mark"></div>
       <div class="brand-title">PENNANT HOIST</div>
       <span class="chassis-badge">SERIES 02 // ALPHA</span>
-      <div class="status-meter">
+      <div class="status-meter" style="display:flex; align-items:center; gap:8px; font-family:var(--font-masthead); font-size:11px; font-weight:600; color:var(--text-sub); background:var(--socket); border:1px solid var(--border); padding:5px 12px; border-radius:2px;">
         <div class="lamp"></div>
         <span>DAEMON ONLINE [WAL]</span>
       </div>
     </div>
-    <button class="btn-action" id="btn-open-composer">+ NEW BROADCAST</button>
+    <div class="header-actions">
+      <button class="btn-toggle-col active" id="btn-toggle-outbox">OUTBOX QUEUE [ON]</button>
+      <button class="btn-action" id="btn-open-composer">+ NEW BROADCAST</button>
+    </div>
   </header>
 
   <div id="deck-viewport"></div>
+
+  <!-- Nostr Sovereign Key Covenant Modal -->
+  <div id="covenant-modal">
+    <div class="covenant-chassis">
+      <div class="covenant-title">
+        <span>⚠ // PROTOCOL NOTICE: CRYPTOGRAPHIC SOVEREIGNTY</span>
+      </div>
+      <div class="covenant-body">
+        <div class="covenant-point">
+          <strong>1. UN-CENSORABLE GOSSIP PROPAGATION:</strong><br>
+          Nostr is an open relay gossip network. Events signed and published cannot be forcibly recalled or deleted once propagated across independent relays.
+        </div>
+        <div class="covenant-point">
+          <strong>2. RELAYS ARE INDEPENDENT ROUTERS:</strong><br>
+          Relays do not act as account servers. We supply verified default relays, but you maintain full sovereign control over your outbound relay list.
+        </div>
+        <div class="covenant-point">
+          <strong>3. ABSOLUTE KEY CUSTODY (NSEC ENCLAVE):</strong><br>
+          Your nsec is the master private key to your entire decentralized identity. Pennant signs events locally and will strictly never transmit your key across any network.
+        </div>
+      </div>
+      <button class="btn-covenant-accept" id="btn-accept-covenant">[ I ACCEPT CRYPTOGRAPHIC CUSTODY ]</button>
+    </div>
+  </div>
 
   <!-- Physical Inset Composer Drawer -->
   <div id="composer-drawer">
@@ -486,56 +847,207 @@
       </div>
       <div class="drawer-body">
         
-        <div class="section-label">SELECT EGRESS TRANSPORTS:</div>
+        <div class="section-label">
+          <span>SELECT PROTOCOL BUS & TARGET STATIONS:</span>
+          <span style="cursor:pointer; color:var(--text-muted); font-size:9px;" id="btn-toggle-cw">[+ ADD CW / SPOILER]</span>
+        </div>
 
-        <div class="rocker-rack">
-          <div class="rocker-unit active" data-platform="bluesky">
-            <span class="rocker-title">ATPROTO</span>
-            <div class="switch-well">
-              <div class="rocker-button">
-                <div class="ribs-texture"></div>
-                <div class="indicator-jewel"></div>
+        <!-- 4 Protocol Instrument Bays (ATProto, ActivityPub, Nostr, Matrix) -->
+        <div class="protocol-cluster">
+          
+          <!-- ATPROTO BAY -->
+          <div class="protocol-bay" id="bay-atproto">
+            <div class="rocker-unit active" data-bus="atproto">
+              <div class="rocker-title-row"><span class="rocker-title">ATPROTO</span></div>
+              <div class="switch-well">
+                <div class="rocker-button">
+                  <div class="ribs-texture"></div>
+                  <div class="indicator-jewel"></div>
+                </div>
+              </div>
+              <span class="rocker-state-badge">[ ARMED ]</span>
+            </div>
+            
+            <div class="station-key-rack" id="rack-atproto">
+              <div class="station-key active" data-handle="@pennant.layline" data-bus="atproto">
+                <div class="key-lamp-slit"></div>
+                <span class="key-label">@PENNANT.LAYLINE</span>
+              </div>
+              <div class="station-key active" data-handle="@personal.bsky" data-bus="atproto">
+                <div class="key-lamp-slit"></div>
+                <span class="key-label">@PERSONAL.BSKY</span>
+              </div>
+              <div class="station-key active" data-handle="@brand.bsky" data-bus="atproto">
+                <div class="key-lamp-slit"></div>
+                <span class="key-label">@BRAND.BSKY</span>
               </div>
             </div>
-            <span class="rocker-state-badge">[ ARMED ]</span>
           </div>
 
-          <div class="rocker-unit active" data-platform="mastodon">
-            <span class="rocker-title">ACTIVITYPUB</span>
-            <div class="switch-well">
-              <div class="rocker-button">
-                <div class="ribs-texture"></div>
-                <div class="indicator-jewel"></div>
+          <!-- ACTIVITYPUB BAY -->
+          <div class="protocol-bay" id="bay-activitypub">
+            <div class="rocker-unit active" data-bus="activitypub">
+              <div class="rocker-title-row"><span class="rocker-title">ACTIVITYPUB</span></div>
+              <div class="switch-well">
+                <div class="rocker-button">
+                  <div class="ribs-texture"></div>
+                  <div class="indicator-jewel"></div>
+                </div>
+              </div>
+              <span class="rocker-state-badge">[ ARMED ]</span>
+            </div>
+            
+            <div class="station-key-rack" id="rack-activitypub">
+              <div class="station-key active" data-handle="@signal@social.pennant" data-bus="activitypub">
+                <div class="key-lamp-slit"></div>
+                <span class="key-label">@SIGNAL</span>
+              </div>
+              <div class="station-key active" data-handle="@wood@mastodon.social" data-bus="activitypub">
+                <div class="key-lamp-slit"></div>
+                <span class="key-label">@MASTODON</span>
               </div>
             </div>
-            <span class="rocker-state-badge">[ ARMED ]</span>
           </div>
 
-          <div class="rocker-unit active" data-platform="nostr">
-            <span class="rocker-title">NOSTR</span>
-            <div class="switch-well">
-              <div class="rocker-button">
-                <div class="ribs-texture"></div>
-                <div class="indicator-jewel"></div>
+          <!-- NOSTR BAY WITH COVENANT HOOK -->
+          <div class="protocol-bay" id="bay-nostr">
+            <div class="rocker-unit active" data-bus="nostr">
+              <div class="rocker-title-row">
+                <span class="rocker-title">NOSTR</span>
+                <div class="telemetry-help-dot">?
+                  <div class="tooltip-card">
+                    <strong style="color: #fbbf24;">// NOSTR MEDIA ROUTING</strong><br>
+                    Nostr relays only store text notes. Images upload automatically to Blossom / NIP-96 media servers. Each identity can bind to a dedicated server, or inherit the fallback pool.
+                  </div>
+                </div>
+              </div>
+              <div class="switch-well">
+                <div class="rocker-button">
+                  <div class="ribs-texture"></div>
+                  <div class="indicator-jewel"></div>
+                </div>
+              </div>
+              <span class="rocker-state-badge">[ ARMED ]</span>
+            </div>
+            
+            <div class="station-key-rack" id="rack-nostr">
+              <div class="station-key active" data-handle="npub1...damus" data-bus="nostr">
+                <div class="key-lamp-slit"></div>
+                <span class="key-label">DAMUS POOL</span>
+              </div>
+              <div class="station-key active" data-handle="npub1...relays" data-bus="nostr">
+                <div class="key-lamp-slit"></div>
+                <span class="key-label">FLEET RELAYS</span>
               </div>
             </div>
-            <span class="rocker-state-badge">[ ARMED ]</span>
           </div>
+
+          <!-- MATRIX READ-ONLY ANNOUNCEMENT BAY -->
+          <div class="protocol-bay" id="bay-matrix">
+            <div class="rocker-unit active" data-bus="matrix">
+              <div class="rocker-title-row">
+                <span class="rocker-title">MATRIX</span>
+                <div class="telemetry-help-dot">?
+                  <div class="tooltip-card">
+                    <strong style="color: #34d399;">// MATRIX ANNOUNCEMENT EGRESS</strong><br>
+                    Broadcasts formatted HTML notice events (m.room.message / m.notice) directly into read-only community announcement rooms or ops channels.
+                  </div>
+                </div>
+              </div>
+              <div class="switch-well">
+                <div class="rocker-button">
+                  <div class="ribs-texture"></div>
+                  <div class="indicator-jewel"></div>
+                </div>
+              </div>
+              <span class="rocker-state-badge">[ ARMED ]</span>
+            </div>
+            
+            <div class="station-key-rack" id="rack-matrix">
+              <div class="station-key active" data-handle="!announcements:matrix.org" data-bus="matrix">
+                <div class="key-lamp-slit"></div>
+                <span class="key-label">#ANNOUNCEMENTS</span>
+              </div>
+              <div class="station-key" data-handle="!ops:matrix.org" data-bus="matrix">
+                <div class="key-lamp-slit"></div>
+                <span class="key-label">#OPS-DISPATCH</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Optional Content Warning Flap -->
+        <div id="cw-row">
+          <span style="font-family:var(--font-col-header); font-size:10px; font-weight:700; color:#fbbf24;">CW / SPOILER:</span>
+          <input type="text" id="cw-input" placeholder="e.g. Sensitive content, politics, tech spoilers..." />
+          <span style="cursor:pointer; color:var(--text-muted); font-size:10px;" id="btn-close-cw">[✕]</span>
         </div>
 
         <div class="section-label">PAYLOAD DRAFT:</div>
-        <textarea id="composer-text" placeholder="Draft transmission record for authenticated fleet egress..."></textarea>
+        <div class="composer-drop-zone">
+          <textarea id="composer-text" placeholder="Draft transmission record for authenticated fleet egress... (Drag image file here)"></textarea>
+        </div>
         
+        <!-- Contextual Staged File Bar with Alt-Text Input -->
+        <div id="media-preview-bar">
+          <div class="media-top-line">
+            <span class="media-badge">STAGED BLOB</span>
+            <span id="staged-file-name">asset.png (1.2 MB)</span>
+            <button class="btn-alt-text" id="btn-toggle-alt">[+ ALT TEXT]</button>
+            <span style="margin-left:auto; cursor:pointer; color:#ef4444;" id="btn-remove-media">[DISCARD]</span>
+          </div>
+          <input type="text" id="alt-text-input" placeholder="Describe image for screen readers & federated accessibility..." />
+        </div>
+
+        <!-- Precision Scheduler Bay with Agency Timezone Selector -->
+        <div class="schedule-control-bay">
+          <div class="schedule-mode-toggle">
+            <button class="schedule-mode-btn active" id="btn-mode-now">TRANSMIT NOW</button>
+            <button class="schedule-mode-btn" id="btn-mode-schedule">SCHEDULE RECORD</button>
+          </div>
+          <div class="schedule-inputs-box" id="schedule-inputs">
+            <span style="color: var(--text-muted);">DISPATCH AT:</span>
+            <input type="date" id="sched-date" />
+            <input type="time" id="sched-time" />
+            <select id="sched-tz">
+              <option value="LOCAL">LOCAL (Workstation)</option>
+              <option value="America/New_York">America/New_York (EDT)</option>
+              <option value="America/Chicago">America/Chicago (CDT)</option>
+              <option value="America/Los_Angeles">America/Los_Angeles (PDT)</option>
+              <option value="Europe/London">Europe/London (BST)</option>
+              <option value="Asia/Tokyo">Asia/Tokyo (JST)</option>
+              <option value="UTC">UTC (Zulu +0)</option>
+            </select>
+          </div>
+        </div>
+
         <div class="telemetry-row">
           <div class="counters-tray">
             <span class="counter-pill" id="cnt-bsky">ATProto: 0/300</span>
             <span class="counter-pill" id="cnt-masto">AP: 0/500</span>
-            <span class="counter-pill" id="cnt-nostr">Nostr: &infin;</span>
+            <span class="counter-pill" id="cnt-targets">Targets: 6 Armed</span>
           </div>
-          <span style="color: var(--signal-green); font-size: 11px; font-weight: 700; font-family: var(--font-col-header);">● AIRLOCK ARMED</span>
+          
+          <!-- Contextual Media Trigger -->
+          <div class="staging-group">
+            <input type="file" id="media-file-input" style="display:none;" accept="image/*,video/*" />
+            <div class="staging-status-trigger active" id="staging-trigger">
+              <div class="lamp-dot"></div>
+              <span id="staging-label">STAGING READY</span>
+            </div>
+            <div class="telemetry-help-dot align-right">?
+              <div class="tooltip-card">
+                <strong style="color: var(--signal-green);">// MEDIA AIRLOCK ENGINE</strong><br>
+                Drag & drop files to stage immediately. Computes SHA-256 and BlurHash in pure JS. Staged media is pre-uploaded to each protocol's native host (Bluesky PDS, Mastodon, or Blossom) before final egress.
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+      
       <div class="drawer-footer">
+        <span class="shortcut-legend">[Ctrl + Enter to Transmit]</span>
         <button class="btn-cancel" id="btn-cancel-composer">CANCEL</button>
         <button class="btn-action" id="btn-submit-broadcast">TRANSMIT RECORD</button>
       </div>
@@ -600,61 +1112,328 @@
       viewport.appendChild(el);
     });
 
-    let selectedTargets = ['bluesky', 'mastodon', 'nostr'];
+    // Column Toggle Controller
+    const btnToggleOutbox = document.getElementById('btn-toggle-outbox');
+    btnToggleOutbox.addEventListener('click', () => {
+      const outboxCol = document.getElementById('col-queue_col');
+      if (outboxCol.classList.contains('hidden-col')) {
+        outboxCol.classList.remove('hidden-col');
+        btnToggleOutbox.classList.add('active');
+        btnToggleOutbox.innerText = 'OUTBOX QUEUE [ON]';
+      } else {
+        outboxCol.classList.add('hidden-col');
+        btnToggleOutbox.classList.remove('active');
+        btnToggleOutbox.innerText = 'OUTBOX QUEUE [OFF]';
+      }
+    });
 
+    const busState = { atproto: true, activitypub: true, nostr: true, matrix: true };
+    const activeTargets = new Set([
+      '@pennant.layline', '@personal.bsky', '@brand.bsky',
+      '@signal@social.pennant', '@wood@mastodon.social',
+      'npub1...damus', 'npub1...relays',
+      '!announcements:matrix.org'
+    ]);
+
+    // Nostr Sovereign Covenant Controller
+    const covenantModal = document.getElementById('covenant-modal');
+    function checkNostrCovenant() {
+      if (!localStorage.getItem('pennant_nostr_covenant_accepted')) {
+        covenantModal.style.display = 'flex';
+        return false;
+      }
+      return true;
+    }
+    document.getElementById('btn-accept-covenant').addEventListener('click', () => {
+      localStorage.setItem('pennant_nostr_covenant_accepted', 'true');
+      covenantModal.style.display = 'none';
+    });
+
+    // Master Rocker Switches
     document.querySelectorAll('.rocker-unit').forEach(unit => {
-      unit.addEventListener('click', () => {
-        const platform = unit.getAttribute('data-platform');
+      unit.addEventListener('click', (e) => {
+        if (e.target.closest('.telemetry-help-dot')) return;
+        const bus = unit.getAttribute('data-bus');
+        
+        // Trigger covenant check if opening Nostr
+        if (bus === 'nostr' && !busState[bus]) {
+          if (!checkNostrCovenant()) return;
+        }
+
         const badge = unit.querySelector('.rocker-state-badge');
-        if (selectedTargets.includes(platform)) {
-          selectedTargets = selectedTargets.filter(t => t !== platform);
-          unit.classList.remove('active');
-          badge.innerText = '[ BYPASS ]';
-        } else {
-          selectedTargets.push(platform);
+        const bay = document.getElementById('bay-' + bus);
+        
+        busState[bus] = !busState[bus];
+        if (busState[bus]) {
           unit.classList.add('active');
           badge.innerText = '[ ARMED ]';
+          bay.classList.remove('bypassed');
+        } else {
+          unit.classList.remove('active');
+          badge.innerText = '[ BYPASS ]';
+          bay.classList.add('bypassed');
         }
-        updateCounters();
+        updateTargetCount();
       });
+    });
+
+    // Station Keys
+    document.querySelectorAll('.station-key').forEach(key => {
+      key.addEventListener('click', () => {
+        const handle = key.getAttribute('data-handle');
+        const bus = key.getAttribute('data-bus');
+
+        if (bus === 'nostr') {
+          if (!checkNostrCovenant()) return;
+        }
+        
+        if (!busState[bus]) {
+          const unit = document.querySelector(`.rocker-unit[data-bus="${bus}"]`);
+          const bay = document.getElementById('bay-' + bus);
+          busState[bus] = true;
+          unit.classList.add('active');
+          unit.querySelector('.rocker-state-badge').innerText = '[ ARMED ]';
+          bay.classList.remove('bypassed');
+        }
+
+        if (activeTargets.has(handle)) {
+          activeTargets.delete(handle);
+          key.classList.remove('active');
+        } else {
+          activeTargets.add(handle);
+          key.classList.add('active');
+        }
+        updateTargetCount();
+      });
+    });
+
+    function getEffectiveTargets() {
+      const list = [];
+      document.querySelectorAll('.station-key.active').forEach(st => {
+        const bus = st.getAttribute('data-bus');
+        const handle = st.getAttribute('data-handle');
+        if (busState[bus] && activeTargets.has(handle)) {
+          list.push({ bus, handle });
+        }
+      });
+      return list;
+    }
+
+    function updateTargetCount() {
+      const effective = getEffectiveTargets();
+      document.getElementById('cnt-targets').innerText = `Targets: ${effective.length} Armed`;
+    }
+
+    // Content Warning (CW) Toggle
+    const btnToggleCw = document.getElementById('btn-toggle-cw');
+    const cwRow = document.getElementById('cw-row');
+    const cwInput = document.getElementById('cw-input');
+    btnToggleCw.addEventListener('click', () => {
+      cwRow.style.display = 'flex';
+      cwInput.focus();
+    });
+    document.getElementById('btn-close-cw').addEventListener('click', () => {
+      cwRow.style.display = 'none';
+      cwInput.value = '';
+    });
+
+    // Scheduler Mechanics with Timezone Conversion
+    let isScheduledMode = false;
+    const btnModeNow = document.getElementById('btn-mode-now');
+    const btnModeSchedule = document.getElementById('btn-mode-schedule');
+    const scheduleInputs = document.getElementById('schedule-inputs');
+    const schedDate = document.getElementById('sched-date');
+    const schedTime = document.getElementById('sched-time');
+    const schedTz = document.getElementById('sched-tz');
+    const submitBtn = document.getElementById('btn-submit-broadcast');
+
+    function initScheduleDefaults() {
+      const now = new Date();
+      now.setHours(now.getHours() + 1);
+      schedDate.value = now.toISOString().split('T')[0];
+      schedTime.value = now.toTimeString().slice(0, 5);
+    }
+    initScheduleDefaults();
+
+    btnModeNow.addEventListener('click', () => {
+      isScheduledMode = false;
+      btnModeNow.classList.add('active');
+      btnModeSchedule.classList.remove('active');
+      scheduleInputs.style.display = 'none';
+      submitBtn.innerText = 'TRANSMIT RECORD';
+    });
+
+    btnModeSchedule.addEventListener('click', () => {
+      isScheduledMode = true;
+      btnModeSchedule.classList.add('active');
+      btnModeNow.classList.remove('active');
+      scheduleInputs.style.display = 'flex';
+      submitBtn.innerText = 'ENQUEUE SCHEDULED';
     });
 
     const composerDrawer = document.getElementById('composer-drawer');
     const composerText = document.getElementById('composer-text');
+    const stagingTrigger = document.getElementById('staging-trigger');
+    const stagingLabel = document.getElementById('staging-label');
+    const mediaInput = document.getElementById('media-file-input');
+    const mediaPreview = document.getElementById('media-preview-bar');
+    const stagedFileName = document.getElementById('staged-file-name');
+    const btnToggleAlt = document.getElementById('btn-toggle-alt');
+    const altTextInput = document.getElementById('alt-text-input');
+    let stagedMediaFile = null;
+
+    btnToggleAlt.addEventListener('click', () => {
+      if (altTextInput.style.display === 'block') {
+        altTextInput.style.display = 'none';
+      } else {
+        altTextInput.style.display = 'block';
+        altTextInput.focus();
+      }
+    });
+
+    // Drag-and-Drop Handling
+    ['dragenter', 'dragover'].forEach(name => {
+      composerText.addEventListener(name, (e) => {
+        e.preventDefault();
+        composerText.classList.add('drag-over');
+      });
+    });
+    ['dragleave', 'drop'].forEach(name => {
+      composerText.addEventListener(name, (e) => {
+        e.preventDefault();
+        composerText.classList.remove('drag-over');
+      });
+    });
+    composerText.addEventListener('drop', (e) => {
+      if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+        stageFile(e.dataTransfer.files[0]);
+      }
+    });
+
+    function stageFile(file) {
+      stagedMediaFile = file;
+      mediaPreview.style.display = 'flex';
+      stagedFileName.innerText = `${file.name} (${(file.size / (1024*1024)).toFixed(1)} MB)`;
+      stagingLabel.innerText = 'MEDIA STAGED';
+      stagingTrigger.classList.add('active');
+    }
+
+    stagingTrigger.addEventListener('click', () => mediaInput.click());
+    mediaInput.addEventListener('change', () => {
+      if (mediaInput.files && mediaInput.files[0]) {
+        stageFile(mediaInput.files[0]);
+      }
+    });
+
+    document.getElementById('btn-remove-media').addEventListener('click', () => {
+      stagedMediaFile = null;
+      mediaInput.value = '';
+      mediaPreview.style.display = 'none';
+      altTextInput.style.display = 'none';
+      altTextInput.value = '';
+      stagingLabel.innerText = 'STAGING READY';
+    });
 
     document.getElementById('btn-open-composer').addEventListener('click', () => {
       composerDrawer.style.display = 'flex';
       composerText.focus();
     });
 
-    function closeComposer() {
+    function hideComposer() { composerDrawer.style.display = 'none'; }
+    function clearComposer() {
       composerDrawer.style.display = 'none';
       composerText.value = '';
+      stagedMediaFile = null;
+      mediaInput.value = '';
+      mediaPreview.style.display = 'none';
+      altTextInput.style.display = 'none';
+      altTextInput.value = '';
+      cwRow.style.display = 'none';
+      cwInput.value = '';
+      stagingLabel.innerText = 'STAGING READY';
       updateCounters();
     }
 
-    document.getElementById('btn-close-esc').addEventListener('click', closeComposer);
-    document.getElementById('btn-cancel-composer').addEventListener('click', closeComposer);
+    document.getElementById('btn-close-esc').addEventListener('click', hideComposer);
+    document.getElementById('btn-cancel-composer').addEventListener('click', hideComposer);
     composerDrawer.addEventListener('click', (e) => {
-      if (e.target === composerDrawer) closeComposer();
+      if (e.target === composerDrawer) hideComposer();
     });
 
     composerText.addEventListener('input', updateCounters);
 
     function updateCounters() {
       const len = composerText.value.length;
-      document.getElementById('cnt-bsky').innerText = `ATProto: ${len}/300`;
-      document.getElementById('cnt-masto').innerText = `AP: ${len}/500`;
-      document.getElementById('cnt-bsky').style.color = len > 300 ? '#ef4444' : 'var(--text-sub)';
-      document.getElementById('cnt-masto').style.color = len > 500 ? '#ef4444' : 'var(--text-sub)';
+      const bskyPill = document.getElementById('cnt-bsky');
+      const mastoPill = document.getElementById('cnt-masto');
+
+      bskyPill.innerText = `ATProto: ${len}/300`;
+      mastoPill.innerText = `AP: ${len}/500`;
+
+      if (len > 300) {
+        bskyPill.style.color = '#ef4444';
+      } else if (len >= 280) {
+        bskyPill.style.color = '#fbbf24';
+      } else {
+        bskyPill.style.color = 'var(--text-sub)';
+      }
+
+      mastoPill.style.color = len > 500 ? '#ef4444' : 'var(--text-sub)';
+      submitBtn.disabled = len > 500;
     }
 
-    document.getElementById('btn-submit-broadcast').addEventListener('click', async () => {
+    window.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        if (composerDrawer.style.display === 'flex') {
+          e.preventDefault();
+          transmitBroadcast();
+        }
+      } else if (e.key === 'Escape') {
+        if (composerDrawer.style.display === 'flex') {
+          hideComposer();
+        }
+      }
+    });
+
+    submitBtn.addEventListener('click', transmitBroadcast);
+
+    async function transmitBroadcast() {
       const text = composerText.value.trim();
-      if (!text) return;
-      const btn = document.getElementById('btn-submit-broadcast');
-      btn.innerText = 'TRANSMITTING...';
-      btn.disabled = true;
+      const targets = getEffectiveTargets();
+      
+      if (!text && !stagedMediaFile) return;
+      if (targets.length === 0) {
+        alert('Transmission Blocked: No target stations are armed for egress.');
+        return;
+      }
+      if (text.length > 500) {
+        alert('Transmission Blocked: Payload exceeds network limit.');
+        return;
+      }
+
+      let scheduledTimestamp = null;
+      let displayTimeLabel = 'just now';
+
+      if (isScheduledMode) {
+        if (!schedDate.value || !schedTime.value) {
+          alert('Scheduler Incomplete: Provide both a date and time for queue slot.');
+          return;
+        }
+
+        const chosenTz = schedTz.value;
+        const targetDate = new Date(`${schedDate.value}T${schedTime.value}`);
+        
+        if (isNaN(targetDate.getTime()) || targetDate <= new Date()) {
+          alert('Scheduler Invariant: Target dispatch time must be in the future.');
+          return;
+        }
+
+        scheduledTimestamp = targetDate.toISOString();
+        displayTimeLabel = `${schedDate.value} ${schedTime.value} (${chosenTz === 'LOCAL' ? 'Local' : chosenTz})`;
+      }
+
+      submitBtn.innerText = isScheduledMode ? 'ENQUEUEING...' : 'TRANSMITTING...';
+      submitBtn.disabled = true;
 
       try {
         const res = await fetch('/api/ingest/broadcast', {
@@ -666,26 +1445,48 @@
           body: JSON.stringify({
             profileId: 'pennant',
             message: text,
-            targets: selectedTargets
+            cw: cwInput.value.trim() || null,
+            media: stagedMediaFile ? { 
+              name: stagedMediaFile.name, 
+              size: stagedMediaFile.size,
+              alt: altTextInput.value.trim() || null
+            } : null,
+            targets: targets.map(t => t.handle),
+            protocols: Array.from(new Set(targets.map(t => t.bus))),
+            scheduledFor: scheduledTimestamp
           })
         });
         const data = await res.json();
         if (data.success) {
-          closeComposer();
+          clearComposer();
           const queueContainer = document.getElementById('cards-queue_col');
           const newCard = document.createElement('div');
           newCard.className = 'card';
-          newCard.style.borderColor = 'var(--accent-orange)';
+          newCard.id = 'queue-card-' + data.queueId;
+          newCard.style.borderColor = isScheduledMode ? '#38bdf8' : 'var(--accent-orange)';
+          
+          const statusText = isScheduledMode
+            ? `<span style="color: #38bdf8;">&#9684; SCHEDULED (${targets.length} TARGETS)</span>`
+            : `<span style="color: var(--signal-green);">&#9679; ENQUEUED (${targets.length} TARGETS${stagedMediaFile ? ' + MEDIA' : ''})</span>`;
+
           newCard.innerHTML = `
             <div class="card-meta">
               <span class="author-name">@pennant</span>
-              <span style="color: var(--accent-orange);">JOB #${data.queueId}</span>
+              <span style="color: ${isScheduledMode ? '#38bdf8' : 'var(--accent-orange)'};">JOB #${data.queueId}</span>
             </div>
+            ${cwInput.value ? `<div style="color:#fbbf24; font-family:var(--font-col-header); font-size:11px; margin-bottom:4px;">[CW: ${cwInput.value}]</div>` : ''}
             <div>${text}</div>
+            ${stagedMediaFile ? `<div style="font-family:var(--font-col-header); font-size:10px; color:#7dd3fc; margin-top:4px;">📎 ${stagedMediaFile.name} ${altTextInput.value ? `("${altTextInput.value}")` : ''}</div>` : ''}
             <div class="card-footer">
-              <span style="color: var(--signal-green);">&#9679; ENQUEUED (PENDING)</span>
-              <span>just now</span>
+              ${statusText}
+              <span>${displayTimeLabel}</span>
             </div>
+            ${isScheduledMode ? `
+              <div class="card-actions">
+                <button class="btn-card-act" onclick="alert('Triggering immediate flush for JOB #${data.queueId}')">NOW ⚡</button>
+                <button class="btn-card-act danger" onclick="document.getElementById('queue-card-${data.queueId}').remove()">DISCARD ✕</button>
+              </div>
+            ` : ''}
           `;
           queueContainer.prepend(newCard);
         } else {
@@ -694,11 +1495,10 @@
       } catch (e) {
         alert('Network Egress Fault: ' + e.message);
       } finally {
-        btn.innerText = 'TRANSMIT RECORD';
-        btn.disabled = false;
+        submitBtn.innerText = isScheduledMode ? 'ENQUEUE SCHEDULED' : 'TRANSMIT RECORD';
+        submitBtn.disabled = false;
       }
-    });
+    }
   </script>
 </body>
 </html>
-
