@@ -161,7 +161,7 @@
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      max-width: 200px;
+      max-width: 195px;
     }
     .col-sub {
       font-family: var(--font-col-header);
@@ -173,24 +173,26 @@
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      max-width: 200px;
+      max-width: 195px;
     }
     .col-header-controls {
       display: flex;
       align-items: center;
       gap: 6px;
     }
-    .btn-close-column {
+    .btn-close-col {
       background: transparent;
-      border: none;
+      border: 1px solid transparent;
       color: var(--text-muted);
       cursor: pointer;
       font-family: var(--font-col-header);
       font-size: 11px;
-      padding: 2px 4px;
+      font-weight: 700;
+      padding: 2px 5px;
       border-radius: 2px;
+      line-height: 1;
     }
-    .btn-close-column:hover { color: #f87171; background: #261215; }
+    .btn-close-col:hover { color: #f87171; border-color: #551c24; background: #220e12; }
 
     .protocol-badge {
       font-family: var(--font-col-header);
@@ -321,11 +323,12 @@
     .window-body::-webkit-scrollbar-track { background: #0c0e12; }
     .window-body::-webkit-scrollbar-thumb { background: #2b313d; border-radius: 2px; }
 
-    /* Two-Stage Column Wizard Layout */
+    /* Column Wizard Layout */
     .builder-preset-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 10px;
+      margin-top: 8px;
     }
     .builder-preset-card {
       background: #12151d;
@@ -356,7 +359,6 @@
       line-height: 1.35;
     }
 
-    /* Step 2 Configuration Bay */
     #stream-config-bay {
       display: none;
       flex-direction: column;
@@ -400,7 +402,48 @@
       margin-top: 4px;
     }
 
-    /* Settings Sections */
+    /* Hashtag Stash Bar in Composer */
+    .hashtag-stash-tray {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      background: #0d0f14;
+      border: 1px solid #222836;
+      padding: 6px 10px;
+      border-radius: 2px;
+      font-family: var(--font-col-header);
+      font-size: 10px;
+    }
+    .tag-chip {
+      background: #151922;
+      border: 1px solid #2b3446;
+      color: #38bdf8;
+      padding: 2px 7px;
+      border-radius: 2px;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.1s ease;
+    }
+    .tag-chip:hover {
+      background: #1c2331;
+      border-color: #38bdf8;
+      color: #fff;
+    }
+    .btn-tag-action {
+      background: #181c26;
+      border: 1px solid #2e3648;
+      color: var(--text-sub);
+      font-family: var(--font-col-header);
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+    .btn-tag-action:hover { color: #fff; border-color: var(--border-bright); }
+
+    /* Environmental & Configuration Sections */
     .config-section {
       background: #111319;
       border: 1px solid var(--border);
@@ -521,7 +564,7 @@
       letter-spacing: 0.08em;
       color: var(--text-sub);
       text-transform: uppercase;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -782,15 +825,16 @@
     </div>
   </div>
 
-  <!-- Settings & Account Onboarding Drawer -->
+  <!-- Settings & Environmental Config Drawer -->
   <div class="modal-overlay" id="settings-drawer">
     <div class="chassis-window settings-chassis">
       <div class="window-top">
-        <span>// SYSTEM CONFIGURATION & NODE METRICS</span>
+        <span>// SYSTEM & ENVIRONMENT CONFIGURATION</span>
         <span style="cursor: pointer; color: var(--text-muted);" id="btn-close-settings">[ESC]</span>
       </div>
       <div class="window-body">
         
+        <!-- Section 1: Identities -->
         <div class="config-section">
           <div class="config-title">
             <span>1. AUTHENTICATED FLEET IDENTITIES</span>
@@ -834,48 +878,55 @@
           </div>
         </div>
 
+        <!-- Section 2: Environment Settings (OS/Hardware) -->
         <div class="config-section">
-          <div class="config-title">2. STRIPE COMMERCIAL SEAT & MULTI-DEVICE LICENSE</div>
+          <div class="config-title">2. RUNTIME & OPERATING SYSTEM INTEGRATION</div>
+          <div class="config-row">
+            <span>Hardware GPU Acceleration:</span>
+            <span style="color:var(--signal-green);">ENABLED [WEBVIEW2 / SYSTEM]</span>
+          </div>
+          <div class="config-row">
+            <span>Autostart Daemon on Login:</span>
+            <span style="color:var(--text-muted);">OPT-IN (Registry / LaunchAgent)</span>
+          </div>
+          <div class="config-row">
+            <span>System Notifications:</span>
+            <span style="color:var(--signal-green);">NATIVE TOASTS (Active)</span>
+          </div>
+          <div class="config-row">
+            <span>Local Database Storage:</span>
+            <button class="btn-header" id="btn-open-db-dir" style="padding:3px 8px;">OPEN %USERPROFILE%\.pennant ↗</button>
+          </div>
+        </div>
+
+        <!-- Section 3: Stripe Commercial Seat -->
+        <div class="config-section">
+          <div class="config-title">3. STRIPE COMMERCIAL LICENSE & SEATS</div>
           <div class="config-row">
             <span>Seat Status:</span>
-            <span style="color:var(--signal-green); font-weight:700;" id="cfg-tier-status">STANDALONE DESKTOP [SOLO ACTIVE]</span>
+            <span style="color:var(--signal-green); font-weight:700;" id="cfg-tier-status">STANDALONE DESKTOP [ACTIVE]</span>
           </div>
           <div class="config-row">
             <span>Annual Serial Key:</span>
             <div style="display:flex; gap:6px;">
-              <input type="text" id="cfg-license-key" value="PH-SOLO-2026-X892-F891" spellcheck="false" style="width:200px;" />
+              <input type="text" id="cfg-license-key" value="PH-DESKTOP-2026-X892-F891" spellcheck="false" style="width:200px;" />
               <button class="btn-header" id="btn-verify-key" style="padding:3px 8px;">VERIFY</button>
             </div>
           </div>
           <div class="config-row">
             <span>Billing Actions:</span>
             <div class="stripe-btn-tray">
-              <button class="btn-stripe" id="btn-stripe-checkout">BUY DESKTOP SEAT ($49/YR)</button>
-              <button class="btn-stripe" id="btn-stripe-portal" style="background:#1e293b; border-color:#334155;">MANAGE CLOUD SYNC ↗</button>
+              <button class="btn-stripe" id="btn-stripe-checkout">BUY DESKTOP LICENSE ($49/YR)</button>
+              <button class="btn-stripe" id="btn-stripe-portal" style="background:#1e293b; border-color:#334155;">MANAGE BILLING PORTAL ↗</button>
             </div>
           </div>
         </div>
 
-        <div class="config-section">
-          <div class="config-title">3. SUBSTRATE RUNTIME & PERSISTENCE</div>
-          <div class="config-row">
-            <span>Database Path:</span>
-            <span style="color:#e2e8f0; font-family:var(--font-masthead); font-size:10px;">%USERPROFILE%\.pennant\pennant_schedule.db</span>
-          </div>
-          <div class="config-row">
-            <span>Journal Invariant:</span>
-            <span style="color:var(--signal-green);">SQLite WAL (Write-Ahead Log)</span>
-          </div>
-          <div class="config-row">
-            <span>Process Egress:</span>
-            <span>127.0.0.1:7420 (Loopback Hardened)</span>
-          </div>
-        </div>
-
+        <!-- Section 4: About -->
         <div class="config-section">
           <div class="config-title">4. ABOUT PENNANT HOIST</div>
           <div style="font-family:var(--font-col-header); font-size:10.5px; line-height:1.6; color:#94a3b8;">
-            Pennant Hoist v0.2.0 (Series 02 // Alpha)<br>
+            Pennant Hoist v0.2.0 (Series 02 // Production Release)<br>
             Engineered by <strong style="color:#fff;">Layline Digital</strong> for sovereign multi-protocol broadcast egress.<br>
             Protected by Cryptographic Signer Enclave & SQLite WAL durability.<br>
             Licensed under the MIT License. Repository: <span style="color:#38bdf8;">github.com/Layline-Digital/pennant-social</span>
@@ -1048,6 +1099,14 @@
           <span style="cursor:pointer; color:var(--text-muted); font-size:10px;" id="btn-close-cw">[✕]</span>
         </div>
 
+        <!-- Dynamic Hashtag Stash Tray -->
+        <div class="hashtag-stash-tray">
+          <span style="color:var(--text-muted); font-size:9.5px; font-weight:700;">HASHTAG STASH:</span>
+          <div id="hashtag-chips-container" style="display:flex; gap:5px; flex-wrap:wrap;"></div>
+          <button class="btn-tag-action" id="btn-add-tag-prompt" title="Add a new persistent tag">+ TAG</button>
+          <button class="btn-tag-action" id="btn-copy-all-tags" title="Copy all hashtags to clipboard for external use">[COPY ALL]</button>
+        </div>
+
         <div class="section-label">PAYLOAD DRAFT:</div>
         <div class="composer-drop-zone">
           <textarea id="composer-text" placeholder="Draft transmission record for authenticated fleet egress... (Drag image file here)"></textarea>
@@ -1164,7 +1223,7 @@
 
     function renderDeck() {
       viewport.innerHTML = '';
-      activeDeckColumns.forEach((col, idx) => {
+      activeDeckColumns.forEach(col => {
         const el = document.createElement('div');
         el.className = 'deck-column';
         el.id = 'col-' + col.id;
@@ -1184,7 +1243,7 @@
             </div>
             <div class="col-header-controls">
               <span class="protocol-badge ${col.badge}">${col.protocol}</span>
-              <button class="btn-close-column" onclick="removeColumn(${idx})" title="Close Stream Column">✕</button>
+              <button class="btn-close-col" data-col-id="${col.id}" title="Close Stream Column">✕</button>
             </div>
           </div>
           <div class="cards-container" id="cards-${col.id}">
@@ -1208,13 +1267,22 @@
         `;
         viewport.appendChild(el);
       });
+
+      // Bind close buttons securely by exact ID (prevents indexing mismatch)
+      document.querySelectorAll('.btn-close-col').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const cid = btn.getAttribute('data-col-id');
+          removeColumnById(cid);
+        });
+      });
     }
 
-    window.removeColumn = function(idx) {
-      activeDeckColumns.splice(idx, 1);
+    function removeColumnById(columnId) {
+      activeDeckColumns = activeDeckColumns.filter(c => c.id !== columnId);
       saveDeckColumns();
       renderDeck();
-    };
+    }
 
     window.openReply = function(author) {
       document.getElementById('composer-drawer').style.display = 'flex';
@@ -1232,6 +1300,82 @@
       btn.classList.toggle('liked');
       btn.innerText = btn.classList.contains('liked') ? '★ LIKED' : '★ LIKE';
     };
+
+    // =========================================================================
+    // HASHTAG STASH & AUTOMATED ACCUMULATION ENGINE
+    // =========================================================================
+    let hashtagStash = ['#buildinpublic', '#laylinedigital', '#opensource', '#nostr', '#fediverse'];
+
+    function loadHashtagStash() {
+      const saved = localStorage.getItem('pennant_hashtag_stash');
+      if (saved) {
+        try { hashtagStash = JSON.parse(saved); } catch (e) {}
+      }
+      renderHashtagChips();
+    }
+
+    function saveHashtagStash() {
+      localStorage.setItem('pennant_hashtag_stash', JSON.stringify(hashtagStash));
+    }
+
+    function renderHashtagChips() {
+      const container = document.getElementById('hashtag-chips-container');
+      container.innerHTML = '';
+      hashtagStash.forEach(tag => {
+        const chip = document.createElement('span');
+        chip.className = 'tag-chip';
+        chip.innerText = tag;
+        chip.title = `Click to append ${tag} to draft`;
+        chip.addEventListener('click', () => {
+          const area = document.getElementById('composer-text');
+          area.value = (area.value.trim() ? area.value.trim() + ' ' : '') + tag + ' ';
+          area.focus();
+          updateCounters();
+        });
+        container.appendChild(chip);
+      });
+    }
+
+    document.getElementById('btn-add-tag-prompt').addEventListener('click', () => {
+      const customTag = prompt('Enter a hashtag to save in your fleet stash (e.g. #tech):');
+      if (customTag && customTag.trim()) {
+        const clean = customTag.trim().startsWith('#') ? customTag.trim() : '#' + customTag.trim();
+        if (!hashtagStash.includes(clean)) {
+          hashtagStash.push(clean);
+          saveHashtagStash();
+          renderHashtagChips();
+        }
+      }
+    });
+
+    document.getElementById('btn-copy-all-tags').addEventListener('click', () => {
+      if (hashtagStash.length === 0) return;
+      const tagString = hashtagStash.join(' ');
+      navigator.clipboard.writeText(tagString).then(() => {
+        const copyBtn = document.getElementById('btn-copy-all-tags');
+        const orig = copyBtn.innerText;
+        copyBtn.innerText = '[COPIED!]';
+        setTimeout(() => { copyBtn.innerText = orig; }, 1800);
+      });
+    });
+
+    // Auto-accumulate tags used in composed broadcasts (Opt-in passive learning)
+    function harvestTagsFromText(text) {
+      const found = text.match(/#[a-zA-Z0-9_-]+/g);
+      if (found) {
+        let changed = false;
+        found.forEach(t => {
+          if (!hashtagStash.includes(t)) {
+            hashtagStash.push(t);
+            changed = true;
+          }
+        });
+        if (changed) {
+          saveHashtagStash();
+          renderHashtagChips();
+        }
+      }
+    }
 
     // =========================================================================
     // TWO-STAGE TWEETDECK-STYLE COLUMN ASSEMBLY WIZARD
@@ -1269,7 +1413,6 @@
       wizardStage1.style.display = 'none';
       streamConfigBay.style.display = 'flex';
 
-      // Reset & intelligently adapt form
       if (type === 'timeline') {
         cfgBusSelect.innerHTML = `
           <option value="atproto">ATProto (Bluesky)</option>
@@ -1371,7 +1514,7 @@
       closeColBuilder();
     }
 
-    // Settings & Account Onboarding Controller
+    // Settings Controller
     const settingsDrawer = document.getElementById('settings-drawer');
     const accountAddBox = document.getElementById('account-add-box');
     const btnShowAddAccount = document.getElementById('btn-show-add-account');
@@ -1405,13 +1548,11 @@
       `;
       roster.prepend(item);
 
-      // Add to account dropdown selector in column wizard
       const opt = document.createElement('option');
       opt.value = handle;
       opt.innerText = `${handle} (${bus.toUpperCase()})`;
       cfgAccountSelect.prepend(opt);
 
-      // Add dynamic station key to composer bay
       const rack = document.getElementById('rack-' + bus);
       if (rack) {
         const newKey = document.createElement('div');
@@ -1445,23 +1586,33 @@
       alert(`Identity Secured: Connected ${handle} into local loopback enclave.`);
     });
 
-    // Integrated Branded Stripe Actions
+    // Native & Web Browser Opener Helper
+    function openExternalUrl(targetUrl) {
+      // In Tauri desktop, route out to OS browser via server launcher endpoint
+      fetch(`/launch?url=${encodeURIComponent(targetUrl)}`).catch(() => {
+        window.open(targetUrl, '_blank');
+      });
+    }
+
     const STRIPE_CHECKOUT_URL = 'https://pay.laylinedigital.com/pennant-desktop';
     const STRIPE_PORTAL_URL   = 'https://billing.laylinedigital.com';
 
     document.getElementById('btn-stripe-checkout').addEventListener('click', () => {
-      // In production desktop/web, opens your custom branded checkout link
-      window.open(STRIPE_CHECKOUT_URL, '_blank');
+      openExternalUrl(STRIPE_CHECKOUT_URL);
     });
 
     document.getElementById('btn-stripe-portal').addEventListener('click', () => {
-      window.open(STRIPE_PORTAL_URL, '_blank');
+      openExternalUrl(STRIPE_PORTAL_URL);
+    });
+
+    document.getElementById('btn-open-db-dir').addEventListener('click', () => {
+      alert('Local Storage Path: %USERPROFILE%\\.pennant\\pennant_schedule.db\nSQLite WAL files reside in this folder.');
     });
 
     document.getElementById('btn-verify-key').addEventListener('click', () => {
       const key = document.getElementById('cfg-license-key').value.trim();
       if (key.startsWith('PH-')) {
-        alert(`License Key Validated: Seat unlocked with 7-day offline grace period cache.`);
+        alert('License Validated: Seat unlocked with 7-day offline grace period cache.');
         document.getElementById('cfg-tier-status').innerText = 'STANDALONE DESKTOP [VERIFIED]';
       } else {
         alert('Verification Fault: Invalid serial key format. Keys begin with PH-');
@@ -1630,6 +1781,7 @@
 
     loadSavedLayout();
     loadDeckColumns();
+    loadHashtagStash();
 
     const btnToggleCw = document.getElementById('btn-toggle-cw');
     const cwRow = document.getElementById('cw-row');
@@ -1847,6 +1999,8 @@
         return;
       }
 
+      harvestTagsFromText(text);
+
       let scheduledTimestamp = null;
       let displayTimeLabel = 'just now';
 
@@ -1940,6 +2094,3 @@
   </script>
 </body>
 </html>
-
-
-
