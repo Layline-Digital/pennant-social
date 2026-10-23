@@ -143,7 +143,6 @@
       box-shadow: 0 6px 18px rgba(0,0,0,0.45);
       scroll-snap-align: start;
     }
-    .deck-column.hidden-col { display: none !important; }
     .column-header {
       padding: 13px 16px;
       background: #14161c;
@@ -159,6 +158,10 @@
       color: var(--text-col-pop);
       letter-spacing: 0.06em;
       text-transform: uppercase;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 210px;
     }
     .col-sub {
       font-family: var(--font-col-header);
@@ -168,6 +171,23 @@
       text-transform: uppercase;
       letter-spacing: 0.06em;
     }
+    .col-header-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-close-column {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-family: var(--font-col-header);
+      font-size: 11px;
+      padding: 2px 4px;
+      border-radius: 2px;
+    }
+    .btn-close-column:hover { color: #f87171; background: #261215; }
+
     .protocol-badge {
       font-family: var(--font-col-header);
       font-size: 10px;
@@ -297,6 +317,66 @@
     .window-body::-webkit-scrollbar-track { background: #0c0e12; }
     .window-body::-webkit-scrollbar-thumb { background: #2b313d; border-radius: 2px; }
 
+    /* TweetDeck-Style "Build a Column" Layout */
+    .builder-preset-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .builder-preset-card {
+      background: #12151d;
+      border: 1px solid #283140;
+      border-radius: 2px;
+      padding: 12px 10px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      transition: all 0.12s ease;
+    }
+    .builder-preset-card:hover {
+      background: #1a1e2a;
+      border-color: var(--accent-orange);
+      transform: translateY(-1px);
+    }
+    .preset-title {
+      font-family: var(--font-col-header);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-col-pop);
+    }
+    .preset-desc {
+      font-family: var(--font-grotesk);
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.35;
+    }
+
+    .builder-custom-tray {
+      background: #0d0f15;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .custom-row {
+      display: grid;
+      grid-template-columns: 140px 1fr 1fr;
+      gap: 8px;
+    }
+    .custom-row select, .custom-row input {
+      background: #151821;
+      border: 1px solid #2d3647;
+      color: #fff;
+      font-family: var(--font-col-header);
+      font-size: 10.5px;
+      padding: 6px 8px;
+      border-radius: 2px;
+      outline: none;
+    }
+
     /* Settings Sections */
     .config-section {
       background: #111319;
@@ -340,7 +420,6 @@
       width: 260px;
     }
 
-    /* Identity Add Form Inset */
     #account-add-box {
       display: none;
       flex-direction: column;
@@ -390,12 +469,7 @@
     }
     .btn-del-acct:hover { background: #7f1d1d; color: #fff; }
 
-    /* Stripe Buttons */
-    .stripe-btn-tray {
-      display: flex;
-      gap: 10px;
-      margin-top: 4px;
-    }
+    .stripe-btn-tray { display: flex; gap: 10px; margin-top: 4px; }
     .btn-stripe {
       background: #635bff;
       border: 1px solid #4f46e5;
@@ -413,38 +487,9 @@
     }
     .btn-stripe:hover { background: #534be8; }
 
-    /* Column Manager Rows */
-    .col-manage-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #141720;
-      border: 1px solid #232a36;
-      padding: 8px 12px;
-      border-radius: 2px;
-      font-family: var(--font-col-header);
-      font-size: 11px;
-    }
-    .col-toggle-btn {
-      background: #1e2533;
-      border: 1px solid #333f54;
-      color: var(--text-sub);
-      font-family: var(--font-col-header);
-      font-size: 10px;
-      font-weight: 700;
-      padding: 3px 10px;
-      border-radius: 2px;
-      cursor: pointer;
-    }
-    .col-toggle-btn.visible {
-      background: #11261b;
-      border-color: #235c3c;
-      color: var(--signal-green);
-    }
-
     .composer-chassis { width: 740px; max-width: 100%; max-height: calc(100vh - 40px); }
     .settings-chassis { width: 680px; max-width: 100%; max-height: calc(100vh - 40px); }
-    .col-modal-chassis { width: 560px; max-width: 100%; max-height: calc(100vh - 40px); }
+    .builder-chassis { width: 640px; max-width: 100%; max-height: calc(100vh - 40px); }
 
     .section-label {
       font-family: var(--font-col-header);
@@ -626,7 +671,7 @@
       </div>
     </div>
     <div class="header-actions">
-      <button class="btn-header" id="btn-open-col-manager">⊞ MANAGE COLUMNS</button>
+      <button class="btn-header" id="btn-open-col-builder">+ ADD COLUMN</button>
       <button class="btn-header" id="btn-open-settings">⚙ CONFIG / ABOUT</button>
       <button class="btn-action" id="btn-open-composer">+ NEW BROADCAST</button>
     </div>
@@ -634,21 +679,58 @@
 
   <div id="deck-viewport"></div>
 
-  <!-- Granular Column Manager Modal -->
-  <div class="modal-overlay" id="col-manager-drawer">
-    <div class="chassis-window col-modal-chassis">
+  <!-- TweetDeck-Style "Add / Build Column" Wizard Modal -->
+  <div class="modal-overlay" id="col-builder-drawer">
+    <div class="chassis-window builder-chassis">
       <div class="window-top">
-        <span>// DECK COLUMN CONTROLLER</span>
-        <span style="cursor: pointer; color: var(--text-muted);" id="btn-close-col-manager">[ESC]</span>
+        <span>// MOUNT NEW STREAM COLUMN</span>
+        <span style="cursor: pointer; color: var(--text-muted);" id="btn-close-col-builder">[ESC]</span>
       </div>
       <div class="window-body">
-        <div style="font-family:var(--font-col-header); font-size:10.5px; color:var(--text-sub); margin-bottom:4px;">
-          Configure live monitoring streams and operational ledger columns:
+        
+        <div class="section-label">1. CHOOSE COMMON PRESET STREAM:</div>
+        <div class="builder-preset-grid">
+          <div class="builder-preset-card" data-proto="atproto" data-type="timeline" data-label="@pennant.layline" data-sub="Federated Ingress">
+            <div class="preset-title">🏠 Home Timeline</div>
+            <div class="preset-desc">Live chronological feed from your primary Bluesky PDS stream.</div>
+          </div>
+          <div class="builder-preset-card" data-proto="activitypub" data-type="mentions" data-label="Notifications / Mentions" data-sub="Incoming Interactions">
+            <div class="preset-title">🔔 Mentions Stream</div>
+            <div class="preset-desc">Mentions and direct interactions across federated instances.</div>
+          </div>
+          <div class="builder-preset-card" data-proto="nostr" data-type="firehose" data-label="Damus Relay Firehose" data-sub="WebSocket Cluster">
+            <div class="preset-title">⚡ Relay Firehose</div>
+            <div class="preset-desc">Raw Kind-1 note feed from verified public relay clusters.</div>
+          </div>
+          <div class="builder-preset-card" data-proto="atproto" data-type="tag" data-label="#buildinpublic Feed" data-sub="Keyword Ingress">
+            <div class="preset-title"># Topic / Hashtag</div>
+            <div class="preset-desc">Live tail of posts matching specific keywords or tags.</div>
+          </div>
+          <div class="builder-preset-card" data-proto="matrix" data-type="room" data-label="#announcements:matrix.org" data-sub="Room Ingress">
+            <div class="preset-title">💬 Matrix Room</div>
+            <div class="preset-desc">Real-time room monitoring for alerts or release announcements.</div>
+          </div>
+          <div class="builder-preset-card" data-proto="queue" data-type="queue" data-label="Outbox Delivery Queue" data-sub="Persistent Ledger">
+            <div class="preset-title">📋 Outbox Ledger</div>
+            <div class="preset-desc">Scheduled broadcast slots, retries, and dispatch proofs.</div>
+          </div>
         </div>
-        <div id="column-toggle-list" style="display:flex; flex-direction:column; gap:8px;"></div>
-      </div>
-      <div class="drawer-footer">
-        <button class="btn-action" id="btn-done-col-manager">SAVE & APPLY</button>
+
+        <div class="section-label">2. OR BUILD CUSTOM COLUMN SOURCE:</div>
+        <div class="builder-custom-tray">
+          <div class="custom-row">
+            <select id="custom-col-proto">
+              <option value="atproto">ATProto (Bluesky)</option>
+              <option value="activitypub">ActivityPub (Mastodon)</option>
+              <option value="nostr">Nostr Relay Pool</option>
+              <option value="matrix">Matrix Room</option>
+            </select>
+            <input type="text" id="custom-col-label" placeholder="Stream Title (e.g. @wood or #tech)" />
+            <input type="text" id="custom-col-sub" placeholder="Sub-label (e.g. Custom Filter)" />
+          </div>
+          <button class="btn-action" style="align-self: flex-end; padding: 6px 14px;" id="btn-mount-custom-col">+ MOUNT CUSTOM COLUMN</button>
+        </div>
+
       </div>
     </div>
   </div>
@@ -1006,65 +1088,79 @@
       document.body.style.backgroundImage = `url(${dataUrl})`;
       document.querySelector('.composer-chassis').style.backgroundImage = `url(${dataUrl})`;
       document.querySelector('.settings-chassis').style.backgroundImage = `url(${dataUrl})`;
-      document.querySelector('.col-modal-chassis').style.backgroundImage = `url(${dataUrl})`;
+      document.querySelector('.builder-chassis').style.backgroundImage = `url(${dataUrl})`;
     })();
 
-    // Dynamic Columns Registry
-    const columnsConfig = [
-      { id: 'bsky_main', label: '@pennant.layline', protocol: 'ATProto', badge: 'badge-bsky', sub: 'Federated Ingress', defaultVisible: true },
-      { id: 'masto_signal', label: '@signal@social.pennant', protocol: 'ActivityPub', badge: 'badge-masto', sub: 'Local Instance', defaultVisible: true },
-      { id: 'nostr_relay', label: 'Relay Damus Pool', protocol: 'Nostr', badge: 'badge-nostr', sub: 'WebSocket Cluster', defaultVisible: true },
-      { id: 'matrix_stream', label: '#announcements:matrix.org', protocol: 'Matrix', badge: 'badge-matrix', sub: 'Room Feeds', defaultVisible: false },
-      { id: 'queue_col', label: 'Outbox Delivery Queue', protocol: 'SQLite WAL', badge: 'badge-queue', sub: 'Persistent Ledger', defaultVisible: true }
+    // Dynamic Columns State
+    const defaultDeckColumns = [
+      { id: 'bsky_main', label: '@pennant.layline', protocol: 'ATProto', badge: 'badge-bsky', sub: 'Federated Ingress' },
+      { id: 'masto_signal', label: '@signal@social.pennant', protocol: 'ActivityPub', badge: 'badge-masto', sub: 'Local Instance' },
+      { id: 'nostr_relay', label: 'Relay Damus Pool', protocol: 'Nostr', badge: 'badge-nostr', sub: 'WebSocket Cluster' },
+      { id: 'queue_col', label: 'Outbox Delivery Queue', protocol: 'SQLite WAL', badge: 'badge-queue', sub: 'Persistent Ledger' }
     ];
 
+    let activeDeckColumns = [];
     const viewport = document.getElementById('deck-viewport');
-    const colVisibility = {};
 
-    function loadColumnPreferences() {
-      const saved = localStorage.getItem('pennant_column_visibility');
+    function loadDeckColumns() {
+      const saved = localStorage.getItem('pennant_active_columns');
       if (saved) {
-        try { Object.assign(colVisibility, JSON.parse(saved)); } catch (e) {}
+        try { activeDeckColumns = JSON.parse(saved); } catch (e) { activeDeckColumns = defaultDeckColumns.slice(); }
       } else {
-        columnsConfig.forEach(col => { colVisibility[col.id] = col.defaultVisible; });
+        activeDeckColumns = defaultDeckColumns.slice();
       }
+      renderDeck();
     }
-    loadColumnPreferences();
 
-    columnsConfig.forEach(col => {
-      const isVisible = colVisibility[col.id] !== false;
-      const el = document.createElement('div');
-      el.className = 'deck-column' + (isVisible ? '' : ' hidden-col');
-      el.id = 'col-' + col.id;
-      el.innerHTML = `
-        <div class="column-header">
-          <div>
-            <div class="col-title">${col.label}</div>
-            <div class="col-sub">${col.sub}</div>
-          </div>
-          <span class="protocol-badge ${col.badge}">${col.protocol}</span>
-        </div>
-        <div class="cards-container" id="cards-${col.id}">
-          <div class="card">
-            <div class="card-meta">
-              <span class="author-name">${col.label}</span>
-              <span>10:46 PM</span>
+    function saveDeckColumns() {
+      localStorage.setItem('pennant_active_columns', JSON.stringify(activeDeckColumns));
+    }
+
+    function renderDeck() {
+      viewport.innerHTML = '';
+      activeDeckColumns.forEach((col, idx) => {
+        const el = document.createElement('div');
+        el.className = 'deck-column';
+        el.id = 'col-' + col.id;
+        el.innerHTML = `
+          <div class="column-header">
+            <div>
+              <div class="col-title" title="${col.label}">${col.label}</div>
+              <div class="col-sub">${col.sub}</div>
             </div>
-            <div>Channel attached. Zero memory leakage across 35 monitoring streams.</div>
-            <div class="in-deck-actions">
-              <button class="btn-deck-act" onclick="openReply('${col.label}')">↩ REPLY</button>
-              <button class="btn-deck-act" onclick="toggleBoost(this)">⟳ BOOST</button>
-              <button class="btn-deck-act" onclick="toggleLike(this)">★ LIKE</button>
-            </div>
-            <div class="card-footer">
-              <span>● SYNCHRONIZED</span>
-              <span style="cursor: pointer;">INSPECT &#8599;</span>
+            <div class="col-header-controls">
+              <span class="protocol-badge ${col.badge}">${col.protocol}</span>
+              <button class="btn-close-column" onclick="removeColumn(${idx})" title="Close Stream Column">✕</button>
             </div>
           </div>
-        </div>
-      `;
-      viewport.appendChild(el);
-    });
+          <div class="cards-container" id="cards-${col.id}">
+            <div class="card">
+              <div class="card-meta">
+                <span class="author-name">${col.label}</span>
+                <span>10:46 PM</span>
+              </div>
+              <div>Stream attached. Zero memory leakage across virtualized channels.</div>
+              <div class="in-deck-actions">
+                <button class="btn-deck-act" onclick="openReply('${col.label}')">↩ REPLY</button>
+                <button class="btn-deck-act" onclick="toggleBoost(this)">⟳ BOOST</button>
+                <button class="btn-deck-act" onclick="toggleLike(this)">★ LIKE</button>
+              </div>
+              <div class="card-footer">
+                <span>● SYNCHRONIZED</span>
+                <span style="cursor: pointer;">INSPECT &#8599;</span>
+              </div>
+            </div>
+          </div>
+        `;
+        viewport.appendChild(el);
+      });
+    }
+
+    window.removeColumn = function(idx) {
+      activeDeckColumns.splice(idx, 1);
+      saveDeckColumns();
+      renderDeck();
+    };
 
     window.openReply = function(author) {
       document.getElementById('composer-drawer').style.display = 'flex';
@@ -1083,39 +1179,56 @@
       btn.innerText = btn.classList.contains('liked') ? '★ LIKED' : '★ LIKE';
     };
 
-    // Granular Column Manager Modal
-    const colManagerDrawer = document.getElementById('col-manager-drawer');
-    const colToggleList = document.getElementById('column-toggle-list');
+    // TweetDeck-Style "Add / Build Column" Controller
+    const colBuilderDrawer = document.getElementById('col-builder-drawer');
+    document.getElementById('btn-open-col-builder').addEventListener('click', () => {
+      colBuilderDrawer.style.display = 'flex';
+    });
+    function closeColBuilder() { colBuilderDrawer.style.display = 'none'; }
+    document.getElementById('btn-close-col-builder').addEventListener('click', closeColBuilder);
 
-    document.getElementById('btn-open-col-manager').addEventListener('click', () => {
-      colToggleList.innerHTML = '';
-      columnsConfig.forEach(col => {
-        const isVis = colVisibility[col.id] !== false;
-        const row = document.createElement('div');
-        row.className = 'col-manage-row';
-        row.innerHTML = `
-          <span><strong>${col.protocol}:</strong> ${col.label}</span>
-          <button class="col-toggle-btn ${isVis ? 'visible' : ''}" data-col="${col.id}">
-            ${isVis ? 'ENABLED [✓]' : 'DISABLED [ ]'}
-          </button>
-        `;
-        row.querySelector('button').addEventListener('click', function() {
-          const cid = this.getAttribute('data-col');
-          colVisibility[cid] = !colVisibility[cid];
-          this.classList.toggle('visible');
-          this.innerText = colVisibility[cid] ? 'ENABLED [✓]' : 'DISABLED [ ]';
-          const domCol = document.getElementById('col-' + cid);
-          if (domCol) domCol.classList.toggle('hidden-col', !colVisibility[cid]);
-          localStorage.setItem('pennant_column_visibility', JSON.stringify(colVisibility));
-        });
-        colToggleList.appendChild(row);
+    function mountNewColumn(proto, label, sub) {
+      let badge = 'badge-bsky';
+      let protoLabel = 'ATProto';
+      if (proto === 'activitypub') { badge = 'badge-masto'; protoLabel = 'ActivityPub'; }
+      else if (proto === 'nostr') { badge = 'badge-nostr'; protoLabel = 'Nostr'; }
+      else if (proto === 'matrix') { badge = 'badge-matrix'; protoLabel = 'Matrix'; }
+      else if (proto === 'queue') { badge = 'badge-queue'; protoLabel = 'SQLite WAL'; }
+
+      activeDeckColumns.push({
+        id: 'stream_' + Date.now(),
+        label: label,
+        protocol: protoLabel,
+        badge: badge,
+        sub: sub || 'Custom Stream'
       });
-      colManagerDrawer.style.display = 'flex';
+      saveDeckColumns();
+      renderDeck();
+      closeColBuilder();
+    }
+
+    document.querySelectorAll('.builder-preset-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const proto = card.getAttribute('data-proto');
+        const label = card.getAttribute('data-label');
+        const sub = card.getAttribute('data-sub');
+        mountNewColumn(proto, label, sub);
+      });
     });
 
-    function closeColManager() { colManagerDrawer.style.display = 'none'; }
-    document.getElementById('btn-close-col-manager').addEventListener('click', closeColManager);
-    document.getElementById('btn-done-col-manager').addEventListener('click', closeColManager);
+    document.getElementById('btn-mount-custom-col').addEventListener('click', () => {
+      const proto = document.getElementById('custom-col-proto').value;
+      const label = document.getElementById('custom-col-label').value.trim();
+      const sub = document.getElementById('custom-col-sub').value.trim();
+
+      if (!label) {
+        alert('Validation Fault: Please enter a title or handle for the column.');
+        return;
+      }
+      mountNewColumn(proto, label, sub || 'Custom Stream');
+      document.getElementById('custom-col-label').value = '';
+      document.getElementById('custom-col-sub').value = '';
+    });
 
     // Settings & Account Onboarding Controller
     const settingsDrawer = document.getElementById('settings-drawer');
@@ -1368,6 +1481,7 @@
     }
 
     loadSavedLayout();
+    loadDeckColumns();
 
     const btnToggleCw = document.getElementById('btn-toggle-cw');
     const cwRow = document.getElementById('cw-row');
@@ -1527,8 +1641,8 @@
     settingsDrawer.addEventListener('click', (e) => {
       if (e.target === settingsDrawer) closeSettings();
     });
-    colManagerDrawer.addEventListener('click', (e) => {
-      if (e.target === colManagerDrawer) closeColManager();
+    colBuilderDrawer.addEventListener('click', (e) => {
+      if (e.target === colBuilderDrawer) closeColBuilder();
     });
 
     composerText.addEventListener('input', updateCounters);
@@ -1565,7 +1679,7 @@
       } else if (e.key === 'Escape') {
         if (composerDrawer.style.display === 'flex') hideComposer();
         if (settingsDrawer.style.display === 'flex') closeSettings();
-        if (colManagerDrawer.style.display === 'flex') closeColManager();
+        if (colBuilderDrawer.style.display === 'flex') closeColBuilder();
       }
     });
 
