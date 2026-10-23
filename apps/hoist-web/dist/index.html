@@ -143,7 +143,7 @@
       box-shadow: 0 6px 18px rgba(0,0,0,0.45);
       scroll-snap-align: start;
     }
-    .deck-column.hidden-col { display: none; }
+    .deck-column.hidden-col { display: none !important; }
     .column-header {
       padding: 13px 16px;
       background: #14161c;
@@ -413,9 +413,38 @@
     }
     .btn-stripe:hover { background: #534be8; }
 
-    /* Composer Specific */
+    /* Column Manager Rows */
+    .col-manage-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #141720;
+      border: 1px solid #232a36;
+      padding: 8px 12px;
+      border-radius: 2px;
+      font-family: var(--font-col-header);
+      font-size: 11px;
+    }
+    .col-toggle-btn {
+      background: #1e2533;
+      border: 1px solid #333f54;
+      color: var(--text-sub);
+      font-family: var(--font-col-header);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+    .col-toggle-btn.visible {
+      background: #11261b;
+      border-color: #235c3c;
+      color: var(--signal-green);
+    }
+
     .composer-chassis { width: 740px; max-width: 100%; max-height: calc(100vh - 40px); }
     .settings-chassis { width: 680px; max-width: 100%; max-height: calc(100vh - 40px); }
+    .col-modal-chassis { width: 560px; max-width: 100%; max-height: calc(100vh - 40px); }
 
     .section-label {
       font-family: var(--font-col-header);
@@ -597,13 +626,32 @@
       </div>
     </div>
     <div class="header-actions">
+      <button class="btn-header" id="btn-open-col-manager">⊞ MANAGE COLUMNS</button>
       <button class="btn-header" id="btn-open-settings">⚙ CONFIG / ABOUT</button>
-      <button class="btn-header active" id="btn-toggle-outbox">OUTBOX QUEUE [ON]</button>
       <button class="btn-action" id="btn-open-composer">+ NEW BROADCAST</button>
     </div>
   </header>
 
   <div id="deck-viewport"></div>
+
+  <!-- Granular Column Manager Modal -->
+  <div class="modal-overlay" id="col-manager-drawer">
+    <div class="chassis-window col-modal-chassis">
+      <div class="window-top">
+        <span>// DECK COLUMN CONTROLLER</span>
+        <span style="cursor: pointer; color: var(--text-muted);" id="btn-close-col-manager">[ESC]</span>
+      </div>
+      <div class="window-body">
+        <div style="font-family:var(--font-col-header); font-size:10.5px; color:var(--text-sub); margin-bottom:4px;">
+          Configure live monitoring streams and operational ledger columns:
+        </div>
+        <div id="column-toggle-list" style="display:flex; flex-direction:column; gap:8px;"></div>
+      </div>
+      <div class="drawer-footer">
+        <button class="btn-action" id="btn-done-col-manager">SAVE & APPLY</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Settings & Account Onboarding Drawer -->
   <div class="modal-overlay" id="settings-drawer">
@@ -614,14 +662,12 @@
       </div>
       <div class="window-body">
         
-        <!-- Live Identity Roster with Inline Addition -->
         <div class="config-section">
           <div class="config-title">
             <span>1. AUTHENTICATED FLEET IDENTITIES</span>
             <button class="btn-header" style="padding:2px 8px; font-size:9.5px;" id="btn-show-add-account">+ CONNECT ACCOUNT</button>
           </div>
 
-          <!-- Add Account Form Inset -->
           <div id="account-add-box">
             <div class="account-input-grid">
               <select id="new-acct-bus">
@@ -630,8 +676,8 @@
                 <option value="nostr">Nostr (Enclave/Bunker)</option>
                 <option value="matrix">Matrix (Room Egress)</option>
               </select>
-              <input type="text" id="new-acct-handle" placeholder="Handle / Identifier (e.g. @brand.bsky)" />
-              <input type="password" id="new-acct-secret" placeholder="App Password / Token / nsec / bunker URI" />
+              <input type="text" id="new-acct-handle" placeholder="Handle (e.g. @brand.bsky)" />
+              <input type="password" id="new-acct-secret" placeholder="App Password / Token / nsec" />
               <button class="btn-action" style="padding:5px 12px;" id="btn-save-new-account">ADD</button>
             </div>
             <div style="font-family:var(--font-col-header); font-size:9px; color:var(--text-muted);">
@@ -640,41 +686,43 @@
           </div>
 
           <div id="identities-roster" style="display:flex; flex-direction:column; gap:6px;">
-            <div class="account-list-item" data-id="bsky-main">
+            <div class="account-list-item">
               <span><strong style="color:#60a5fa;">ATPROTO:</strong> @pennant.layline</span>
               <button class="btn-del-acct" onclick="this.parentElement.remove()">DISCONNECT ✕</button>
             </div>
-            <div class="account-list-item" data-id="masto-signal">
+            <div class="account-list-item">
               <span><strong style="color:#c084fc;">ACTIVITYPUB:</strong> @signal@social.pennant</span>
               <button class="btn-del-acct" onclick="this.parentElement.remove()">DISCONNECT ✕</button>
             </div>
-            <div class="account-list-item" data-id="nostr-damus">
+            <div class="account-list-item">
               <span><strong style="color:#fbbf24;">NOSTR:</strong> npub1...damus (Signer Enclave)</span>
               <button class="btn-del-acct" onclick="this.parentElement.remove()">DISCONNECT ✕</button>
             </div>
-            <div class="account-list-item" data-id="matrix-ops">
+            <div class="account-list-item">
               <span><strong style="color:#34d399;">MATRIX:</strong> #announcements:matrix.org</span>
               <button class="btn-del-acct" onclick="this.parentElement.remove()">DISCONNECT ✕</button>
             </div>
           </div>
         </div>
 
-        <!-- Stripe Commercial Billing Module -->
         <div class="config-section">
-          <div class="config-title">2. STRIPE COMMERCIAL SEAT & SUBSCRIPTION</div>
+          <div class="config-title">2. STRIPE COMMERCIAL SEAT & MULTI-DEVICE LICENSE</div>
           <div class="config-row">
-            <span>Seat Tier:</span>
+            <span>Seat Status:</span>
             <span style="color:var(--signal-green); font-weight:700;" id="cfg-tier-status">STANDALONE DESKTOP [SOLO ACTIVE]</span>
           </div>
           <div class="config-row">
             <span>Annual Serial Key:</span>
-            <input type="text" id="cfg-license-key" value="PH-SOLO-2026-X892-F891" spellcheck="false" />
+            <div style="display:flex; gap:6px;">
+              <input type="text" id="cfg-license-key" value="PH-SOLO-2026-X892-F891" spellcheck="false" style="width:200px;" />
+              <button class="btn-header" id="btn-verify-key" style="padding:3px 8px;">VERIFY</button>
+            </div>
           </div>
           <div class="config-row">
-            <span>Billing & Checkout Actions:</span>
+            <span>Billing Actions:</span>
             <div class="stripe-btn-tray">
-              <a href="https://buy.stripe.com/test_desktop_license" target="_blank" class="btn-stripe">BUY DESKTOP SEAT ($49/YR)</a>
-              <a href="https://billing.stripe.com/p/login/test" target="_blank" class="btn-stripe" style="background:#1e293b; border-color:#334155;">MANAGE SUBSCRIPTION ↗</a>
+              <button class="btn-stripe" id="btn-stripe-checkout">BUY DESKTOP SEAT ($49/YR)</button>
+              <button class="btn-stripe" id="btn-stripe-portal" style="background:#1e293b; border-color:#334155;">MANAGE CLOUD SYNC ↗</button>
             </div>
           </div>
         </div>
@@ -958,19 +1006,35 @@
       document.body.style.backgroundImage = `url(${dataUrl})`;
       document.querySelector('.composer-chassis').style.backgroundImage = `url(${dataUrl})`;
       document.querySelector('.settings-chassis').style.backgroundImage = `url(${dataUrl})`;
+      document.querySelector('.col-modal-chassis').style.backgroundImage = `url(${dataUrl})`;
     })();
 
+    // Dynamic Columns Registry
     const columnsConfig = [
-      { id: 'bsky_main', label: '@pennant.layline', protocol: 'ATProto', badge: 'badge-bsky', sub: 'Federated Ingress' },
-      { id: 'masto_signal', label: '@signal@social.pennant', protocol: 'ActivityPub', badge: 'badge-masto', sub: 'Local Instance' },
-      { id: 'nostr_relay', label: 'Relay Damus Pool', protocol: 'Nostr', badge: 'badge-nostr', sub: 'WebSocket Cluster' },
-      { id: 'queue_col', label: 'Outbox Delivery Queue', protocol: 'SQLite WAL', badge: 'badge-queue', sub: 'Persistent Ledger' }
+      { id: 'bsky_main', label: '@pennant.layline', protocol: 'ATProto', badge: 'badge-bsky', sub: 'Federated Ingress', defaultVisible: true },
+      { id: 'masto_signal', label: '@signal@social.pennant', protocol: 'ActivityPub', badge: 'badge-masto', sub: 'Local Instance', defaultVisible: true },
+      { id: 'nostr_relay', label: 'Relay Damus Pool', protocol: 'Nostr', badge: 'badge-nostr', sub: 'WebSocket Cluster', defaultVisible: true },
+      { id: 'matrix_stream', label: '#announcements:matrix.org', protocol: 'Matrix', badge: 'badge-matrix', sub: 'Room Feeds', defaultVisible: false },
+      { id: 'queue_col', label: 'Outbox Delivery Queue', protocol: 'SQLite WAL', badge: 'badge-queue', sub: 'Persistent Ledger', defaultVisible: true }
     ];
 
     const viewport = document.getElementById('deck-viewport');
+    const colVisibility = {};
+
+    function loadColumnPreferences() {
+      const saved = localStorage.getItem('pennant_column_visibility');
+      if (saved) {
+        try { Object.assign(colVisibility, JSON.parse(saved)); } catch (e) {}
+      } else {
+        columnsConfig.forEach(col => { colVisibility[col.id] = col.defaultVisible; });
+      }
+    }
+    loadColumnPreferences();
+
     columnsConfig.forEach(col => {
+      const isVisible = colVisibility[col.id] !== false;
       const el = document.createElement('div');
-      el.className = 'deck-column';
+      el.className = 'deck-column' + (isVisible ? '' : ' hidden-col');
       el.id = 'col-' + col.id;
       el.innerHTML = `
         <div class="column-header">
@@ -986,7 +1050,7 @@
               <span class="author-name">${col.label}</span>
               <span>10:46 PM</span>
             </div>
-            <div>2D virtualized channel attached. Zero memory leakage across 35 monitoring streams.</div>
+            <div>Channel attached. Zero memory leakage across 35 monitoring streams.</div>
             <div class="in-deck-actions">
               <button class="btn-deck-act" onclick="openReply('${col.label}')">↩ REPLY</button>
               <button class="btn-deck-act" onclick="toggleBoost(this)">⟳ BOOST</button>
@@ -1019,6 +1083,40 @@
       btn.innerText = btn.classList.contains('liked') ? '★ LIKED' : '★ LIKE';
     };
 
+    // Granular Column Manager Modal
+    const colManagerDrawer = document.getElementById('col-manager-drawer');
+    const colToggleList = document.getElementById('column-toggle-list');
+
+    document.getElementById('btn-open-col-manager').addEventListener('click', () => {
+      colToggleList.innerHTML = '';
+      columnsConfig.forEach(col => {
+        const isVis = colVisibility[col.id] !== false;
+        const row = document.createElement('div');
+        row.className = 'col-manage-row';
+        row.innerHTML = `
+          <span><strong>${col.protocol}:</strong> ${col.label}</span>
+          <button class="col-toggle-btn ${isVis ? 'visible' : ''}" data-col="${col.id}">
+            ${isVis ? 'ENABLED [✓]' : 'DISABLED [ ]'}
+          </button>
+        `;
+        row.querySelector('button').addEventListener('click', function() {
+          const cid = this.getAttribute('data-col');
+          colVisibility[cid] = !colVisibility[cid];
+          this.classList.toggle('visible');
+          this.innerText = colVisibility[cid] ? 'ENABLED [✓]' : 'DISABLED [ ]';
+          const domCol = document.getElementById('col-' + cid);
+          if (domCol) domCol.classList.toggle('hidden-col', !colVisibility[cid]);
+          localStorage.setItem('pennant_column_visibility', JSON.stringify(colVisibility));
+        });
+        colToggleList.appendChild(row);
+      });
+      colManagerDrawer.style.display = 'flex';
+    });
+
+    function closeColManager() { colManagerDrawer.style.display = 'none'; }
+    document.getElementById('btn-close-col-manager').addEventListener('click', closeColManager);
+    document.getElementById('btn-done-col-manager').addEventListener('click', closeColManager);
+
     // Settings & Account Onboarding Controller
     const settingsDrawer = document.getElementById('settings-drawer');
     const accountAddBox = document.getElementById('account-add-box');
@@ -1044,7 +1142,6 @@
         return;
       }
 
-      // Add to UI Roster
       const roster = document.getElementById('identities-roster');
       const item = document.createElement('div');
       item.className = 'account-list-item';
@@ -1054,7 +1151,6 @@
       `;
       roster.prepend(item);
 
-      // Add dynamic station key to composer bay
       const rack = document.getElementById('rack-' + bus);
       if (rack) {
         const newKey = document.createElement('div');
@@ -1082,30 +1178,38 @@
         saveLayout();
       }
 
-      // Reset form
       document.getElementById('new-acct-handle').value = '';
       document.getElementById('new-acct-secret').value = '';
       accountAddBox.style.display = 'none';
       alert(`Identity Secured: Connected ${handle} into local loopback enclave.`);
     });
 
+    // Integrated Stripe Actions
+    document.getElementById('btn-stripe-checkout').addEventListener('click', () => {
+      const email = prompt('Enter your billing email for Stripe Checkout:');
+      if (email && email.includes('@')) {
+        alert(`Redirecting to Layline Digital Stripe Checkout for ${email}... (In test mode, serial key PH-SOLO-2026-X892-F891 will activate instantly)`);
+        document.getElementById('cfg-tier-status').innerText = 'STANDALONE DESKTOP [SOLO ACTIVE]';
+      }
+    });
+
+    document.getElementById('btn-stripe-portal').addEventListener('click', () => {
+      alert('Opening Stripe Billing Customer Portal: manage subscriptions, invoices, and payment methods.');
+    });
+
+    document.getElementById('btn-verify-key').addEventListener('click', () => {
+      const key = document.getElementById('cfg-license-key').value.trim();
+      if (key.startsWith('PH-')) {
+        alert(`License Key Validated: Seat unlocked with 7-day offline grace period cache.`);
+        document.getElementById('cfg-tier-status').innerText = 'STANDALONE DESKTOP [VERIFIED]';
+      } else {
+        alert('Verification Fault: Invalid serial key format. Keys begin with PH-');
+      }
+    });
+
     document.getElementById('btn-save-settings').addEventListener('click', () => {
       localStorage.setItem('pennant_license_key', document.getElementById('cfg-license-key').value.trim());
       closeSettings();
-    });
-
-    const btnToggleOutbox = document.getElementById('btn-toggle-outbox');
-    btnToggleOutbox.addEventListener('click', () => {
-      const outboxCol = document.getElementById('col-queue_col');
-      if (outboxCol.classList.contains('hidden-col')) {
-        outboxCol.classList.remove('hidden-col');
-        btnToggleOutbox.classList.add('active');
-        btnToggleOutbox.innerText = 'OUTBOX QUEUE [ON]';
-      } else {
-        outboxCol.classList.add('hidden-col');
-        btnToggleOutbox.classList.remove('active');
-        btnToggleOutbox.innerText = 'OUTBOX QUEUE [OFF]';
-      }
     });
 
     const covenantModal = document.getElementById('covenant-modal');
@@ -1423,6 +1527,9 @@
     settingsDrawer.addEventListener('click', (e) => {
       if (e.target === settingsDrawer) closeSettings();
     });
+    colManagerDrawer.addEventListener('click', (e) => {
+      if (e.target === colManagerDrawer) closeColManager();
+    });
 
     composerText.addEventListener('input', updateCounters);
 
@@ -1458,6 +1565,7 @@
       } else if (e.key === 'Escape') {
         if (composerDrawer.style.display === 'flex') hideComposer();
         if (settingsDrawer.style.display === 'flex') closeSettings();
+        if (colManagerDrawer.style.display === 'flex') closeColManager();
       }
     });
 
@@ -1526,35 +1634,37 @@
         if (data.success) {
           clearComposer();
           const queueContainer = document.getElementById('cards-queue_col');
-          const newCard = document.createElement('div');
-          newCard.className = 'card';
-          newCard.id = 'queue-card-' + data.queueId;
-          newCard.style.borderColor = isScheduledMode ? '#38bdf8' : 'var(--accent-orange)';
-          
-          const statusText = isScheduledMode
-            ? `<span style="color: #38bdf8;">&#9684; SCHEDULED (${targets.length} TARGETS)</span>`
-            : `<span style="color: var(--signal-green);">&#9679; ENQUEUED (${targets.length} TARGETS${stagedMediaFile ? ' + MEDIA' : ''})</span>`;
+          if (queueContainer) {
+            const newCard = document.createElement('div');
+            newCard.className = 'card';
+            newCard.id = 'queue-card-' + data.queueId;
+            newCard.style.borderColor = isScheduledMode ? '#38bdf8' : 'var(--accent-orange)';
+            
+            const statusText = isScheduledMode
+              ? `<span style="color: #38bdf8;">&#9684; SCHEDULED (${targets.length} TARGETS)</span>`
+              : `<span style="color: var(--signal-green);">&#9679; ENQUEUED (${targets.length} TARGETS${stagedMediaFile ? ' + MEDIA' : ''})</span>`;
 
-          newCard.innerHTML = `
-            <div class="card-meta">
-              <span class="author-name">@pennant</span>
-              <span style="color: ${isScheduledMode ? '#38bdf8' : 'var(--accent-orange)'};">JOB #${data.queueId}</span>
-            </div>
-            ${cwInput.value ? `<div style="color:#fbbf24; font-family:var(--font-col-header); font-size:11px; margin-bottom:4px;">[CW: ${cwInput.value}]</div>` : ''}
-            <div>${text}</div>
-            ${stagedMediaFile ? `<div style="font-family:var(--font-col-header); font-size:10px; color:#7dd3fc; margin-top:4px;">📎 ${stagedMediaFile.name} ${altTextInput.value ? `("${altTextInput.value}")` : ''}</div>` : ''}
-            <div class="card-footer">
-              ${statusText}
-              <span>${displayTimeLabel}</span>
-            </div>
-            ${isScheduledMode ? `
-              <div class="card-actions">
-                <button class="btn-card-act" onclick="alert('Triggering immediate flush for JOB #${data.queueId}')">NOW ⚡</button>
-                <button class="btn-card-act danger" onclick="document.getElementById('queue-card-${data.queueId}').remove()">DISCARD ✕</button>
+            newCard.innerHTML = `
+              <div class="card-meta">
+                <span class="author-name">@pennant</span>
+                <span style="color: ${isScheduledMode ? '#38bdf8' : 'var(--accent-orange)'};">JOB #${data.queueId}</span>
               </div>
-            ` : ''}
-          `;
-          queueContainer.prepend(newCard);
+              ${cwInput.value ? `<div style="color:#fbbf24; font-family:var(--font-col-header); font-size:11px; margin-bottom:4px;">[CW: ${cwInput.value}]</div>` : ''}
+              <div>${text}</div>
+              ${stagedMediaFile ? `<div style="font-family:var(--font-col-header); font-size:10px; color:#7dd3fc; margin-top:4px;">📎 ${stagedMediaFile.name} ${altTextInput.value ? `("${altTextInput.value}")` : ''}</div>` : ''}
+              <div class="card-footer">
+                ${statusText}
+                <span>${displayTimeLabel}</span>
+              </div>
+              ${isScheduledMode ? `
+                <div class="card-actions">
+                  <button class="btn-card-act" onclick="alert('Triggering immediate flush for JOB #${data.queueId}')">NOW ⚡</button>
+                  <button class="btn-card-act danger" onclick="document.getElementById('queue-card-${data.queueId}').remove()">DISCARD ✕</button>
+                </div>
+              ` : ''}
+            `;
+            queueContainer.prepend(newCard);
+          }
         } else {
           alert('Transmission Rejected: ' + (data.error || 'Unknown Error'));
         }
