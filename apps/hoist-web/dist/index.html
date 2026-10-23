@@ -161,7 +161,7 @@
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      max-width: 210px;
+      max-width: 200px;
     }
     .col-sub {
       font-family: var(--font-col-header);
@@ -170,6 +170,10 @@
       margin-top: 3px;
       text-transform: uppercase;
       letter-spacing: 0.06em;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 200px;
     }
     .col-header-controls {
       display: flex;
@@ -269,7 +273,7 @@
     .btn-deck-act.liked { color: #f43f5e; border-color: #9f1239; background: #2c0b14; }
     .btn-deck-act.boosted { color: var(--signal-green); border-color: #166534; background: #0c2317; }
 
-    /* Modals & Drawers Shared Chassis */
+    /* Modals & Drawers */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -317,7 +321,7 @@
     .window-body::-webkit-scrollbar-track { background: #0c0e12; }
     .window-body::-webkit-scrollbar-thumb { background: #2b313d; border-radius: 2px; }
 
-    /* TweetDeck-Style "Build a Column" Layout */
+    /* Two-Stage Column Wizard Layout */
     .builder-preset-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -331,11 +335,11 @@
       cursor: pointer;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 5px;
       transition: all 0.12s ease;
     }
     .builder-preset-card:hover {
-      background: #1a1e2a;
+      background: #191e2b;
       border-color: var(--accent-orange);
       transform: translateY(-1px);
     }
@@ -352,29 +356,48 @@
       line-height: 1.35;
     }
 
-    .builder-custom-tray {
-      background: #0d0f15;
-      border: 1px solid var(--border);
+    /* Step 2 Configuration Bay */
+    #stream-config-bay {
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+      background: #0f1218;
+      border: 1px solid var(--border-bright);
+      border-left: 3px solid var(--accent-orange);
+      padding: 14px;
       border-radius: 2px;
-      padding: 12px 14px;
+    }
+    .config-field-group {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 5px;
     }
-    .custom-row {
-      display: grid;
-      grid-template-columns: 140px 1fr 1fr;
-      gap: 8px;
+    .config-field-label {
+      font-family: var(--font-col-header);
+      font-size: 9.5px;
+      font-weight: 700;
+      color: var(--text-sub);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
     }
-    .custom-row select, .custom-row input {
-      background: #151821;
-      border: 1px solid #2d3647;
+    .config-field-group select, .config-field-group input {
+      background: #161922;
+      border: 1px solid #2a3344;
       color: #fff;
       font-family: var(--font-col-header);
-      font-size: 10.5px;
-      padding: 6px 8px;
+      font-size: 11px;
+      padding: 6px 10px;
       border-radius: 2px;
       outline: none;
+    }
+    .config-field-group input:focus, .config-field-group select:focus {
+      border-color: var(--accent-orange);
+    }
+    .stream-mount-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 4px;
     }
 
     /* Settings Sections */
@@ -688,47 +711,71 @@
       </div>
       <div class="window-body">
         
-        <div class="section-label">1. CHOOSE COMMON PRESET STREAM:</div>
-        <div class="builder-preset-grid">
-          <div class="builder-preset-card" data-proto="atproto" data-type="timeline" data-label="@pennant.layline" data-sub="Federated Ingress">
-            <div class="preset-title">🏠 Home Timeline</div>
-            <div class="preset-desc">Live chronological feed from your primary Bluesky PDS stream.</div>
-          </div>
-          <div class="builder-preset-card" data-proto="activitypub" data-type="mentions" data-label="Notifications / Mentions" data-sub="Incoming Interactions">
-            <div class="preset-title">🔔 Mentions Stream</div>
-            <div class="preset-desc">Mentions and direct interactions across federated instances.</div>
-          </div>
-          <div class="builder-preset-card" data-proto="nostr" data-type="firehose" data-label="Damus Relay Firehose" data-sub="WebSocket Cluster">
-            <div class="preset-title">⚡ Relay Firehose</div>
-            <div class="preset-desc">Raw Kind-1 note feed from verified public relay clusters.</div>
-          </div>
-          <div class="builder-preset-card" data-proto="atproto" data-type="tag" data-label="#buildinpublic Feed" data-sub="Keyword Ingress">
-            <div class="preset-title"># Topic / Hashtag</div>
-            <div class="preset-desc">Live tail of posts matching specific keywords or tags.</div>
-          </div>
-          <div class="builder-preset-card" data-proto="matrix" data-type="room" data-label="#announcements:matrix.org" data-sub="Room Ingress">
-            <div class="preset-title">💬 Matrix Room</div>
-            <div class="preset-desc">Real-time room monitoring for alerts or release announcements.</div>
-          </div>
-          <div class="builder-preset-card" data-proto="queue" data-type="queue" data-label="Outbox Delivery Queue" data-sub="Persistent Ledger">
-            <div class="preset-title">📋 Outbox Ledger</div>
-            <div class="preset-desc">Scheduled broadcast slots, retries, and dispatch proofs.</div>
+        <div id="wizard-stage-1">
+          <div class="section-label">1. CHOOSE STREAM TYPE:</div>
+          <div class="builder-preset-grid">
+            <div class="builder-preset-card" data-stream-type="timeline">
+              <div class="preset-title">🏠 Home Timeline</div>
+              <div class="preset-desc">Followed account feed across Bluesky, Mastodon, or Nostr.</div>
+            </div>
+            <div class="builder-preset-card" data-stream-type="mentions">
+              <div class="preset-title">🔔 Mentions Stream</div>
+              <div class="preset-desc">Incoming replies, notifications, and direct interactions.</div>
+            </div>
+            <div class="builder-preset-card" data-stream-type="tag">
+              <div class="preset-title"># Topic / Hashtag</div>
+              <div class="preset-desc">Live chronological stream tracking specific hashtags.</div>
+            </div>
+            <div class="builder-preset-card" data-stream-type="relay">
+              <div class="preset-title">⚡ Relay Stream</div>
+              <div class="preset-desc">Global unfiltered Kind-1 note feed from public Nostr relays.</div>
+            </div>
+            <div class="builder-preset-card" data-stream-type="room">
+              <div class="preset-title">💬 Matrix Room</div>
+              <div class="preset-desc">Live room monitoring for community updates or team alerts.</div>
+            </div>
+            <div class="builder-preset-card" data-stream-type="queue">
+              <div class="preset-title">📋 Outbox Ledger</div>
+              <div class="preset-desc">Durable SQLite WAL dispatch queue and delivery receipts.</div>
+            </div>
           </div>
         </div>
 
-        <div class="section-label">2. OR BUILD CUSTOM COLUMN SOURCE:</div>
-        <div class="builder-custom-tray">
-          <div class="custom-row">
-            <select id="custom-col-proto">
+        <!-- Step 2: Stream Configuration Bay -->
+        <div id="stream-config-bay">
+          <div class="section-label" style="color:var(--accent-orange);">2. CONFIGURE STREAM SOURCE:</div>
+          
+          <div class="config-field-group">
+            <label class="config-field-label">Target Protocol Bus:</label>
+            <select id="cfg-bus-select">
               <option value="atproto">ATProto (Bluesky)</option>
               <option value="activitypub">ActivityPub (Mastodon)</option>
               <option value="nostr">Nostr Relay Pool</option>
-              <option value="matrix">Matrix Room</option>
+              <option value="matrix">Matrix Protocol</option>
             </select>
-            <input type="text" id="custom-col-label" placeholder="Stream Title (e.g. @wood or #tech)" />
-            <input type="text" id="custom-col-sub" placeholder="Sub-label (e.g. Custom Filter)" />
           </div>
-          <button class="btn-action" style="align-self: flex-end; padding: 6px 14px;" id="btn-mount-custom-col">+ MOUNT CUSTOM COLUMN</button>
+
+          <div class="config-field-group" id="cfg-account-group">
+            <label class="config-field-label">Account / Identity:</label>
+            <select id="cfg-account-select">
+              <option value="@pennant.layline">@pennant.layline (Primary)</option>
+              <option value="@personal.bsky">@personal.bsky (ATProto)</option>
+              <option value="@brand.bsky">@brand.bsky (ATProto)</option>
+              <option value="@signal@social.pennant">@signal@social.pennant (Mastodon)</option>
+              <option value="@wood@mastodon.social">@wood@mastodon.social (Mastodon)</option>
+              <option value="npub1...damus">npub1...damus (Nostr Enclave)</option>
+            </select>
+          </div>
+
+          <div class="config-field-group" id="cfg-param-group">
+            <label class="config-field-label" id="cfg-param-label">Query Parameter / Tag:</label>
+            <input type="text" id="cfg-param-input" placeholder="#buildinpublic" />
+          </div>
+
+          <div class="stream-mount-bar">
+            <button class="btn-header" id="btn-back-stage-1">← BACK TO TYPES</button>
+            <button class="btn-action" id="btn-confirm-mount-col">MOUNT TO DECK ↗</button>
+          </div>
         </div>
 
       </div>
@@ -1091,12 +1138,11 @@
       document.querySelector('.builder-chassis').style.backgroundImage = `url(${dataUrl})`;
     })();
 
-    // Dynamic Columns State
     const defaultDeckColumns = [
-      { id: 'bsky_main', label: '@pennant.layline', protocol: 'ATProto', badge: 'badge-bsky', sub: 'Federated Ingress' },
-      { id: 'masto_signal', label: '@signal@social.pennant', protocol: 'ActivityPub', badge: 'badge-masto', sub: 'Local Instance' },
-      { id: 'nostr_relay', label: 'Relay Damus Pool', protocol: 'Nostr', badge: 'badge-nostr', sub: 'WebSocket Cluster' },
-      { id: 'queue_col', label: 'Outbox Delivery Queue', protocol: 'SQLite WAL', badge: 'badge-queue', sub: 'Persistent Ledger' }
+      { id: 'bsky_main', label: '@pennant.layline', protocol: 'ATProto', badge: 'badge-bsky', sub: 'Home Timeline', query: '@pennant.layline' },
+      { id: 'masto_signal', label: '@signal@social.pennant', protocol: 'ActivityPub', badge: 'badge-masto', sub: 'Mentions & Alerts', query: '@signal' },
+      { id: 'nostr_relay', label: 'Relay Damus Pool', protocol: 'Nostr', badge: 'badge-nostr', sub: 'Relay Firehose', query: 'wss://relay.damus.io' },
+      { id: 'queue_col', label: 'Outbox Delivery Queue', protocol: 'SQLite WAL', badge: 'badge-queue', sub: 'Persistent Ledger', query: 'local_wal' }
     ];
 
     let activeDeckColumns = [];
@@ -1122,6 +1168,14 @@
         const el = document.createElement('div');
         el.className = 'deck-column';
         el.id = 'col-' + col.id;
+        
+        let sampleContent = 'Stream attached. Zero memory leakage across virtualized channels.';
+        if (col.sub.includes('Tag') || col.label.startsWith('#')) {
+          sampleContent = `Tracking live federated posts for ${col.label}. Subscribed via local WebSocket dispatcher.`;
+        } else if (col.protocol === 'Matrix') {
+          sampleContent = `Connected to room ${col.label}. Tail reading m.room.message notices in real time.`;
+        }
+
         el.innerHTML = `
           <div class="column-header">
             <div>
@@ -1136,12 +1190,12 @@
           <div class="cards-container" id="cards-${col.id}">
             <div class="card">
               <div class="card-meta">
-                <span class="author-name">${col.label}</span>
+                <span class="author-name">${col.query || col.label}</span>
                 <span>10:46 PM</span>
               </div>
-              <div>Stream attached. Zero memory leakage across virtualized channels.</div>
+              <div>${sampleContent}</div>
               <div class="in-deck-actions">
-                <button class="btn-deck-act" onclick="openReply('${col.label}')">↩ REPLY</button>
+                <button class="btn-deck-act" onclick="openReply('${col.query || col.label}')">↩ REPLY</button>
                 <button class="btn-deck-act" onclick="toggleBoost(this)">⟳ BOOST</button>
                 <button class="btn-deck-act" onclick="toggleLike(this)">★ LIKE</button>
               </div>
@@ -1179,15 +1233,124 @@
       btn.innerText = btn.classList.contains('liked') ? '★ LIKED' : '★ LIKE';
     };
 
-    // TweetDeck-Style "Add / Build Column" Controller
+    // =========================================================================
+    // TWO-STAGE TWEETDECK-STYLE COLUMN ASSEMBLY WIZARD
+    // =========================================================================
     const colBuilderDrawer = document.getElementById('col-builder-drawer');
+    const wizardStage1 = document.getElementById('wizard-stage-1');
+    const streamConfigBay = document.getElementById('stream-config-bay');
+
+    const cfgBusSelect = document.getElementById('cfg-bus-select');
+    const cfgAccountGroup = document.getElementById('cfg-account-group');
+    const cfgAccountSelect = document.getElementById('cfg-account-select');
+    const cfgParamGroup = document.getElementById('cfg-param-group');
+    const cfgParamLabel = document.getElementById('cfg-param-label');
+    const cfgParamInput = document.getElementById('cfg-param-input');
+
+    let currentAssemblyType = 'timeline';
+
     document.getElementById('btn-open-col-builder').addEventListener('click', () => {
+      wizardStage1.style.display = 'block';
+      streamConfigBay.style.display = 'none';
       colBuilderDrawer.style.display = 'flex';
     });
+
     function closeColBuilder() { colBuilderDrawer.style.display = 'none'; }
     document.getElementById('btn-close-col-builder').addEventListener('click', closeColBuilder);
 
-    function mountNewColumn(proto, label, sub) {
+    document.querySelectorAll('.builder-preset-card').forEach(card => {
+      card.addEventListener('click', () => {
+        currentAssemblyType = card.getAttribute('data-stream-type');
+        transitionToStage2(currentAssemblyType);
+      });
+    });
+
+    function transitionToStage2(type) {
+      wizardStage1.style.display = 'none';
+      streamConfigBay.style.display = 'flex';
+
+      // Reset & intelligently adapt form
+      if (type === 'timeline') {
+        cfgBusSelect.innerHTML = `
+          <option value="atproto">ATProto (Bluesky)</option>
+          <option value="activitypub">ActivityPub (Mastodon)</option>
+          <option value="nostr">Nostr Relay Pool</option>
+        `;
+        cfgAccountGroup.style.display = 'flex';
+        cfgParamGroup.style.display = 'none';
+      } else if (type === 'mentions') {
+        cfgBusSelect.innerHTML = `
+          <option value="atproto">ATProto (Bluesky)</option>
+          <option value="activitypub">ActivityPub (Mastodon)</option>
+        `;
+        cfgAccountGroup.style.display = 'flex';
+        cfgParamGroup.style.display = 'none';
+      } else if (type === 'tag') {
+        cfgBusSelect.innerHTML = `
+          <option value="atproto">ATProto (Bluesky Search)</option>
+          <option value="activitypub">ActivityPub (Instance Tag)</option>
+        `;
+        cfgAccountGroup.style.display = 'none';
+        cfgParamGroup.style.display = 'flex';
+        cfgParamLabel.innerText = 'Hashtag or Keyword:';
+        cfgParamInput.placeholder = '#buildinpublic';
+        cfgParamInput.value = '#buildinpublic';
+      } else if (type === 'relay') {
+        cfgBusSelect.innerHTML = `<option value="nostr">Nostr Protocol</option>`;
+        cfgAccountGroup.style.display = 'none';
+        cfgParamGroup.style.display = 'flex';
+        cfgParamLabel.innerText = 'Relay WebSocket URL:';
+        cfgParamInput.placeholder = 'wss://relay.damus.io';
+        cfgParamInput.value = 'wss://relay.damus.io';
+      } else if (type === 'room') {
+        cfgBusSelect.innerHTML = `<option value="matrix">Matrix Protocol</option>`;
+        cfgAccountGroup.style.display = 'none';
+        cfgParamGroup.style.display = 'flex';
+        cfgParamLabel.innerText = 'Matrix Room ID / Alias:';
+        cfgParamInput.placeholder = '#announcements:matrix.org';
+        cfgParamInput.value = '#announcements:matrix.org';
+      } else if (type === 'queue') {
+        mountNewColumn('queue', 'Outbox Delivery Queue', 'Persistent Ledger', 'local_wal');
+      }
+    }
+
+    document.getElementById('btn-back-stage-1').addEventListener('click', () => {
+      wizardStage1.style.display = 'block';
+      streamConfigBay.style.display = 'none';
+    });
+
+    document.getElementById('btn-confirm-mount-col').addEventListener('click', () => {
+      const bus = cfgBusSelect.value;
+      let label = '';
+      let sub = '';
+      let query = '';
+
+      if (currentAssemblyType === 'timeline') {
+        label = cfgAccountSelect.value;
+        sub = `${bus.toUpperCase()} Timeline`;
+        query = cfgAccountSelect.value;
+      } else if (currentAssemblyType === 'mentions') {
+        label = `Mentions (${cfgAccountSelect.value})`;
+        sub = `${bus.toUpperCase()} Alerts`;
+        query = cfgAccountSelect.value;
+      } else if (currentAssemblyType === 'tag') {
+        label = cfgParamInput.value.trim() || '#trend';
+        sub = `${bus.toUpperCase()} Tag Stream`;
+        query = label;
+      } else if (currentAssemblyType === 'relay') {
+        label = cfgParamInput.value.trim() || 'wss://relay.damus.io';
+        sub = 'Nostr Firehose';
+        query = label;
+      } else if (currentAssemblyType === 'room') {
+        label = cfgParamInput.value.trim() || '#announcements';
+        sub = 'Matrix Channel Ingress';
+        query = label;
+      }
+
+      mountNewColumn(bus, label, sub, query);
+    });
+
+    function mountNewColumn(proto, label, sub, query) {
       let badge = 'badge-bsky';
       let protoLabel = 'ATProto';
       if (proto === 'activitypub') { badge = 'badge-masto'; protoLabel = 'ActivityPub'; }
@@ -1200,35 +1363,13 @@
         label: label,
         protocol: protoLabel,
         badge: badge,
-        sub: sub || 'Custom Stream'
+        sub: sub || 'Custom Stream',
+        query: query || label
       });
       saveDeckColumns();
       renderDeck();
       closeColBuilder();
     }
-
-    document.querySelectorAll('.builder-preset-card').forEach(card => {
-      card.addEventListener('click', () => {
-        const proto = card.getAttribute('data-proto');
-        const label = card.getAttribute('data-label');
-        const sub = card.getAttribute('data-sub');
-        mountNewColumn(proto, label, sub);
-      });
-    });
-
-    document.getElementById('btn-mount-custom-col').addEventListener('click', () => {
-      const proto = document.getElementById('custom-col-proto').value;
-      const label = document.getElementById('custom-col-label').value.trim();
-      const sub = document.getElementById('custom-col-sub').value.trim();
-
-      if (!label) {
-        alert('Validation Fault: Please enter a title or handle for the column.');
-        return;
-      }
-      mountNewColumn(proto, label, sub || 'Custom Stream');
-      document.getElementById('custom-col-label').value = '';
-      document.getElementById('custom-col-sub').value = '';
-    });
 
     // Settings & Account Onboarding Controller
     const settingsDrawer = document.getElementById('settings-drawer');
@@ -1264,6 +1405,13 @@
       `;
       roster.prepend(item);
 
+      // Add to account dropdown selector in column wizard
+      const opt = document.createElement('option');
+      opt.value = handle;
+      opt.innerText = `${handle} (${bus.toUpperCase()})`;
+      cfgAccountSelect.prepend(opt);
+
+      // Add dynamic station key to composer bay
       const rack = document.getElementById('rack-' + bus);
       if (rack) {
         const newKey = document.createElement('div');
