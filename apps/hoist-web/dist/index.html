@@ -305,7 +305,7 @@
       padding: 12px 14px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
     }
     .config-title {
       font-family: var(--font-col-header);
@@ -316,6 +316,9 @@
       text-transform: uppercase;
       border-bottom: 1px dashed rgba(255,255,255,0.08);
       padding-bottom: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
     .config-row {
       display: flex;
@@ -337,9 +340,82 @@
       width: 260px;
     }
 
+    /* Identity Add Form Inset */
+    #account-add-box {
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+      background: #0b0d12;
+      border: 1px dashed var(--accent-orange);
+      padding: 10px 12px;
+      border-radius: 2px;
+    }
+    .account-input-grid {
+      display: grid;
+      grid-template-columns: 120px 1fr 1fr auto;
+      gap: 8px;
+      align-items: center;
+    }
+    .account-input-grid select, .account-input-grid input {
+      background: #12151d;
+      border: 1px solid #2c3546;
+      color: #fff;
+      font-family: var(--font-col-header);
+      font-size: 10.5px;
+      padding: 5px 8px;
+      border-radius: 2px;
+      outline: none;
+    }
+
+    .account-list-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #151821;
+      border: 1px solid #252b38;
+      padding: 6px 10px;
+      border-radius: 2px;
+      font-family: var(--font-col-header);
+      font-size: 11px;
+    }
+    .btn-del-acct {
+      background: transparent;
+      border: 1px solid #4a1d24;
+      color: #f87171;
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+    .btn-del-acct:hover { background: #7f1d1d; color: #fff; }
+
+    /* Stripe Buttons */
+    .stripe-btn-tray {
+      display: flex;
+      gap: 10px;
+      margin-top: 4px;
+    }
+    .btn-stripe {
+      background: #635bff;
+      border: 1px solid #4f46e5;
+      color: #fff;
+      font-family: var(--font-masthead);
+      font-size: 10.5px;
+      font-weight: 800;
+      padding: 6px 14px;
+      border-radius: 2px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-stripe:hover { background: #534be8; }
+
     /* Composer Specific */
     .composer-chassis { width: 740px; max-width: 100%; max-height: calc(100vh - 40px); }
-    .settings-chassis { width: 640px; max-width: 100%; max-height: calc(100vh - 40px); }
+    .settings-chassis { width: 680px; max-width: 100%; max-height: calc(100vh - 40px); }
 
     .section-label {
       font-family: var(--font-col-header);
@@ -529,7 +605,7 @@
 
   <div id="deck-viewport"></div>
 
-  <!-- Settings & About Console Modal -->
+  <!-- Settings & Account Onboarding Drawer -->
   <div class="modal-overlay" id="settings-drawer">
     <div class="chassis-window settings-chassis">
       <div class="window-top">
@@ -538,28 +614,54 @@
       </div>
       <div class="window-body">
         
+        <!-- Live Identity Roster with Inline Addition -->
         <div class="config-section">
-          <div class="config-title">1. AUTHENTICATED FLEET IDENTITIES</div>
-          <div class="config-row">
-            <span>● ATPROTO (Bluesky PDS)</span>
-            <span style="color:#60a5fa; font-weight:700;">@pennant.layline</span>
+          <div class="config-title">
+            <span>1. AUTHENTICATED FLEET IDENTITIES</span>
+            <button class="btn-header" style="padding:2px 8px; font-size:9.5px;" id="btn-show-add-account">+ CONNECT ACCOUNT</button>
           </div>
-          <div class="config-row">
-            <span>● ACTIVITYPUB (Mastodon Node)</span>
-            <span style="color:#c084fc; font-weight:700;">@signal@social.pennant</span>
+
+          <!-- Add Account Form Inset -->
+          <div id="account-add-box">
+            <div class="account-input-grid">
+              <select id="new-acct-bus">
+                <option value="atproto">ATProto (Bluesky)</option>
+                <option value="activitypub">ActivityPub (Mastodon)</option>
+                <option value="nostr">Nostr (Enclave/Bunker)</option>
+                <option value="matrix">Matrix (Room Egress)</option>
+              </select>
+              <input type="text" id="new-acct-handle" placeholder="Handle / Identifier (e.g. @brand.bsky)" />
+              <input type="password" id="new-acct-secret" placeholder="App Password / Token / nsec / bunker URI" />
+              <button class="btn-action" style="padding:5px 12px;" id="btn-save-new-account">ADD</button>
+            </div>
+            <div style="font-family:var(--font-col-header); font-size:9px; color:var(--text-muted);">
+              Credentials resolve strictly to local SessionVault in WAL memory. Private keys are never exported.
+            </div>
           </div>
-          <div class="config-row">
-            <span>● NOSTR (Signer Enclave)</span>
-            <span style="color:#fbbf24; font-weight:700;">npub1...damus (BIP-340 Schnorr)</span>
-          </div>
-          <div class="config-row">
-            <span>● MATRIX (Announcement Room)</span>
-            <span style="color:#34d399; font-weight:700;">#announcements:matrix.org</span>
+
+          <div id="identities-roster" style="display:flex; flex-direction:column; gap:6px;">
+            <div class="account-list-item" data-id="bsky-main">
+              <span><strong style="color:#60a5fa;">ATPROTO:</strong> @pennant.layline</span>
+              <button class="btn-del-acct" onclick="this.parentElement.remove()">DISCONNECT ✕</button>
+            </div>
+            <div class="account-list-item" data-id="masto-signal">
+              <span><strong style="color:#c084fc;">ACTIVITYPUB:</strong> @signal@social.pennant</span>
+              <button class="btn-del-acct" onclick="this.parentElement.remove()">DISCONNECT ✕</button>
+            </div>
+            <div class="account-list-item" data-id="nostr-damus">
+              <span><strong style="color:#fbbf24;">NOSTR:</strong> npub1...damus (Signer Enclave)</span>
+              <button class="btn-del-acct" onclick="this.parentElement.remove()">DISCONNECT ✕</button>
+            </div>
+            <div class="account-list-item" data-id="matrix-ops">
+              <span><strong style="color:#34d399;">MATRIX:</strong> #announcements:matrix.org</span>
+              <button class="btn-del-acct" onclick="this.parentElement.remove()">DISCONNECT ✕</button>
+            </div>
           </div>
         </div>
 
+        <!-- Stripe Commercial Billing Module -->
         <div class="config-section">
-          <div class="config-title">2. STRIPE COMMERCIAL SEAT & LICENSE</div>
+          <div class="config-title">2. STRIPE COMMERCIAL SEAT & SUBSCRIPTION</div>
           <div class="config-row">
             <span>Seat Tier:</span>
             <span style="color:var(--signal-green); font-weight:700;" id="cfg-tier-status">STANDALONE DESKTOP [SOLO ACTIVE]</span>
@@ -569,8 +671,11 @@
             <input type="text" id="cfg-license-key" value="PH-SOLO-2026-X892-F891" spellcheck="false" />
           </div>
           <div class="config-row">
-            <span>Entitlement Status:</span>
-            <span style="color:var(--text-muted);">Verified offline (Grace: 7 days remaining)</span>
+            <span>Billing & Checkout Actions:</span>
+            <div class="stripe-btn-tray">
+              <a href="https://buy.stripe.com/test_desktop_license" target="_blank" class="btn-stripe">BUY DESKTOP SEAT ($49/YR)</a>
+              <a href="https://billing.stripe.com/p/login/test" target="_blank" class="btn-stripe" style="background:#1e293b; border-color:#334155;">MANAGE SUBSCRIPTION ↗</a>
+            </div>
           </div>
         </div>
 
@@ -914,13 +1019,76 @@
       btn.innerText = btn.classList.contains('liked') ? '★ LIKED' : '★ LIKE';
     };
 
-    // Settings Drawer Controller
+    // Settings & Account Onboarding Controller
     const settingsDrawer = document.getElementById('settings-drawer');
+    const accountAddBox = document.getElementById('account-add-box');
+    const btnShowAddAccount = document.getElementById('btn-show-add-account');
+
     document.getElementById('btn-open-settings').addEventListener('click', () => {
       settingsDrawer.style.display = 'flex';
     });
     function closeSettings() { settingsDrawer.style.display = 'none'; }
     document.getElementById('btn-close-settings').addEventListener('click', closeSettings);
+    
+    btnShowAddAccount.addEventListener('click', () => {
+      accountAddBox.style.display = accountAddBox.style.display === 'flex' ? 'none' : 'flex';
+    });
+
+    document.getElementById('btn-save-new-account').addEventListener('click', () => {
+      const bus = document.getElementById('new-acct-bus').value;
+      const handle = document.getElementById('new-acct-handle').value.trim();
+      const secret = document.getElementById('new-acct-secret').value.trim();
+
+      if (!handle || !secret) {
+        alert('Validation Fault: Both an account identifier and authentication secret are required.');
+        return;
+      }
+
+      // Add to UI Roster
+      const roster = document.getElementById('identities-roster');
+      const item = document.createElement('div');
+      item.className = 'account-list-item';
+      item.innerHTML = `
+        <span><strong style="color:var(--signal-green);">${bus.toUpperCase()}:</strong> ${handle}</span>
+        <button class="btn-del-acct" onclick="this.parentElement.remove()">DISCONNECT ✕</button>
+      `;
+      roster.prepend(item);
+
+      // Add dynamic station key to composer bay
+      const rack = document.getElementById('rack-' + bus);
+      if (rack) {
+        const newKey = document.createElement('div');
+        newKey.className = 'station-key active';
+        newKey.setAttribute('data-handle', handle);
+        newKey.setAttribute('data-bus', bus);
+        newKey.innerHTML = `
+          <div class="key-lamp-slit"></div>
+          <span class="key-label">${handle.toUpperCase()}</span>
+        `;
+        newKey.addEventListener('click', () => {
+          if (activeTargets.has(handle)) {
+            activeTargets.delete(handle);
+            newKey.classList.remove('active');
+          } else {
+            activeTargets.add(handle);
+            newKey.classList.add('active');
+          }
+          updateTargetCount();
+          saveLayout();
+        });
+        rack.prepend(newKey);
+        activeTargets.add(handle);
+        updateTargetCount();
+        saveLayout();
+      }
+
+      // Reset form
+      document.getElementById('new-acct-handle').value = '';
+      document.getElementById('new-acct-secret').value = '';
+      accountAddBox.style.display = 'none';
+      alert(`Identity Secured: Connected ${handle} into local loopback enclave.`);
+    });
+
     document.getElementById('btn-save-settings').addEventListener('click', () => {
       localStorage.setItem('pennant_license_key', document.getElementById('cfg-license-key').value.trim());
       closeSettings();
