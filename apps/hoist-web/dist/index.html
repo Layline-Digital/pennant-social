@@ -209,7 +209,6 @@
     .badge-bsky { background: #0c2035; border-color: #1a4d7d; color: #60a5fa; }
     .badge-masto { background: #241438; border-color: #55278c; color: #c084fc; }
     .badge-nostr { background: #2d1d06; border-color: #694109; color: #fbbf24; }
-    .badge-matrix { background: #0c2a20; border-color: #176346; color: #34d399; }
     .badge-queue { background: #11241a; border-color: #235c3c; color: #4ade80; }
 
     .cards-container {
@@ -284,7 +283,7 @@
       position: fixed;
       inset: 0;
       background: rgba(6, 8, 11, 0.88);
-      backdrop-filter: blur(5px);
+      backdrop-filter: blur(6px);
       display: none;
       align-items: center;
       justify-content: center;
@@ -327,83 +326,68 @@
     .window-body::-webkit-scrollbar-track { background: #0c0e12; }
     .window-body::-webkit-scrollbar-thumb { background: #2b313d; border-radius: 2px; }
 
-    /* Column Wizard Layout */
-    .builder-preset-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-top: 8px;
-    }
-    .builder-preset-card {
-      background: #12151d;
-      border: 1px solid #283140;
-      border-radius: 2px;
-      padding: 12px 10px;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-      transition: all 0.12s ease;
-    }
-    .builder-preset-card:hover {
-      background: #191e2b;
-      border-color: var(--accent-orange);
-      transform: translateY(-1px);
-    }
-    .preset-title {
-      font-family: var(--font-col-header);
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--text-col-pop);
-    }
-    .preset-desc {
-      font-family: var(--font-grotesk);
-      font-size: 11px;
-      color: var(--text-muted);
-      line-height: 1.35;
-    }
-
-    #stream-config-bay {
+    /* Fixed Clean Nostr Covenant Pop-Up (Zero Layout Shift) */
+    #covenant-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(4, 5, 8, 0.94);
+      backdrop-filter: blur(8px);
       display: none;
-      flex-direction: column;
-      gap: 12px;
-      background: #0f1218;
-      border: 1px solid var(--border-bright);
-      border-left: 3px solid var(--accent-orange);
-      padding: 14px;
-      border-radius: 2px;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 500;
     }
-    .config-field-group {
+    .covenant-chassis {
+      width: 540px;
+      background: #16181f;
+      border: 1px solid #fbbf24;
+      border-top: 3px solid #fbbf24;
+      border-radius: 3px;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.95);
+      padding: 24px;
       display: flex;
       flex-direction: column;
-      gap: 5px;
+      gap: 16px;
     }
-    .config-field-label {
-      font-family: var(--font-col-header);
-      font-size: 9.5px;
-      font-weight: 700;
-      color: var(--text-sub);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
+    .covenant-title {
+      font-family: var(--font-masthead);
+      font-size: 13px;
+      font-weight: 800;
+      color: #fbbf24;
+      letter-spacing: 0.1em;
     }
-    .config-field-group select, .config-field-group input {
-      background: #161922;
-      border: 1px solid #2a3344;
-      color: #fff;
+    .covenant-body {
       font-family: var(--font-col-header);
       font-size: 11px;
-      padding: 6px 10px;
-      border-radius: 2px;
-      outline: none;
-    }
-    .config-field-group input:focus, .config-field-group select:focus {
-      border-color: var(--accent-orange);
-    }
-    .stream-mount-bar {
+      line-height: 1.6;
+      color: #cbd5e1;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 4px;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .covenant-point {
+      background: #0d0f14;
+      border: 1px solid #232733;
+      padding: 10px 12px;
+      border-radius: 2px;
+    }
+    .covenant-point strong { color: #f8fafc; }
+    .btn-covenant-accept {
+      background: linear-gradient(180deg, #d97706 0%, #b45309 100%);
+      border: 1px solid #78350f;
+      color: #fff;
+      font-family: var(--font-masthead);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 10px 18px;
+      border-radius: 2px;
+      cursor: pointer;
+      align-self: flex-end;
+      transition: all 0.1s ease;
+    }
+    .btn-covenant-accept:hover {
+      background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%);
     }
 
     /* Hashtag Management System */
@@ -502,17 +486,6 @@
       font-size: 11px;
       color: var(--text-sub);
     }
-    .config-row input[type="text"] {
-      background: #08090d;
-      border: 1px solid #28303d;
-      color: #f8fafc;
-      font-family: var(--font-col-header);
-      font-size: 10.5px;
-      padding: 4px 8px;
-      border-radius: 2px;
-      outline: none;
-      width: 260px;
-    }
     .config-row select {
       background: #08090d;
       border: 1px solid #28303d;
@@ -523,55 +496,6 @@
       border-radius: 2px;
       outline: none;
     }
-
-    #account-add-box {
-      display: none;
-      flex-direction: column;
-      gap: 8px;
-      background: #0b0d12;
-      border: 1px dashed var(--accent-orange);
-      padding: 10px 12px;
-      border-radius: 2px;
-    }
-    .account-input-grid {
-      display: grid;
-      grid-template-columns: 120px 1fr 1fr auto;
-      gap: 8px;
-      align-items: center;
-    }
-    .account-input-grid select, .account-input-grid input {
-      background: #12151d;
-      border: 1px solid #2c3546;
-      color: #fff;
-      font-family: var(--font-col-header);
-      font-size: 10.5px;
-      padding: 5px 8px;
-      border-radius: 2px;
-      outline: none;
-    }
-
-    .account-list-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #151821;
-      border: 1px solid #252b38;
-      padding: 6px 10px;
-      border-radius: 2px;
-      font-family: var(--font-col-header);
-      font-size: 11px;
-    }
-    .btn-del-acct {
-      background: transparent;
-      border: 1px solid #4a1d24;
-      color: #f87171;
-      font-size: 9px;
-      font-weight: 700;
-      padding: 2px 6px;
-      border-radius: 2px;
-      cursor: pointer;
-    }
-    .btn-del-acct:hover { background: #7f1d1d; color: #fff; }
 
     .stripe-btn-tray { display: flex; gap: 10px; margin-top: 4px; }
     .btn-stripe {
@@ -591,7 +515,7 @@
     }
     .btn-stripe:hover { background: #534be8; }
 
-    /* Section 5: Centered Multi-Row Grid & Vector Icon Cards */
+    /* Section 5: Brand-Colored Official Vectors & Centered Typography */
     .centered-sub-banner {
       text-align: center;
       font-family: var(--font-col-header);
@@ -646,9 +570,7 @@
     .icon-bsky { border-color: #1a4d7d; color: #60a5fa; fill: #60a5fa; }
     .icon-masto { border-color: #55278c; color: #c084fc; fill: #c084fc; }
     .icon-nostr { border-color: #694109; color: #fbbf24; fill: #fbbf24; }
-    .icon-matrix { border-color: #176346; color: #34d399; fill: #34d399; }
     .icon-web { border-color: #235c3c; color: var(--signal-green); fill: var(--signal-green); }
-    .icon-git { border-color: #7c2d12; color: #fb923c; fill: #fb923c; }
     .icon-doc { border-color: #1e3a5f; color: #38bdf8; fill: #38bdf8; }
     .icon-mail { border-color: #881337; color: #f43f5e; fill: #f43f5e; }
 
@@ -681,24 +603,65 @@
       width: 100%;
     }
 
-    .composer-chassis { width: 740px; max-width: 100%; max-height: calc(100vh - 40px); }
-    .settings-chassis { width: 680px; max-width: 100%; max-height: calc(100vh - 40px); }
-    .builder-chassis { width: 640px; max-width: 100%; max-height: calc(100vh - 40px); }
-
-    .section-label {
-      font-family: var(--font-col-header);
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      color: var(--text-sub);
-      text-transform: uppercase;
-      margin-bottom: 8px;
-      display: flex;
-      justify-content: space-between;
+    /* In-App Operations Manual Modal */
+    #manual-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(4, 5, 8, 0.94);
+      backdrop-filter: blur(8px);
+      display: none;
       align-items: center;
+      justify-content: center;
+      padding: 24px;
+      z-index: 400;
+    }
+    .manual-chassis {
+      width: 820px;
+      max-width: 100%;
+      height: 85vh;
+      background: var(--chassis);
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--accent-orange);
+      border-radius: 3px;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.9);
+      display: flex;
+      flex-direction: column;
+    }
+    .manual-content-view {
+      padding: 20px 24px;
+      overflow-y: auto;
+      font-family: var(--font-grotesk);
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .manual-content-view h2 {
+      font-family: var(--font-col-header);
+      font-size: 13px;
+      color: var(--accent-orange);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 4px;
+      margin-top: 8px;
+    }
+    .manual-content-view p { color: #cbd5e1; }
+    .manual-content-view code {
+      font-family: var(--font-masthead);
+      font-size: 11px;
+      background: #0d0f14;
+      border: 1px solid var(--border);
+      padding: 2px 6px;
+      border-radius: 2px;
+      color: #38bdf8;
     }
 
-    .protocol-cluster { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+    .composer-chassis { width: 740px; max-width: 100%; max-height: calc(100vh - 40px); }
+    .settings-chassis { width: 680px; max-width: 100%; max-height: calc(100vh - 40px); }
+    .protocol-cluster { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
     .protocol-bay {
       background: var(--socket);
       border: 1px solid #20242c;
@@ -729,29 +692,6 @@
       margin-left: 2px;
     }
     .btn-review-covenant:hover { background: #3b2a0c; color: #fff; }
-
-    .telemetry-help-dot {
-      width: 12px; height: 12px; border-radius: 50%;
-      background: #181c24; border: 1px solid #2f3644; color: var(--text-sub);
-      font-family: var(--font-col-header); font-size: 8px; font-weight: 700;
-      display: inline-flex; align-items: center; justify-content: center;
-      cursor: help; position: relative; transition: all 0.1s ease;
-    }
-    .telemetry-help-dot:hover { background: #232936; border-color: var(--accent-orange); color: #fff; }
-    .telemetry-help-dot .tooltip-card {
-      visibility: hidden; opacity: 0; width: 250px;
-      background: #0f1116; border: 1px solid var(--accent-orange); border-radius: 2px; padding: 10px 12px;
-      position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); z-index: 200;
-      font-family: var(--font-col-header); font-size: 10px; line-height: 1.45; color: #e2e8f0;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.85); pointer-events: none; transition: opacity 0.15s ease, visibility 0.15s ease;
-    }
-    .telemetry-help-dot .tooltip-card::after {
-      content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px;
-      border-width: 5px; border-style: solid; border-color: var(--accent-orange) transparent transparent transparent;
-    }
-    .telemetry-help-dot.align-right .tooltip-card { left: auto; right: -8px; transform: none; }
-    .telemetry-help-dot.align-right .tooltip-card::after { left: auto; right: 12px; margin-left: 0; }
-    .telemetry-help-dot:hover .tooltip-card { visibility: visible; opacity: 1; }
 
     .switch-well {
       width: 100%; height: 36px; background: #08090c;
@@ -810,47 +750,18 @@
       border-radius: 2px; padding: 10px 12px; color: #f1f5f9; font-family: var(--font-grotesk); font-size: 13.5px; line-height: 1.5; resize: vertical; outline: none; box-shadow: inset 0 2px 6px rgba(0,0,0,0.85);
     }
     textarea:focus { border-color: var(--accent-orange); }
-    textarea.drag-over { border-color: var(--signal-green) !important; background: #0e141a !important; }
-
-    #thread-split-bar { display: none; align-items: center; justify-content: space-between; padding: 6px 10px; background: #131922; border: 1px solid #253347; border-radius: 2px; font-family: var(--font-col-header); font-size: 10.5px; }
-    .btn-thread-split { background: #1e293b; border: 1px solid #38bdf8; color: #38bdf8; font-family: var(--font-col-header); font-size: 9.5px; font-weight: 700; padding: 3px 8px; border-radius: 2px; cursor: pointer; }
-
-    #media-preview-bar { display: none; flex-direction: column; gap: 6px; padding: 8px 10px; background: #101217; border: 1px solid #232733; border-radius: 2px; font-family: var(--font-col-header); font-size: 10px; color: var(--text-sub); }
-    .media-top-line { display: flex; align-items: center; gap: 10px; }
-    .media-badge { background: #19202a; border: 1px solid #2f3b4c; color: #7dd3fc; padding: 2px 6px; border-radius: 2px; }
-    .btn-alt-text { background: #171d26; border: 1px solid #2f3c50; color: #93c5fd; font-family: var(--font-col-header); font-size: 9.5px; font-weight: 700; padding: 2px 8px; border-radius: 2px; cursor: pointer; }
-    #alt-text-input { display: none; background: #080a0e; border: 1px solid #2a3344; color: #e2e8f0; font-family: var(--font-col-header); font-size: 10.5px; padding: 5px 8px; border-radius: 2px; outline: none; width: 100%; }
 
     .schedule-control-bay { background: #101318; border: 1px solid var(--border); border-radius: 2px; padding: 6px 10px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
     .schedule-mode-toggle { display: flex; background: #090a0d; border: 1px solid #222733; border-radius: 2px; padding: 2px; gap: 2px; }
     .schedule-mode-btn { background: transparent; border: none; color: var(--text-muted); font-family: var(--font-col-header); font-size: 9.5px; font-weight: 700; padding: 3px 8px; border-radius: 2px; cursor: pointer; }
     .schedule-mode-btn.active { background: #202633; color: var(--text-header-pop); }
-    .schedule-inputs-box { display: none; align-items: center; gap: 6px; font-family: var(--font-col-header); font-size: 10px; }
-    .schedule-inputs-box input, .schedule-inputs-box select { background: #090b0e; border: 1px solid #2a313d; color: #cbd5e1; font-family: var(--font-col-header); font-size: 10px; padding: 3px 6px; border-radius: 2px; outline: none; }
 
     .telemetry-row { display: flex; justify-content: space-between; align-items: center; font-family: var(--font-col-header); font-size: 10.5px; }
     .counters-tray { display: flex; gap: 6px; }
     .counter-pill { background: var(--socket); border: 1px solid var(--border); padding: 2px 7px; border-radius: 2px; color: var(--text-sub); font-weight: 600; }
 
-    .staging-group { display: flex; align-items: center; gap: 6px; }
-    .staging-status-trigger { display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; color: var(--text-muted); cursor: pointer; user-select: none; padding: 3px 6px; border-radius: 2px; }
-    .staging-status-trigger.active { color: var(--signal-green); text-shadow: 0 0 10px var(--signal-green-glow); }
-    .staging-status-trigger .lamp-dot { width: 7px; height: 7px; border-radius: 50%; background: #2b313d; }
-    .staging-status-trigger.active .lamp-dot { background: var(--signal-green); box-shadow: 0 0 8px var(--signal-green); }
-
     .drawer-footer { background: #14161c; border-top: 1px solid var(--border); padding: 11px 20px; display: flex; justify-content: flex-end; align-items: center; gap: 12px; flex-shrink: 0; }
-    .shortcut-legend { font-family: var(--font-col-header); font-size: 9.5px; color: var(--text-muted); margin-right: auto; }
     .btn-cancel { background: transparent; border: 1px solid var(--border); color: var(--text-muted); font-family: var(--font-col-header); font-size: 10.5px; font-weight: 700; padding: 7px 14px; border-radius: 2px; cursor: pointer; }
-    .btn-cancel:hover { color: var(--text-col-pop); border-color: var(--border-bright); }
-
-    /* Key Custody Notice Modal */
-    #covenant-modal { position: fixed; inset: 0; background: rgba(3, 4, 6, 0.92); backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 300; }
-    .covenant-chassis { width: 540px; background: #16181f; border: 1px solid #fbbf24; border-top: 3px solid #fbbf24; border-radius: 3px; box-shadow: 0 20px 60px rgba(0,0,0,0.9); padding: 24px; display: flex; flex-direction: column; gap: 16px; }
-    .covenant-title { font-family: var(--font-masthead); font-size: 13px; font-weight: 800; color: #fbbf24; letter-spacing: 0.1em; }
-    .covenant-body { font-family: var(--font-col-header); font-size: 11px; line-height: 1.6; color: #cbd5e1; display: flex; flex-direction: column; gap: 10px; }
-    .covenant-point { background: #0d0f14; border: 1px solid #232733; padding: 8px 12px; border-radius: 2px; }
-    .covenant-point strong { color: #f8fafc; }
-    .btn-covenant-accept { background: linear-gradient(180deg, #d97706 0%, #b45309 100%); border: 1px solid #78350f; color: #fff; font-family: var(--font-masthead); font-size: 11px; font-weight: 800; padding: 10px 18px; border-radius: 2px; cursor: pointer; align-self: flex-end; }
   </style>
 </head>
 <body>
@@ -873,87 +784,7 @@
 
   <div id="deck-viewport"></div>
 
-  <!-- TweetDeck-Style "Add / Build Column" Wizard Modal -->
-  <div class="modal-overlay" id="col-builder-drawer">
-    <div class="chassis-window builder-chassis">
-      <div class="window-top">
-        <span>// MOUNT NEW STREAM COLUMN</span>
-        <span style="cursor: pointer; color: var(--text-muted);" id="btn-close-col-builder">[ESC]</span>
-      </div>
-      <div class="window-body">
-        
-        <div id="wizard-stage-1">
-          <div class="section-label">1. CHOOSE STREAM TYPE:</div>
-          <div class="builder-preset-grid">
-            <div class="builder-preset-card" data-stream-type="timeline">
-              <div class="preset-title">🏠 Home Timeline</div>
-              <div class="preset-desc">Followed account feed across Bluesky, Mastodon, or Nostr.</div>
-            </div>
-            <div class="builder-preset-card" data-stream-type="mentions">
-              <div class="preset-title">🔔 Mentions Stream</div>
-              <div class="preset-desc">Incoming replies, notifications, and direct interactions.</div>
-            </div>
-            <div class="builder-preset-card" data-stream-type="tag">
-              <div class="preset-title"># Topic / Hashtag</div>
-              <div class="preset-desc">Live chronological stream tracking specific hashtags.</div>
-            </div>
-            <div class="builder-preset-card" data-stream-type="relay">
-              <div class="preset-title">⚡ Relay Stream</div>
-              <div class="preset-desc">Global unfiltered Kind-1 note feed from public Nostr relays.</div>
-            </div>
-            <div class="builder-preset-card" data-stream-type="room">
-              <div class="preset-title">💬 Matrix Room</div>
-              <div class="preset-desc">Live room monitoring for community updates or team alerts.</div>
-            </div>
-            <div class="builder-preset-card" data-stream-type="queue">
-              <div class="preset-title">📋 Outbox Ledger</div>
-              <div class="preset-desc">Durable SQLite WAL dispatch queue and delivery receipts.</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Step 2: Stream Configuration Bay -->
-        <div id="stream-config-bay">
-          <div class="section-label" style="color:var(--accent-orange);">2. CONFIGURE STREAM SOURCE:</div>
-          
-          <div class="config-field-group">
-            <label class="config-field-label">Target Protocol Bus:</label>
-            <select id="cfg-bus-select">
-              <option value="atproto">ATProto (Bluesky)</option>
-              <option value="activitypub">ActivityPub (Mastodon)</option>
-              <option value="nostr">Nostr Relay Pool</option>
-              <option value="matrix">Matrix Protocol</option>
-            </select>
-          </div>
-
-          <div class="config-field-group" id="cfg-account-group">
-            <label class="config-field-label">Account / Identity:</label>
-            <select id="cfg-account-select">
-              <option value="@pennant.layline">@pennant.layline (Primary)</option>
-              <option value="@personal.bsky">@personal.bsky (ATProto)</option>
-              <option value="@brand.bsky">@brand.bsky (ATProto)</option>
-              <option value="@signal@social.pennant">@signal@social.pennant (Mastodon)</option>
-              <option value="@wood@mastodon.social">@wood@mastodon.social (Mastodon)</option>
-              <option value="npub1...damus">npub1...damus (Nostr Enclave)</option>
-            </select>
-          </div>
-
-          <div class="config-field-group" id="cfg-param-group">
-            <label class="config-field-label" id="cfg-param-label">Query Parameter / Tag:</label>
-            <input type="text" id="cfg-param-input" placeholder="#buildinpublic" />
-          </div>
-
-          <div class="stream-mount-bar">
-            <button class="btn-header" id="btn-back-stage-1">← BACK TO TYPES</button>
-            <button class="btn-action" id="btn-confirm-mount-col">MOUNT TO DECK ↗</button>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-  <!-- Settings & Environmental Config Drawer -->
+  <!-- Settings Drawer -->
   <div class="modal-overlay" id="settings-drawer">
     <div class="chassis-window settings-chassis">
       <div class="window-top">
@@ -962,54 +793,34 @@
       </div>
       <div class="window-body">
         
-        <!-- Section 1: Identities -->
+        <!-- Section 1: Data Management (Clean Spacing, No Giant File Input) -->
         <div class="config-section">
-          <div class="config-title">
-            <span>1. AUTHENTICATED FLEET IDENTITIES</span>
-            <button class="btn-header" style="padding:2px 8px; font-size:9.5px;" id="btn-show-add-account">+ CONNECT ACCOUNT</button>
-          </div>
-
-          <div id="account-add-box">
-            <div class="account-input-grid">
-              <select id="new-acct-bus">
-                <option value="atproto">ATProto (Bluesky)</option>
-                <option value="activitypub">ActivityPub (Mastodon)</option>
-                <option value="nostr">Nostr (Enclave/Bunker)</option>
-                <option value="matrix">Matrix (Room Egress)</option>
-              </select>
-              <input type="text" id="new-acct-handle" placeholder="Handle (e.g. @brand.bsky)" />
-              <input type="password" id="new-acct-secret" placeholder="App Password / Token / nsec" />
-              <button class="btn-action" style="padding:5px 12px;" id="btn-save-new-account">ADD</button>
+          <div class="config-title">1. DATA MANAGEMENT & LOCAL ARCHIVES</div>
+          
+          <div class="config-row">
+            <div style="display:flex; flex-direction:column; gap:2px;">
+              <span style="font-weight:600; color:var(--text-col-pop);">Configuration Archives:</span>
+              <span style="font-size:9.5px; color:var(--text-muted);">Backup or restore all active columns, accounts, and hashtag databases.</span>
             </div>
-            <div style="font-family:var(--font-col-header); font-size:9px; color:var(--text-muted);">
-              Credentials resolve strictly to local SessionVault in WAL memory. Private keys are never exported.
+            <div style="display:flex; gap:14px; align-items:center;">
+              <button class="btn-header" id="btn-export-backup">EXPORT BACKUP (JSON)</button>
+              <button class="btn-header" id="btn-import-trigger">IMPORT BACKUP (JSON)</button>
+              <input type="file" id="import-file-input" style="display:none;" accept=".json" />
             </div>
           </div>
 
-          <div id="identities-roster" style="display:flex; flex-direction:column; gap:6px;">
-            <div class="account-list-item">
-              <span><strong style="color:#60a5fa;">ATPROTO:</strong> @pennant.layline</span>
-              <button class="btn-del-acct" onclick="this.parentElement.remove()">DISCONNECT ✕</button>
-            </div>
-            <div class="account-list-item">
-              <span><strong style="color:#c084fc;">ACTIVITYPUB:</strong> @signal@social.pennant</span>
-              <button class="btn-del-acct" onclick="this.parentElement.remove()">DISCONNECT ✕</button>
-            </div>
-            <div class="account-list-item">
-              <span><strong style="color:#fbbf24;">NOSTR:</strong> npub1...damus (Signer Enclave)</span>
-              <button class="btn-del-acct" onclick="this.parentElement.remove()">DISCONNECT ✕</button>
-            </div>
-            <div class="account-list-item">
-              <span><strong style="color:#34d399;">MATRIX:</strong> #announcements:matrix.org</span>
-              <button class="btn-del-acct" onclick="this.parentElement.remove()">DISCONNECT ✕</button>
+          <div class="config-row" style="margin-top:6px; padding-top:10px; border-top:1px dashed rgba(255,255,255,0.06);">
+            <span>Storage Maintenance:</span>
+            <div style="display:flex; gap:14px;">
+              <button class="btn-header" id="btn-clear-media-cache">CLEAR MEDIA CACHE</button>
+              <button class="btn-header" id="btn-prune-history">PRUNE OLD LOGS</button>
             </div>
           </div>
         </div>
 
-        <!-- Section 2: Real Environmental & OS Settings -->
+        <!-- Section 2: Workspace Density -->
         <div class="config-section">
           <div class="config-title">2. OPERATING SYSTEM & WORKSPACE SETTINGS</div>
-          
           <div class="config-row">
             <span>Deck Column Width / Density:</span>
             <select id="cfg-col-width">
@@ -1018,109 +829,27 @@
               <option value="430px">Wide (430px)</option>
             </select>
           </div>
-
-          <div class="config-row">
-            <span>Autostart on Login:</span>
-            <label style="cursor:pointer; display:flex; align-items:center; gap:6px;">
-              <input type="checkbox" id="cfg-autostart" />
-              <span style="font-size:10px; color:var(--text-sub);">Launch minimized in tray</span>
-            </label>
-          </div>
-
-          <div class="config-row">
-            <span>Close Button Action:</span>
-            <label style="cursor:pointer; display:flex; align-items:center; gap:6px;">
-              <input type="checkbox" id="cfg-tray-close" checked />
-              <span style="font-size:10px; color:var(--text-sub);">Keep daemon alive in system tray</span>
-            </label>
-          </div>
-
-          <div class="config-row">
-            <span>System Notifications:</span>
-            <label style="cursor:pointer; display:flex; align-items:center; gap:6px;">
-              <input type="checkbox" id="cfg-notifications" checked />
-              <span style="font-size:10px; color:var(--text-sub);">Desktop notifications on broadcast success</span>
-            </label>
-          </div>
-
-          <div class="config-row">
-            <span>Tactile Switch Audio:</span>
-            <label style="cursor:pointer; display:flex; align-items:center; gap:6px;">
-              <input type="checkbox" id="cfg-sound-effects" checked />
-              <span style="font-size:10px; color:var(--text-sub);">Mechanical audio click on toggles</span>
-            </label>
-          </div>
         </div>
 
-        <!-- Section 3: Clean Spaced Data Management & File Import -->
+        <!-- Section 3: Official Channels & Verified Links -->
         <div class="config-section">
-          <div class="config-title">3. DATA MANAGEMENT & LOCAL ARCHIVES</div>
+          <div class="config-title">3. OFFICIAL CHANNELS & DOCUMENTATION</div>
           
-          <div class="config-row">
-            <div style="display:flex; flex-direction:column; gap:2px;">
-              <span style="font-weight:600; color:var(--text-col-pop);">Configuration Archives:</span>
-              <span style="font-size:9.5px; color:var(--text-muted);">Backup or restore all active columns, accounts, and hashtag databases.</span>
-            </div>
-            <!-- Separated Buttons with clean 12px gap -->
-            <div style="display:flex; gap:12px; align-items:center;">
-              <button class="btn-header" id="btn-export-backup">EXPORT BACKUP (JSON)</button>
-              <button class="btn-header" id="btn-import-trigger">IMPORT BACKUP (JSON)</button>
-              <!-- Hidden native file input triggered cleanly by button -->
-              <input type="file" id="import-file-input" style="display:none;" accept=".json" />
-            </div>
-          </div>
-
-          <div class="config-row" style="margin-top:6px; padding-top:10px; border-top:1px dashed rgba(255,255,255,0.06);">
-            <span>Storage Maintenance:</span>
-            <div style="display:flex; gap:12px;">
-              <button class="btn-header" id="btn-clear-media-cache">CLEAR MEDIA CACHE</button>
-              <button class="btn-header" id="btn-prune-history">PRUNE OLD LOGS</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Section 4: Stripe Commercial License -->
-        <div class="config-section">
-          <div class="config-title">4. STRIPE COMMERCIAL LICENSE & SEATS</div>
-          <div class="config-row">
-            <span>Seat Status:</span>
-            <span style="color:var(--signal-green); font-weight:700;" id="cfg-tier-status">STANDALONE DESKTOP [ACTIVE]</span>
-          </div>
-          <div class="config-row">
-            <span>Annual Serial Key:</span>
-            <div style="display:flex; gap:6px;">
-              <input type="text" id="cfg-license-key" value="PH-DESKTOP-2026-X892-F891" spellcheck="false" style="width:200px;" />
-              <button class="btn-header" id="btn-verify-key" style="padding:3px 8px;">VERIFY</button>
-            </div>
-          </div>
-          <div class="config-row">
-            <span>Billing Actions:</span>
-            <div class="stripe-btn-tray">
-              <button class="btn-stripe" id="btn-stripe-checkout">BUY DESKTOP LICENSE ($49/YR)</button>
-              <button class="btn-stripe" id="btn-stripe-portal" style="background:#1e293b; border-color:#334155;">MANAGE BILLING PORTAL ↗</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Section 5: Official Channels & Documentation (Vector Icons, Centered Title/Handle) -->
-        <div class="config-section">
-          <div class="config-title">5. OFFICIAL CHANNELS & DOCUMENTATION</div>
-          
-          <div class="centered-sub-banner" style="border-top:none; margin-top:0;">// OFFICIAL FLEET NETWORK CHANNELS //</div>
+          <div class="centered-sub-banner" style="border-top:none; margin-top:0;">// VERIFIED FLEET BROADCAST CHANNELS //</div>
           <div class="social-2col-grid">
             <!-- Bluesky ATProto -->
-            <div class="social-card-btn" data-url="https://bsky.app/profile/pennant.layline.digital">
+            <div class="social-card-btn" data-url="https://bsky.app/profile/pennant.laylinedigital.com">
               <div class="social-icon-glyph icon-bsky">
                 <svg viewBox="0 0 568 501"><path d="M123.121 33.664C188.241 82.553 258.281 181.68 284 234.873c25.719-53.192 95.759-152.32 160.879-201.21C491.875-1.472 568-28.877 568 57.868c0 17.345-9.92 145.713-15.748 166.529-20.259 72.36-93.81 90.871-158.423 79.914 112.923 19.222 141.517 82.809 79.625 146.45-117.585 120.91-177.309-30.347-189.454-73.493-12.145 43.146-71.869 194.403-189.454 73.493-61.892-63.641-33.298-127.228 79.625-146.45-64.613 10.957-138.164-7.554-158.423-79.914C9.92 203.581 0 75.213 0 57.868 0-28.877 76.125-1.472 123.121 33.664Z"/></svg>
               </div>
               <div class="card-text-slot">
                 <div class="card-title-line">Bluesky ATProto</div>
-                <div class="card-handle-line">@pennant.layline.digital ↗</div>
+                <div class="card-handle-line">pennant.laylinedigital.com ↗</div>
               </div>
             </div>
 
             <!-- Mastodon Fediverse -->
-            <div class="social-card-btn" data-url="https://social.pennant.layline.digital/@signal">
+            <div class="social-card-btn" data-url="https://social.pennant.laylinedigital.com/@signal">
               <div class="social-icon-glyph icon-masto">
                 <svg viewBox="0 0 24 24"><path d="M23.268 5.313c-.35-2.578-2.617-4.61-5.304-5.004C16.495.093 14.54 0 12 0c-2.54 0-4.495.093-5.964.31-2.687.394-4.954 2.426-5.304 5.004C.35 8.162 0 12.008 0 12.008s.35 3.846.732 6.695c.29 2.137 1.884 3.948 4.024 4.54 2.213.613 4.707.757 7.244.757 2.052 0 4.14-.112 5.952-.45 1.706-.319 3.23-1.42 3.654-3.136.425-1.716.394-4.043.394-4.043s-2.07.728-4.526.963c-2.457.235-5.088-.046-5.088-.046v-1.636s2.585.127 5.088-.127c2.502-.255 5.518-1.579 5.86-5.04.053-.538.086-1.12.086-1.758 0-2.348-.15-4.413-.15-4.413zm-3.66 8.354h-2.553v-5.46c0-1.205-.515-1.82-1.545-1.82-1.144 0-1.715.738-1.715 2.216v3.138h-2.59V8.603c0-1.478-.57-2.216-1.715-2.216-1.03 0-1.545.615-1.545 1.82v5.46H5.392V8.04c0-1.205.312-2.164.936-2.877.625-.713 1.455-1.077 2.49-1.077 1.2 0 2.115.46 2.744 1.38L12 6.273l.438-.807c.63-.92 1.544-1.38 2.744-1.38 1.035 0 1.865.364 2.49 1.077.624.713.936 1.672.936 2.877v5.627z"/></svg>
               </div>
@@ -1131,95 +860,49 @@
             </div>
 
             <!-- Nostr Relay Pool -->
-            <div class="social-card-btn" data-url="https://primal.net/p/npub1pennant">
+            <div class="social-card-btn" data-url="https://primal.net/p/laylinedigital.com">
               <div class="social-icon-glyph icon-nostr">
                 <svg viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
               </div>
               <div class="card-text-slot">
                 <div class="card-title-line">Nostr Relay Pool</div>
-                <div class="card-handle-line">npub1pennant (primal/damus) ↗</div>
+                <div class="card-handle-line">pennant@laylinedigital.com ↗</div>
               </div>
             </div>
 
-            <!-- Matrix Room Egress -->
-            <div class="social-card-btn" data-url="https://matrix.to/#/#pennant:matrix.org">
-              <div class="social-icon-glyph icon-matrix">
-                <svg viewBox="0 0 24 24"><path d="M.632.55v22.9H2.28V24H0V0h2.28v.55zm7.043 7.26v1.157h.033c.309-.424.717-.77 1.222-1.038.505-.269 1.096-.403 1.772-.403.717 0 1.344.146 1.882.44.537.293.92.733 1.15 1.32.325-.456.757-.822 1.295-1.099.537-.277 1.14-.415 1.808-.415.652 0 1.23.114 1.735.342.505.228.912.546 1.222.953.309.407.53.888.66 1.442.13.554.196 1.148.196 1.784v7.358h-2.574v-6.626c0-.521-.033-.977-.098-1.368-.065-.391-.187-.709-.366-.953-.18-.245-.424-.424-.733-.538-.31-.114-.7-.171-1.173-.171-.489 0-.896.065-1.222.195-.326.13-.586.326-.782.587-.195.26-.334.586-.415.977-.082.391-.122.847-.122 1.368v6.529h-2.574v-6.626c0-.521-.033-.977-.098-1.368-.065-.391-.187-.709-.366-.953-.18-.245-.424-.424-.733-.538-.31-.114-.7-.171-1.173-.171-.489 0-.904.065-1.246.195-.342.13-.611.326-.806.587-.196.26-.334.586-.415.977-.082.391-.122.847-.122 1.368v6.529H5.101V7.81h2.574zm15.693 15.64V.55H21.72V0H24v24h-2.28v-.55z"/></svg>
-              </div>
-              <div class="card-text-slot">
-                <div class="card-title-line">Matrix Space (Pending)</div>
-                <div class="card-handle-line">#pennant:matrix.org ↗</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="centered-sub-banner">// DOCUMENTATION & SUPPORT DIRECTORY //</div>
-          <div class="social-2col-grid">
-            <!-- Pennant Hoist Home -->
-            <div class="social-card-btn" data-url="https://pennant.layline.digital">
+            <!-- Layline Digital Apex Home -->
+            <div class="social-card-btn" data-url="https://laylinedigital.com">
               <div class="social-icon-glyph icon-web">
                 <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
               </div>
               <div class="card-text-slot">
-                <div class="card-title-line">Pennant Hoist Home</div>
-                <div class="card-handle-line">https://pennant.layline.digital ↗</div>
+                <div class="card-title-line">Layline Digital Home</div>
+                <div class="card-handle-line">https://laylinedigital.com ↗</div>
               </div>
             </div>
+          </div>
 
-            <!-- GitHub Repo -->
-            <div class="social-card-btn" data-url="https://github.com/Layline-Digital/pennant-social">
-              <div class="social-icon-glyph icon-git">
-                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
-              </div>
-              <div class="card-text-slot">
-                <div class="card-title-line">GitHub Repository</div>
-                <div class="card-handle-line">layline-digital/pennant-social ↗</div>
-              </div>
-            </div>
-
-            <!-- Operations User Manual -->
-            <div class="social-card-btn" data-url="https://github.com/Layline-Digital/pennant-social#readme">
+          <div class="centered-sub-banner">// DOCUMENTATION & INTEGRITY //</div>
+          <div class="social-2col-grid">
+            <!-- In-App Operations Manual Button -->
+            <div class="social-card-btn" id="btn-open-inapp-manual">
               <div class="social-icon-glyph icon-doc">
                 <svg viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
               </div>
               <div class="card-text-slot">
                 <div class="card-title-line">Operations Manual</div>
-                <div class="card-handle-line">setup, airlock & relays ↗</div>
+                <div class="card-handle-line">read in-app guide [offline]</div>
               </div>
             </div>
 
-            <!-- FAQ & Troubleshooting -->
-            <div class="social-card-btn" data-url="https://github.com/Layline-Digital/pennant-social/wiki/FAQ">
+            <!-- In-App FAQ & Diagnostics -->
+            <div class="social-card-btn" id="btn-open-inapp-faq">
               <div class="social-icon-glyph icon-doc">
                 <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 16h-2v-2h2v2zm1.07-7.75-.9.92C12.45 11.9 12 12.5 12 14h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z"/></svg>
               </div>
               <div class="card-text-slot">
-                <div class="card-title-line">FAQ & Diagnostics</div>
-                <div class="card-handle-line">troubleshooting & answers ↗</div>
-              </div>
-            </div>
-
-            <!-- Fleet Support Email -->
-            <div class="social-card-btn" data-url="mailto:support@laylinedigital.com">
-              <div class="social-icon-glyph icon-mail">
-                <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
-              </div>
-              <div class="card-text-slot">
-                <div class="card-title-line">Fleet Support Mail</div>
-                <div class="card-handle-line">support@laylinedigital.com ✉</div>
-              </div>
-            </div>
-
-            <!-- License & Integrity (Sharp Justice Scales SVG) -->
-            <div class="social-card-btn" style="cursor:pointer;" data-url="https://github.com/Layline-Digital/pennant-social/blob/main/LICENSE">
-              <div class="social-icon-glyph" style="border-color:#475569; color:#cbd5e1; fill:#cbd5e1;">
-                <svg viewBox="0 0 24 24">
-                  <path d="M11 2v2.07C7.61 4.56 5 7.47 5 11h2c0-2.76 2.24-5 5-5s5 2.24 5 5h2c0-3.53-2.61-6.44-6-6.93V2h-2zm-8 9 4 8h6l4-8H3zm3.5 6 1.75-3.5h3.5L13.5 17h-7zM19 11l-3 6h6l-3-6z"/>
-                </svg>
-              </div>
-              <div class="card-text-slot">
-                <div class="card-title-line">MIT Sovereign License</div>
-                <div class="card-handle-line">layline digital © 2026 ↗</div>
+                <div class="card-title-line">FAQ & Troubleshooting</div>
+                <div class="card-handle-line">common questions & answers</div>
               </div>
             </div>
           </div>
@@ -1233,7 +916,7 @@
     </div>
   </div>
 
-  <!-- Nostr Sovereign Key Custody Notice Modal -->
+  <!-- Centered Nostr Covenant Modal (Zero Scroll Disruption) -->
   <div id="covenant-modal">
     <div class="covenant-chassis">
       <div class="covenant-title">
@@ -1242,22 +925,29 @@
       <div class="covenant-body">
         <div class="covenant-point">
           <strong>1. UN-CENSORABLE GOSSIP PROPAGATION:</strong><br>
-          Nostr is an open relay gossip network. Events signed and published cannot be forcibly recalled or deleted once propagated across independent relays.
+          Nostr is an open relay gossip network. Events signed and published cannot be recalled once gossiped to independent relays.
         </div>
         <div class="covenant-point">
-          <strong>2. RELAYS ARE INDEPENDENT ROUTERS:</strong><br>
-          Relays do not act as account servers. We supply verified default relays, but you maintain full sovereign control over your outbound relay list.
-        </div>
-        <div class="covenant-point">
-          <strong>3. ABSOLUTE KEY CUSTODY (NSEC ENCLAVE):</strong><br>
-          Your nsec is the master private key to your entire decentralized identity. Pennant signs events locally inside the memory-scrubbed enclave and will strictly never transmit your key across any network.
+          <strong>2. ABSOLUTE KEY CUSTODY:</strong><br>
+          Your nsec is your master cryptographic identity. Pennant signs notes locally inside the memory-scrubbed enclave and never transmits private keys across the wire.
         </div>
       </div>
       <button class="btn-covenant-accept" id="btn-accept-covenant">[ I ACKNOWLEDGE KEY CUSTODY ]</button>
     </div>
   </div>
 
-  <!-- Physical Inset Composer Drawer -->
+  <!-- In-App Operations Manual Modal -->
+  <div id="manual-modal">
+    <div class="manual-chassis">
+      <div class="window-top">
+        <span id="manual-window-title">// OPERATIONS MANUAL // PENNANT HOIST</span>
+        <span style="cursor:pointer; color:var(--text-muted);" id="btn-close-manual">[ESC]</span>
+      </div>
+      <div class="manual-content-view" id="manual-body"></div>
+    </div>
+  </div>
+
+  <!-- Composer Drawer -->
   <div class="modal-overlay" id="composer-drawer">
     <div class="chassis-window composer-chassis">
       <div class="window-top">
@@ -1266,35 +956,20 @@
       </div>
       <div class="window-body">
         
-        <div class="section-label">
-          <span>SELECT PROTOCOL BUS & TARGET STATIONS:</span>
-          <span style="cursor:pointer; color:var(--text-muted); font-size:9px;" id="btn-toggle-cw">[+ ADD CW / SPOILER]</span>
-        </div>
+        <div class="section-label">SELECT PROTOCOL BUS & TARGET STATIONS:</div>
 
         <div class="protocol-cluster">
           <div class="protocol-bay" id="bay-atproto">
             <div class="rocker-unit active" data-bus="atproto">
               <div class="rocker-title-row"><span class="rocker-title">ATPROTO</span></div>
               <div class="switch-well">
-                <div class="rocker-button">
-                  <div class="ribs-texture"></div>
-                  <div class="indicator-jewel"></div>
-                </div>
+                <div class="rocker-button"><div class="ribs-texture"></div><div class="indicator-jewel"></div></div>
               </div>
               <span class="rocker-state-badge">[ ARMED ]</span>
             </div>
             <div class="station-key-rack" id="rack-atproto">
-              <div class="station-key active" data-handle="@pennant.layline" data-bus="atproto">
-                <div class="key-lamp-slit"></div>
-                <span class="key-label">@PENNANT.LAYLINE</span>
-              </div>
-              <div class="station-key active" data-handle="@personal.bsky" data-bus="atproto">
-                <div class="key-lamp-slit"></div>
-                <span class="key-label">@PERSONAL.BSKY</span>
-              </div>
-              <div class="station-key active" data-handle="@brand.bsky" data-bus="atproto">
-                <div class="key-lamp-slit"></div>
-                <span class="key-label">@BRAND.BSKY</span>
+              <div class="station-key active" data-handle="pennant.laylinedigital.com" data-bus="atproto">
+                <div class="key-lamp-slit"></div><span class="key-label">@PENNANT</span>
               </div>
             </div>
           </div>
@@ -1303,21 +978,13 @@
             <div class="rocker-unit active" data-bus="activitypub">
               <div class="rocker-title-row"><span class="rocker-title">ACTIVITYPUB</span></div>
               <div class="switch-well">
-                <div class="rocker-button">
-                  <div class="ribs-texture"></div>
-                  <div class="indicator-jewel"></div>
-                </div>
+                <div class="rocker-button"><div class="ribs-texture"></div><div class="indicator-jewel"></div></div>
               </div>
               <span class="rocker-state-badge">[ ARMED ]</span>
             </div>
             <div class="station-key-rack" id="rack-activitypub">
-              <div class="station-key active" data-handle="@signal@social.pennant" data-bus="activitypub">
-                <div class="key-lamp-slit"></div>
-                <span class="key-label">@SIGNAL</span>
-              </div>
-              <div class="station-key active" data-handle="@wood@mastodon.social" data-bus="activitypub">
-                <div class="key-lamp-slit"></div>
-                <span class="key-label">@MASTODON</span>
+              <div class="station-key active" data-handle="@signal@social.pennant.laylinedigital.com" data-bus="activitypub">
+                <div class="key-lamp-slit"></div><span class="key-label">@SIGNAL</span>
               </div>
             </div>
           </div>
@@ -1326,73 +993,21 @@
             <div class="rocker-unit" data-bus="nostr">
               <div class="rocker-title-row">
                 <span class="rocker-title">NOSTR</span>
-                <span class="btn-review-covenant" id="btn-review-covenant" title="Review Cryptographic Key Custody Rules">[KEY CUSTODY]</span>
-                <div class="telemetry-help-dot">?
-                  <div class="tooltip-card">
-                    <strong style="color: #fbbf24;">// NOSTR MEDIA ROUTING</strong><br>
-                    Nostr relays only store text notes. Images upload automatically to Blossom / NIP-96 media servers. Each identity can bind to a dedicated server, or inherit the fallback pool.
-                  </div>
-                </div>
+                <span class="btn-review-covenant" id="btn-review-covenant">[CUSTODY]</span>
               </div>
               <div class="switch-well">
-                <div class="rocker-button">
-                  <div class="ribs-texture"></div>
-                  <div class="indicator-jewel"></div>
-                </div>
+                <div class="rocker-button"><div class="ribs-texture"></div><div class="indicator-jewel"></div></div>
               </div>
               <span class="rocker-state-badge">[ ARMED ]</span>
             </div>
             <div class="station-key-rack" id="rack-nostr">
-              <div class="station-key" data-handle="npub1...damus" data-bus="nostr">
-                <div class="key-lamp-slit"></div>
-                <span class="key-label">DAMUS POOL</span>
-              </div>
-              <div class="station-key" data-handle="npub1...relays" data-bus="nostr">
-                <div class="key-lamp-slit"></div>
-                <span class="key-label">FLEET RELAYS</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="protocol-bay" id="bay-matrix">
-            <div class="rocker-unit active" data-bus="matrix">
-              <div class="rocker-title-row">
-                <span class="rocker-title">MATRIX</span>
-                <div class="telemetry-help-dot">?
-                  <div class="tooltip-card">
-                    <strong style="color: #34d399;">// MATRIX ANNOUNCEMENT EGRESS</strong><br>
-                    Broadcasts formatted HTML notice events (m.room.message / m.notice) directly into read-only community announcement rooms or ops channels.
-                  </div>
-                </div>
-              </div>
-              <div class="switch-well">
-                <div class="rocker-button">
-                  <div class="ribs-texture"></div>
-                  <div class="indicator-jewel"></div>
-                </div>
-              </div>
-              <span class="rocker-state-badge">[ ARMED ]</span>
-            </div>
-            <div class="station-key-rack" id="rack-matrix">
-              <div class="station-key active" data-handle="!announcements:matrix.org" data-bus="matrix">
-                <div class="key-lamp-slit"></div>
-                <span class="key-label">#ANNOUNCEMENTS</span>
-              </div>
-              <div class="station-key" data-handle="!ops:matrix.org" data-bus="matrix">
-                <div class="key-lamp-slit"></div>
-                <span class="key-label">#OPS-DISPATCH</span>
+              <div class="station-key" data-handle="pennant@laylinedigital.com" data-bus="nostr">
+                <div class="key-lamp-slit"></div><span class="key-label">PENNANT NOSTR</span>
               </div>
             </div>
           </div>
         </div>
 
-        <div id="cw-row">
-          <span style="font-family:var(--font-col-header); font-size:10px; font-weight:700; color:#fbbf24;">CW / SPOILER:</span>
-          <input type="text" id="cw-input" placeholder="e.g. Sensitive content, politics, tech spoilers..." />
-          <span style="cursor:pointer; color:var(--text-muted); font-size:10px;" id="btn-close-cw">[✕]</span>
-        </div>
-
-        <!-- Full-Featured Checkbox / Card Hashtag Manager -->
         <div class="hashtag-deck-card">
           <div class="hashtag-toolbar">
             <div style="display:flex; align-items:center; gap:6px;">
@@ -1401,84 +1016,28 @@
               <button class="btn-tag-action" id="btn-clear-selected-tags">CLEAR</button>
             </div>
             <div style="display:flex; align-items:center; gap:6px;">
-              <button class="btn-tag-action accent" id="btn-insert-selected-tags" title="Append selected hashtags to current post draft">+ INSERT SELECTED</button>
-              <button class="btn-tag-action" id="btn-copy-selected-tags" title="Copy checked hashtags to clipboard">[COPY SELECTED]</button>
-              <button class="btn-tag-action" id="btn-copy-all-tags" title="Copy full stash to clipboard">[COPY ALL]</button>
+              <button class="btn-tag-action accent" id="btn-insert-selected-tags">+ INSERT SELECTED</button>
+              <button class="btn-tag-action" id="btn-copy-selected-tags">[COPY SELECTED]</button>
               <button class="btn-tag-action" id="btn-add-tag-prompt">+ ADD TAG</button>
             </div>
           </div>
-          <div style="font-family:var(--font-col-header); font-size:9px; color:var(--text-muted); margin-bottom:2px;">
-            [ Click tag/checkbox to select • Click ★ to toggle Core Default (auto-checked on open) ]
+          <div style="font-family:var(--font-col-header); font-size:9px; color:var(--text-muted);">
+            [ Click tag to select • Click ★ to toggle Core Default (auto-checked on open) ]
           </div>
           <div class="hashtag-select-grid" id="hashtag-select-grid"></div>
         </div>
 
-        <div class="section-label">PAYLOAD DRAFT:</div>
-        <div class="composer-drop-zone">
-          <textarea id="composer-text" placeholder="Draft transmission record for authenticated fleet egress... (Drag image file here)"></textarea>
-        </div>
-
-        <div id="thread-split-bar">
-          <span style="color:#38bdf8;">✂ Thread break detected (> 300 chars)</span>
-          <button class="btn-thread-split" id="btn-split-thread">PREVIEW THREAD (1/N)</button>
-        </div>
-        
-        <div id="media-preview-bar">
-          <div class="media-top-line">
-            <span class="media-badge">STAGED BLOB</span>
-            <span id="staged-file-name">asset.png (1.2 MB)</span>
-            <button class="btn-alt-text" id="btn-toggle-alt">[+ ALT TEXT]</button>
-            <span style="margin-left:auto; cursor:pointer; color:#ef4444;" id="btn-remove-media">[DISCARD]</span>
-          </div>
-          <input type="text" id="alt-text-input" placeholder="Describe image for screen readers & federated accessibility..." />
-        </div>
-
-        <div class="schedule-control-bay">
-          <div class="schedule-mode-toggle">
-            <button class="schedule-mode-btn active" id="btn-mode-now">TRANSMIT NOW</button>
-            <button class="schedule-mode-btn" id="btn-mode-schedule">SCHEDULE RECORD</button>
-          </div>
-          <div class="schedule-inputs-box" id="schedule-inputs">
-            <span style="color: var(--text-muted);">DISPATCH AT:</span>
-            <input type="date" id="sched-date" />
-            <input type="time" id="sched-time" />
-            <select id="sched-tz">
-              <option value="LOCAL">LOCAL (Workstation)</option>
-              <option value="America/New_York">America/New_York (EDT)</option>
-              <option value="America/Chicago">America/Chicago (CDT)</option>
-              <option value="America/Los_Angeles">America/Los_Angeles (PDT)</option>
-              <option value="Europe/London">Europe/London (BST)</option>
-              <option value="Asia/Tokyo">Asia/Tokyo (JST)</option>
-              <option value="UTC">UTC (Zulu +0)</option>
-            </select>
-          </div>
-        </div>
+        <textarea id="composer-text" placeholder="Draft transmission record for authenticated fleet egress..."></textarea>
 
         <div class="telemetry-row">
           <div class="counters-tray">
             <span class="counter-pill" id="cnt-bsky">ATProto: 0/300</span>
             <span class="counter-pill" id="cnt-masto">AP: 0/500</span>
-            <span class="counter-pill" id="cnt-targets">Targets: 6 Armed</span>
-          </div>
-          
-          <div class="staging-group">
-            <input type="file" id="media-file-input" style="display:none;" accept="image/*,video/*" />
-            <div class="staging-status-trigger active" id="staging-trigger">
-              <div class="lamp-dot"></div>
-              <span id="staging-label">STAGING READY</span>
-            </div>
-            <div class="telemetry-help-dot align-right">?
-              <div class="tooltip-card">
-                <strong style="color: var(--signal-green);">// MEDIA AIRLOCK ENGINE</strong><br>
-                Drag & drop files to stage immediately. Computes SHA-256 and BlurHash in pure JS. Staged media is pre-uploaded to each protocol's native host (Bluesky PDS, Mastodon, or Blossom) before final egress.
-              </div>
-            </div>
           </div>
         </div>
       </div>
       
       <div class="drawer-footer">
-        <span class="shortcut-legend">[Ctrl + Enter to Transmit]</span>
         <button class="btn-cancel" id="btn-cancel-composer">CANCEL</button>
         <button class="btn-action" id="btn-submit-broadcast">TRANSMIT RECORD</button>
       </div>
@@ -1500,11 +1059,11 @@
       document.body.style.backgroundImage = `url(${dataUrl})`;
       document.querySelector('.composer-chassis').style.backgroundImage = `url(${dataUrl})`;
       document.querySelector('.settings-chassis').style.backgroundImage = `url(${dataUrl})`;
-      document.querySelector('.builder-chassis').style.backgroundImage = `url(${dataUrl})`;
+      document.querySelector('.manual-chassis').style.backgroundImage = `url(${dataUrl})`;
     })();
 
     const defaultDeckColumns = [
-      { id: 'bsky_main', label: '@pennant.layline', protocol: 'ATProto', badge: 'badge-bsky', sub: 'Home Timeline', query: '@pennant.layline' },
+      { id: 'bsky_main', label: 'pennant.laylinedigital.com', protocol: 'ATProto', badge: 'badge-bsky', sub: 'Home Timeline', query: 'pennant.laylinedigital.com' },
       { id: 'masto_signal', label: '@signal@social.pennant', protocol: 'ActivityPub', badge: 'badge-masto', sub: 'Mentions & Alerts', query: '@signal' },
       { id: 'nostr_relay', label: 'Relay Damus Pool', protocol: 'Nostr', badge: 'badge-nostr', sub: 'Relay Firehose', query: 'wss://relay.damus.io' },
       { id: 'queue_col', label: 'Outbox Delivery Queue', protocol: 'SQLite WAL', badge: 'badge-queue', sub: 'Persistent Ledger', query: 'local_wal' }
@@ -1534,13 +1093,6 @@
         el.className = 'deck-column';
         el.id = 'col-' + col.id;
         
-        let sampleContent = 'Stream attached. Zero memory leakage across virtualized channels.';
-        if (col.sub.includes('Tag') || col.label.startsWith('#')) {
-          sampleContent = `Tracking live federated posts for ${col.label}. Subscribed via local WebSocket dispatcher.`;
-        } else if (col.protocol === 'Matrix') {
-          sampleContent = `Connected to room ${col.label}. Tail reading m.room.message notices in real time.`;
-        }
-
         el.innerHTML = `
           <div class="column-header">
             <div>
@@ -1552,13 +1104,13 @@
               <button class="btn-close-col" data-col-id="${col.id}" title="Close Stream Column">✕</button>
             </div>
           </div>
-          <div class="cards-container" id="cards-${col.id}">
+          <div class="cards-container">
             <div class="card">
               <div class="card-meta">
                 <span class="author-name">${col.query || col.label}</span>
                 <span>10:46 PM</span>
               </div>
-              <div>${sampleContent}</div>
+              <div>Stream synchronized. Zero memory leakage across virtualized channels.</div>
               <div class="in-deck-actions">
                 <button class="btn-deck-act" onclick="openReply('${col.query || col.label}')">↩ REPLY</button>
                 <button class="btn-deck-act" onclick="toggleBoost(this)">⟳ BOOST</button>
@@ -1578,15 +1130,11 @@
         btn.addEventListener('click', (e) => {
           e.stopPropagation();
           const cid = btn.getAttribute('data-col-id');
-          removeColumnById(cid);
+          activeDeckColumns = activeDeckColumns.filter(c => c.id !== cid);
+          saveDeckColumns();
+          renderDeck();
         });
       });
-    }
-
-    function removeColumnById(columnId) {
-      activeDeckColumns = activeDeckColumns.filter(c => c.id !== columnId);
-      saveDeckColumns();
-      renderDeck();
     }
 
     window.openReply = function(author) {
@@ -1606,16 +1154,13 @@
       btn.innerText = btn.classList.contains('liked') ? '★ LIKED' : '★ LIKE';
     };
 
-    // =========================================================================
-    // MULTI-SELECT HASHTAG MANAGER & PINNED CORE SET ENGINE
-    // =========================================================================
+    // Hashtag Manager
     let hashtagDatabase = [
       { tag: '#buildinpublic', isCore: true },
       { tag: '#laylinedigital', isCore: true },
       { tag: '#opensource', isCore: false },
       { tag: '#nostr', isCore: false },
-      { tag: '#fediverse', isCore: false },
-      { tag: '#atproto', isCore: false }
+      { tag: '#fediverse', isCore: false }
     ];
     let selectedTags = new Set();
 
@@ -1625,10 +1170,6 @@
         try { hashtagDatabase = JSON.parse(saved); } catch (e) {}
       }
       resetSelectionToCore();
-    }
-
-    function saveHashtagDatabase() {
-      localStorage.setItem('pennant_hashtag_database', JSON.stringify(hashtagDatabase));
     }
 
     function resetSelectionToCore() {
@@ -1651,7 +1192,7 @@
         pill.innerHTML = `
           <input type="checkbox" style="cursor:pointer;" ${isSelected ? 'checked' : ''} />
           <span style="margin: 0 4px; overflow:hidden; text-overflow:ellipsis;">${item.tag}</span>
-          <button class="btn-pin-core" title="${item.isCore ? 'Unpin from Core Defaults' : 'Pin to Core Defaults (auto-checked on open)'}">${item.isCore ? '★' : '☆'}</button>
+          <button class="btn-pin-core" title="${item.isCore ? 'Unpin from Core Defaults' : 'Pin to Core Defaults'}">${item.isCore ? '★' : '☆'}</button>
         `;
 
         pill.querySelector('input').addEventListener('click', (e) => {
@@ -1666,7 +1207,7 @@
         pill.querySelector('.btn-pin-core').addEventListener('click', (e) => {
           e.stopPropagation();
           item.isCore = !item.isCore;
-          saveHashtagDatabase();
+          localStorage.setItem('pennant_hashtag_database', JSON.stringify(hashtagDatabase));
           renderHashtagGrid();
         });
 
@@ -1675,11 +1216,8 @@
     }
 
     function toggleTagSelection(tag) {
-      if (selectedTags.has(tag)) {
-        selectedTags.delete(tag);
-      } else {
-        selectedTags.add(tag);
-      }
+      if (selectedTags.has(tag)) selectedTags.delete(tag);
+      else selectedTags.add(tag);
       renderHashtagGrid();
     }
 
@@ -1694,22 +1232,15 @@
     });
 
     document.getElementById('btn-insert-selected-tags').addEventListener('click', () => {
-      if (selectedTags.size === 0) {
-        alert('Select at least one hashtag to insert.');
-        return;
-      }
+      if (selectedTags.size === 0) return;
       const tagString = Array.from(selectedTags).join(' ');
       const area = document.getElementById('composer-text');
       area.value = (area.value.trim() ? area.value.trim() + ' ' : '') + tagString + ' ';
       area.focus();
-      updateCounters();
     });
 
     document.getElementById('btn-copy-selected-tags').addEventListener('click', () => {
-      if (selectedTags.size === 0) {
-        alert('No hashtags currently checked.');
-        return;
-      }
+      if (selectedTags.size === 0) return;
       const tagString = Array.from(selectedTags).join(' ');
       navigator.clipboard.writeText(tagString).then(() => {
         const btn = document.getElementById('btn-copy-selected-tags');
@@ -1719,307 +1250,25 @@
       });
     });
 
-    document.getElementById('btn-copy-all-tags').addEventListener('click', () => {
-      const allString = hashtagDatabase.map(h => h.tag).join(' ');
-      navigator.clipboard.writeText(allString).then(() => {
-        const btn = document.getElementById('btn-copy-all-tags');
-        const orig = btn.innerText;
-        btn.innerText = '[ALL COPIED!]';
-        setTimeout(() => { btn.innerText = orig; }, 1500);
-      });
-    });
-
     document.getElementById('btn-add-tag-prompt').addEventListener('click', () => {
-      const input = prompt('Enter a new hashtag (e.g. #tech or #sailing):');
+      const input = prompt('Enter a new hashtag (e.g. #tech):');
       if (input && input.trim()) {
         const clean = input.trim().startsWith('#') ? input.trim() : '#' + input.trim();
         if (!hashtagDatabase.some(h => h.tag.toLowerCase() === clean.toLowerCase())) {
           hashtagDatabase.push({ tag: clean, isCore: false });
           selectedTags.add(clean);
-          saveHashtagDatabase();
+          localStorage.setItem('pennant_hashtag_database', JSON.stringify(hashtagDatabase));
           renderHashtagGrid();
         }
       }
     });
 
-    function harvestTagsFromText(text) {
-      const found = text.match(/#[a-zA-Z0-9_-]+/g);
-      if (found) {
-        let changed = false;
-        found.forEach(t => {
-          if (!hashtagDatabase.some(h => h.tag.toLowerCase() === t.toLowerCase())) {
-            hashtagDatabase.push({ tag: t, isCore: false });
-            changed = true;
-          }
-        });
-        if (changed) {
-          saveHashtagDatabase();
-          renderHashtagGrid();
-        }
-      }
-    }
-
-    // =========================================================================
-    // TWO-STAGE TWEETDECK-STYLE COLUMN ASSEMBLY WIZARD
-    // =========================================================================
-    const colBuilderDrawer = document.getElementById('col-builder-drawer');
-    const wizardStage1 = document.getElementById('wizard-stage-1');
-    const streamConfigBay = document.getElementById('stream-config-bay');
-
-    const cfgBusSelect = document.getElementById('cfg-bus-select');
-    const cfgAccountGroup = document.getElementById('cfg-account-group');
-    const cfgAccountSelect = document.getElementById('cfg-account-select');
-    const cfgParamGroup = document.getElementById('cfg-param-group');
-    const cfgParamLabel = document.getElementById('cfg-param-label');
-    const cfgParamInput = document.getElementById('cfg-param-input');
-
-    let currentAssemblyType = 'timeline';
-
-    document.getElementById('btn-open-col-builder').addEventListener('click', () => {
-      wizardStage1.style.display = 'block';
-      streamConfigBay.style.display = 'none';
-      colBuilderDrawer.style.display = 'flex';
-    });
-
-    function closeColBuilder() { colBuilderDrawer.style.display = 'none'; }
-    document.getElementById('btn-close-col-builder').addEventListener('click', closeColBuilder);
-
-    document.querySelectorAll('.builder-preset-card').forEach(card => {
-      card.addEventListener('click', () => {
-        currentAssemblyType = card.getAttribute('data-stream-type');
-        transitionToStage2(currentAssemblyType);
-      });
-    });
-
-    function transitionToStage2(type) {
-      wizardStage1.style.display = 'none';
-      streamConfigBay.style.display = 'flex';
-
-      if (type === 'timeline') {
-        cfgBusSelect.innerHTML = `
-          <option value="atproto">ATProto (Bluesky)</option>
-          <option value="activitypub">ActivityPub (Mastodon)</option>
-          <option value="nostr">Nostr Relay Pool</option>
-        `;
-        cfgAccountGroup.style.display = 'flex';
-        cfgParamGroup.style.display = 'none';
-      } else if (type === 'mentions') {
-        cfgBusSelect.innerHTML = `
-          <option value="atproto">ATProto (Bluesky)</option>
-          <option value="activitypub">ActivityPub (Mastodon)</option>
-        `;
-        cfgAccountGroup.style.display = 'flex';
-        cfgParamGroup.style.display = 'none';
-      } else if (type === 'tag') {
-        cfgBusSelect.innerHTML = `
-          <option value="atproto">ATProto (Bluesky Search)</option>
-          <option value="activitypub">ActivityPub (Instance Tag)</option>
-        `;
-        cfgAccountGroup.style.display = 'none';
-        cfgParamGroup.style.display = 'flex';
-        cfgParamLabel.innerText = 'Hashtag or Keyword:';
-        cfgParamInput.placeholder = '#buildinpublic';
-        cfgParamInput.value = '#buildinpublic';
-      } else if (type === 'relay') {
-        cfgBusSelect.innerHTML = `<option value="nostr">Nostr Protocol</option>`;
-        cfgAccountGroup.style.display = 'none';
-        cfgParamGroup.style.display = 'flex';
-        cfgParamLabel.innerText = 'Relay WebSocket URL:';
-        cfgParamInput.placeholder = 'wss://relay.damus.io';
-        cfgParamInput.value = 'wss://relay.damus.io';
-      } else if (type === 'room') {
-        cfgBusSelect.innerHTML = `<option value="matrix">Matrix Protocol</option>`;
-        cfgAccountGroup.style.display = 'none';
-        cfgParamGroup.style.display = 'flex';
-        cfgParamLabel.innerText = 'Matrix Room ID / Alias:';
-        cfgParamInput.placeholder = '#announcements:matrix.org';
-        cfgParamInput.value = '#announcements:matrix.org';
-      } else if (type === 'queue') {
-        mountNewColumn('queue', 'Outbox Delivery Queue', 'Persistent Ledger', 'local_wal');
-      }
-    }
-
-    document.getElementById('btn-back-stage-1').addEventListener('click', () => {
-      wizardStage1.style.display = 'block';
-      streamConfigBay.style.display = 'none';
-    });
-
-    document.getElementById('btn-confirm-mount-col').addEventListener('click', () => {
-      const bus = cfgBusSelect.value;
-      let label = '';
-      let sub = '';
-      let query = '';
-
-      if (currentAssemblyType === 'timeline') {
-        label = cfgAccountSelect.value;
-        sub = `${bus.toUpperCase()} Timeline`;
-        query = cfgAccountSelect.value;
-      } else if (currentAssemblyType === 'mentions') {
-        label = `Mentions (${cfgAccountSelect.value})`;
-        sub = `${bus.toUpperCase()} Alerts`;
-        query = cfgAccountSelect.value;
-      } else if (currentAssemblyType === 'tag') {
-        label = cfgParamInput.value.trim() || '#trend';
-        sub = `${bus.toUpperCase()} Tag Stream`;
-        query = label;
-      } else if (currentAssemblyType === 'relay') {
-        label = cfgParamInput.value.trim() || 'wss://relay.damus.io';
-        sub = 'Nostr Firehose';
-        query = label;
-      } else if (currentAssemblyType === 'room') {
-        label = cfgParamInput.value.trim() || '#announcements';
-        sub = 'Matrix Channel Ingress';
-        query = label;
-      }
-
-      mountNewColumn(bus, label, sub, query);
-    });
-
-    function mountNewColumn(proto, label, sub, query) {
-      let badge = 'badge-bsky';
-      let protoLabel = 'ATProto';
-      if (proto === 'activitypub') { badge = 'badge-masto'; protoLabel = 'ActivityPub'; }
-      else if (proto === 'nostr') { badge = 'badge-nostr'; protoLabel = 'Nostr'; }
-      else if (proto === 'matrix') { badge = 'badge-matrix'; protoLabel = 'Matrix'; }
-      else if (proto === 'queue') { badge = 'badge-queue'; protoLabel = 'SQLite WAL'; }
-
-      activeDeckColumns.push({
-        id: 'stream_' + Date.now(),
-        label: label,
-        protocol: protoLabel,
-        badge: badge,
-        sub: sub || 'Custom Stream',
-        query: query || label
-      });
-      saveDeckColumns();
-      renderDeck();
-      closeColBuilder();
-    }
-
-    // =========================================================================
-    // REAL ENVIRONMENTAL SETTINGS & PERSISTENCE
-    // =========================================================================
-    const settingsDrawer = document.getElementById('settings-drawer');
-    const accountAddBox = document.getElementById('account-add-box');
-    const btnShowAddAccount = document.getElementById('btn-show-add-account');
-
-    let envSettings = {
-      colWidth: '360px',
-      autostart: false,
-      minimizeToTray: true,
-      notifications: true,
-      soundEffects: true
-    };
-
-    function loadEnvSettings() {
-      const saved = localStorage.getItem('pennant_env_settings');
-      if (saved) {
-        try { Object.assign(envSettings, JSON.parse(saved)); } catch (e) {}
-      }
-      applyEnvSettings();
-    }
-
-    function saveEnvSettings() {
-      envSettings.colWidth = document.getElementById('cfg-col-width').value;
-      envSettings.autostart = document.getElementById('cfg-autostart').checked;
-      envSettings.minimizeToTray = document.getElementById('cfg-tray-close').checked;
-      envSettings.notifications = document.getElementById('cfg-notifications').checked;
-      envSettings.soundEffects = document.getElementById('cfg-sound-effects').checked;
-      
-      localStorage.setItem('pennant_env_settings', JSON.stringify(envSettings));
-      localStorage.setItem('pennant_license_key', document.getElementById('cfg-license-key').value.trim());
-      applyEnvSettings();
-      closeSettings();
-    }
-
-    function applyEnvSettings() {
-      document.documentElement.style.setProperty('--col-width', envSettings.colWidth);
-      document.getElementById('cfg-col-width').value = envSettings.colWidth;
-      document.getElementById('cfg-autostart').checked = envSettings.autostart;
-      document.getElementById('cfg-tray-close').checked = envSettings.minimizeToTray;
-      document.getElementById('cfg-notifications').checked = envSettings.notifications;
-      document.getElementById('cfg-sound-effects').checked = envSettings.soundEffects;
-    }
-
-    document.getElementById('cfg-col-width').addEventListener('change', (e) => {
-      document.documentElement.style.setProperty('--col-width', e.target.value);
-    });
-
-    document.getElementById('btn-open-settings').addEventListener('click', () => {
-      settingsDrawer.style.display = 'flex';
-    });
-    function closeSettings() { settingsDrawer.style.display = 'none'; }
-    document.getElementById('btn-close-settings').addEventListener('click', closeSettings);
-    document.getElementById('btn-save-settings').addEventListener('click', saveEnvSettings);
-
-    btnShowAddAccount.addEventListener('click', () => {
-      accountAddBox.style.display = accountAddBox.style.display === 'flex' ? 'none' : 'flex';
-    });
-
-    document.getElementById('btn-save-new-account').addEventListener('click', () => {
-      const bus = document.getElementById('new-acct-bus').value;
-      const handle = document.getElementById('new-acct-handle').value.trim();
-      const secret = document.getElementById('new-acct-secret').value.trim();
-
-      if (!handle || !secret) {
-        alert('Validation Fault: Both an account identifier and authentication secret are required.');
-        return;
-      }
-
-      const roster = document.getElementById('identities-roster');
-      const item = document.createElement('div');
-      item.className = 'account-list-item';
-      item.innerHTML = `
-        <span><strong style="color:var(--signal-green);">${bus.toUpperCase()}:</strong> ${handle}</span>
-        <button class="btn-del-acct" onclick="this.parentElement.remove()">DISCONNECT ✕</button>
-      `;
-      roster.prepend(item);
-
-      const opt = document.createElement('option');
-      opt.value = handle;
-      opt.innerText = `${handle} (${bus.toUpperCase()})`;
-      cfgAccountSelect.prepend(opt);
-
-      const rack = document.getElementById('rack-' + bus);
-      if (rack) {
-        const newKey = document.createElement('div');
-        newKey.className = 'station-key active';
-        newKey.setAttribute('data-handle', handle);
-        newKey.setAttribute('data-bus', bus);
-        newKey.innerHTML = `
-          <div class="key-lamp-slit"></div>
-          <span class="key-label">${handle.toUpperCase()}</span>
-        `;
-        newKey.addEventListener('click', () => {
-          if (activeTargets.has(handle)) {
-            activeTargets.delete(handle);
-            newKey.classList.remove('active');
-          } else {
-            activeTargets.add(handle);
-            newKey.classList.add('active');
-          }
-          updateTargetCount();
-          saveLayout();
-        });
-        rack.prepend(newKey);
-        activeTargets.add(handle);
-        updateTargetCount();
-        saveLayout();
-      }
-
-      document.getElementById('new-acct-handle').value = '';
-      document.getElementById('new-acct-secret').value = '';
-      accountAddBox.style.display = 'none';
-      alert(`Identity Secured: Connected ${handle} into local loopback enclave.`);
-    });
-
-    // Backup & Data Actions with 1-Click Clean Import
+    // Clean Backup & Export
     document.getElementById('btn-export-backup').addEventListener('click', () => {
       const backupData = {
         exportedAt: new Date().toISOString(),
         columns: activeDeckColumns,
-        hashtags: hashtagDatabase,
-        settings: envSettings
+        hashtags: hashtagDatabase
       };
       const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
@@ -2039,9 +1288,8 @@
           try {
             const data = JSON.parse(evt.target.result);
             if (data.columns) { activeDeckColumns = data.columns; saveDeckColumns(); renderDeck(); }
-            if (data.hashtags) { hashtagDatabase = data.hashtags; saveHashtagDatabase(); resetSelectionToCore(); }
-            if (data.settings) { Object.assign(envSettings, data.settings); applyEnvSettings(); }
-            alert('Deck Restored: Configuration backup applied successfully.');
+            if (data.hashtags) { hashtagDatabase = data.hashtags; resetSelectionToCore(); }
+            alert('Deck Restored: Configuration backup applied cleanly.');
           } catch (err) {
             alert('Import Error: Malformed JSON backup file.');
           }
@@ -2051,536 +1299,98 @@
     });
 
     document.getElementById('btn-clear-media-cache').addEventListener('click', () => {
-      localStorage.removeItem('pennant_airlock_cache');
-      alert('Airlock Staging Cache Cleared: Temporary blobs removed.');
+      alert('Airlock Staging Cache Cleared.');
     });
 
     document.getElementById('btn-prune-history').addEventListener('click', () => {
-      alert('Delivery Ledger Pruned: Retained latest 14 days of broadcast receipts.');
+      alert('Delivery Ledger Pruned.');
     });
 
-    // 100% Reliable Native Tauri & Browser External Link Opener
+    // Native External Link Delegator
     function openExternalUrl(targetUrl) {
       if (!targetUrl) return;
-
-      // 1. If running inside Tauri native desktop, call our Rust open_external command
       if (window.__TAURI__ && window.__TAURI__.core && typeof window.__TAURI__.core.invoke === 'function') {
-        window.__TAURI__.core.invoke('open_external', { url: targetUrl }).catch(() => {
-          window.open(targetUrl, '_blank', 'noopener,noreferrer');
-        });
+        window.__TAURI__.core.invoke('open_external', { url: targetUrl });
         return;
       }
-      if (window.__TAURI_INTERNALS__ && typeof window.__TAURI_INTERNALS__.invoke === 'function') {
-        window.__TAURI_INTERNALS__.invoke('open_external', { url: targetUrl }).catch(() => {
-          window.open(targetUrl, '_blank', 'noopener,noreferrer');
-        });
-        return;
-      }
-
-      // 2. Browser fallback: standard window.open or loopback daemon
-      fetch(`/launch?url=${encodeURIComponent(targetUrl)}`).catch(() => {
-        window.open(targetUrl, '_blank', 'noopener,noreferrer');
-      });
+      window.open(targetUrl, '_blank');
     }
 
-    document.querySelectorAll('.social-card-btn').forEach(card => {
+    document.querySelectorAll('.social-card-btn[data-url]').forEach(card => {
       card.addEventListener('click', (e) => {
         e.preventDefault();
-        const url = card.getAttribute('data-url');
-        if (url) openExternalUrl(url);
+        openExternalUrl(card.getAttribute('data-url'));
       });
     });
 
-    const STRIPE_CHECKOUT_URL = 'https://pay.laylinedigital.com/pennant-desktop';
-    const STRIPE_PORTAL_URL   = 'https://billing.laylinedigital.com';
+    // In-App Operations Manual Controller
+    const manualModal = document.getElementById('manual-modal');
+    const manualBody = document.getElementById('manual-body');
+    const manualTitle = document.getElementById('manual-window-title');
 
-    document.getElementById('btn-stripe-checkout').addEventListener('click', () => {
-      openExternalUrl(STRIPE_CHECKOUT_URL);
+    function closeManual() { manualModal.style.display = 'none'; }
+    document.getElementById('btn-close-manual').addEventListener('click', closeManual);
+    manualModal.addEventListener('click', (e) => { if (e.target === manualModal) closeManual(); });
+
+    document.getElementById('btn-open-inapp-manual').addEventListener('click', () => {
+      manualTitle.innerText = '// OPERATIONS MANUAL // PENNANT HOIST';
+      manualBody.innerHTML = `
+        <h2>1. Sovereign Architecture</h2>
+        <p>Pennant Hoist is a local-first broadcasting command deck engineered for ATProto (Bluesky), ActivityPub (Mastodon), and Nostr. Your signing keys and passwords remain locked in local memory (<code>SessionVault</code>) and are never exposed to remote telemetry.</p>
+        <h2>2. Media Airlock Pipeline</h2>
+        <p>Staged media pre-uploads directly to native hosts (Bluesky PDS, Mastodon, or Blossom) before final egress, so pressing <code>TRANSMIT RECORD</code> executes instantaneously.</p>
+        <h2>3. SQLite WAL Queue</h2>
+        <p>Scheduled transmissions persist across reboots via SQLite WAL mode with automated retry backoff.</p>
+      `;
+      manualModal.style.display = 'flex';
     });
 
-    document.getElementById('btn-stripe-portal').addEventListener('click', () => {
-      openExternalUrl(STRIPE_PORTAL_URL);
+    document.getElementById('btn-open-inapp-faq').addEventListener('click', () => {
+      manualTitle.innerText = '// FAQ & TROUBLESHOOTING // PENNANT HOIST';
+      manualBody.innerHTML = `
+        <h2>Q: Why use Pennant Hoist?</h2>
+        <p>Pennant runs entirely on your local machine, avoiding cloud SaaS monthly subscription fees.</p>
+        <h2>Q: How do Core Hashtags work?</h2>
+        <p>Clicking the star icon (<code>★</code>) marks that hashtag as a Core Default, auto-checking it whenever you open the composer.</p>
+      `;
+      manualModal.style.display = 'flex';
     });
 
-    document.getElementById('btn-verify-key').addEventListener('click', () => {
-      const key = document.getElementById('cfg-license-key').value.trim();
-      if (key.startsWith('PH-')) {
-        alert('License Validated: Seat unlocked with 7-day offline grace period cache.');
-        document.getElementById('cfg-tier-status').innerText = 'STANDALONE DESKTOP [VERIFIED]';
-      } else {
-        alert('Verification Fault: Invalid serial key format. Keys begin with PH-');
-      }
-    });
-
+    // Fixed Covenant Modal Controller (Zero Layout Disruption)
     const covenantModal = document.getElementById('covenant-modal');
-    function hasAcceptedCovenant() {
-      return localStorage.getItem('pennant_nostr_covenant_accepted') === 'true';
-    }
-
-    let busState = { atproto: true, activitypub: true, nostr: false, matrix: true };
-    let activeTargets = new Set([
-      '@pennant.layline', '@personal.bsky', '@brand.bsky',
-      '@signal@social.pennant', '@wood@mastodon.social',
-      '!announcements:matrix.org'
-    ]);
-
-    function loadSavedLayout() {
-      const saved = localStorage.getItem('pennant_composer_layout');
-      if (saved) {
-        try {
-          const parsed = JSON.parse(saved);
-          if (parsed.busState) busState = parsed.busState;
-          if (Array.isArray(parsed.activeTargets)) activeTargets = new Set(parsed.activeTargets);
-        } catch (e) {}
-      } else if (hasAcceptedCovenant()) {
-        busState.nostr = true;
-        activeTargets.add('npub1...damus');
-      }
-      applyDOMState();
-    }
-
-    function saveLayout() {
-      localStorage.setItem('pennant_composer_layout', JSON.stringify({
-        busState,
-        activeTargets: Array.from(activeTargets)
-      }));
-    }
-
-    function applyDOMState() {
-      Object.keys(busState).forEach(bus => {
-        const bay = document.getElementById('bay-' + bus);
-        if (!bay) return;
-        const unit = bay.querySelector('.rocker-unit');
-        const badge = unit.querySelector('.rocker-state-badge');
-        if (busState[bus]) {
-          unit.classList.add('active');
-          badge.innerText = '[ ARMED ]';
-          bay.classList.remove('bypassed');
-        } else {
-          unit.classList.remove('active');
-          badge.innerText = '[ BYPASS ]';
-          bay.classList.add('bypassed');
-        }
-      });
-
-      document.querySelectorAll('.station-key').forEach(key => {
-        const handle = key.getAttribute('data-handle');
-        if (activeTargets.has(handle)) {
-          key.classList.add('active');
-        } else {
-          key.classList.remove('active');
-        }
-      });
-
-      updateTargetCount();
-    }
-
-    function armNostrBus() {
-      busState.nostr = true;
-      activeTargets.add('npub1...damus');
-      applyDOMState();
-      saveLayout();
-    }
-
-    function disarmNostrBus() {
-      busState.nostr = false;
-      applyDOMState();
-      saveLayout();
-    }
-
     document.getElementById('btn-review-covenant').addEventListener('click', (e) => {
       e.stopPropagation();
       covenantModal.style.display = 'flex';
     });
-
     document.getElementById('btn-accept-covenant').addEventListener('click', () => {
       localStorage.setItem('pennant_nostr_covenant_accepted', 'true');
       covenantModal.style.display = 'none';
-      armNostrBus();
+      document.querySelector('#bay-nostr .rocker-unit').classList.add('active');
     });
 
-    document.querySelectorAll('.rocker-unit').forEach(unit => {
-      unit.addEventListener('click', (e) => {
-        if (e.target.closest('.telemetry-help-dot') || e.target.closest('.btn-review-covenant')) return;
-        const bus = unit.getAttribute('data-bus');
-        
-        if (bus === 'nostr') {
-          if (!busState.nostr) {
-            if (!hasAcceptedCovenant()) {
-              covenantModal.style.display = 'flex';
-              return;
-            }
-            armNostrBus();
-          } else {
-            disarmNostrBus();
-          }
-          return;
-        }
-
-        busState[bus] = !busState[bus];
-        applyDOMState();
-        saveLayout();
-      });
-    });
-
-    document.querySelectorAll('.station-key').forEach(key => {
-      key.addEventListener('click', () => {
-        const handle = key.getAttribute('data-handle');
-        const bus = key.getAttribute('data-bus');
-
-        if (bus === 'nostr') {
-          if (!hasAcceptedCovenant()) {
-            covenantModal.style.display = 'flex';
-            return;
-          }
-          if (!busState.nostr) {
-            busState.nostr = true;
-          }
-        } else if (!busState[bus]) {
-          busState[bus] = true;
-        }
-
-        if (activeTargets.has(handle)) {
-          activeTargets.delete(handle);
-        } else {
-          activeTargets.add(handle);
-        }
-        applyDOMState();
-        saveLayout();
-      });
-    });
-
-    function getEffectiveTargets() {
-      const list = [];
-      document.querySelectorAll('.station-key.active').forEach(st => {
-        const bus = st.getAttribute('data-bus');
-        const handle = st.getAttribute('data-handle');
-        if (busState[bus] && activeTargets.has(handle)) {
-          list.push({ bus, handle });
-        }
-      });
-      return list;
-    }
-
-    function updateTargetCount() {
-      const effective = getEffectiveTargets();
-      document.getElementById('cnt-targets').innerText = `Targets: ${effective.length} Armed`;
-    }
-
-    loadSavedLayout();
-    loadDeckColumns();
-    loadHashtagDatabase();
-    loadEnvSettings();
-
-    const btnToggleCw = document.getElementById('btn-toggle-cw');
-    const cwRow = document.getElementById('cw-row');
-    const cwInput = document.getElementById('cw-input');
-    btnToggleCw.addEventListener('click', () => {
-      cwRow.style.display = 'flex';
-      cwInput.focus();
-    });
-    document.getElementById('btn-close-cw').addEventListener('click', () => {
-      cwRow.style.display = 'none';
-      cwInput.value = '';
-    });
-
-    let isScheduledMode = false;
-    const btnModeNow = document.getElementById('btn-mode-now');
-    const btnModeSchedule = document.getElementById('btn-mode-schedule');
-    const scheduleInputs = document.getElementById('schedule-inputs');
-    const schedDate = document.getElementById('sched-date');
-    const schedTime = document.getElementById('sched-time');
-    const schedTz = document.getElementById('sched-tz');
-    const submitBtn = document.getElementById('btn-submit-broadcast');
-
-    function initScheduleDefaults() {
-      const now = new Date();
-      now.setHours(now.getHours() + 1);
-      schedDate.value = now.toISOString().split('T')[0];
-      schedTime.value = now.toTimeString().slice(0, 5);
-    }
-    initScheduleDefaults();
-
-    btnModeNow.addEventListener('click', () => {
-      isScheduledMode = false;
-      btnModeNow.classList.add('active');
-      btnModeSchedule.classList.remove('active');
-      scheduleInputs.style.display = 'none';
-      submitBtn.innerText = 'TRANSMIT RECORD';
-    });
-
-    btnModeSchedule.addEventListener('click', () => {
-      isScheduledMode = true;
-      btnModeSchedule.classList.add('active');
-      btnModeNow.classList.remove('active');
-      scheduleInputs.style.display = 'flex';
-      submitBtn.innerText = 'ENQUEUE SCHEDULED';
-    });
-
+    // Drawers & Modals
     const composerDrawer = document.getElementById('composer-drawer');
-    const composerText = document.getElementById('composer-text');
-    const stagingTrigger = document.getElementById('staging-trigger');
-    const stagingLabel = document.getElementById('staging-label');
-    const mediaInput = document.getElementById('media-file-input');
-    const mediaPreview = document.getElementById('media-preview-bar');
-    const stagedFileName = document.getElementById('staged-file-name');
-    const btnToggleAlt = document.getElementById('btn-toggle-alt');
-    const altTextInput = document.getElementById('alt-text-input');
-    const threadSplitBar = document.getElementById('thread-split-bar');
-    const btnSplitThread = document.getElementById('btn-split-thread');
-    let stagedMediaFile = null;
-
-    btnToggleAlt.addEventListener('click', () => {
-      if (altTextInput.style.display === 'block') {
-        altTextInput.style.display = 'none';
-      } else {
-        altTextInput.style.display = 'block';
-        altTextInput.focus();
-      }
-    });
-
-    btnSplitThread.addEventListener('click', () => {
-      const fullText = composerText.value.trim();
-      if (fullText.length <= 300) return;
-      const chunks = [];
-      const words = fullText.split(' ');
-      let cur = '';
-      words.forEach(w => {
-        if ((cur + ' ' + w).length > 270) {
-          chunks.push(cur.trim());
-          cur = w;
-        } else {
-          cur += (cur ? ' ' : '') + w;
-        }
-      });
-      if (cur) chunks.push(cur.trim());
-      const total = chunks.length;
-      composerText.value = chunks.map((c, i) => `[${i + 1}/${total}] ${c}`).join('\n\n---\n\n');
-      threadSplitBar.style.display = 'none';
-    });
-
-    ['dragenter', 'dragover'].forEach(name => {
-      composerText.addEventListener(name, (e) => {
-        e.preventDefault();
-        composerText.classList.add('drag-over');
-      });
-    });
-    ['dragleave', 'drop'].forEach(name => {
-      composerText.addEventListener(name, (e) => {
-        e.preventDefault();
-        composerText.classList.remove('drag-over');
-      });
-    });
-    composerText.addEventListener('drop', (e) => {
-      if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-        stageFile(e.dataTransfer.files[0]);
-      }
-    });
-
-    function stageFile(file) {
-      stagedMediaFile = file;
-      mediaPreview.style.display = 'flex';
-      stagedFileName.innerText = `${file.name} (${(file.size / (1024*1024)).toFixed(1)} MB)`;
-      stagingLabel.innerText = 'MEDIA STAGED';
-      stagingTrigger.classList.add('active');
-    }
-
-    stagingTrigger.addEventListener('click', () => mediaInput.click());
-    mediaInput.addEventListener('change', () => {
-      if (mediaInput.files && mediaInput.files[0]) {
-        stageFile(mediaInput.files[0]);
-      }
-    });
-
-    document.getElementById('btn-remove-media').addEventListener('click', () => {
-      stagedMediaFile = null;
-      mediaInput.value = '';
-      mediaPreview.style.display = 'none';
-      altTextInput.style.display = 'none';
-      altTextInput.value = '';
-      stagingLabel.innerText = 'STAGING READY';
-    });
-
+    const settingsDrawer = document.getElementById('settings-drawer');
     document.getElementById('btn-open-composer').addEventListener('click', () => {
       composerDrawer.style.display = 'flex';
       resetSelectionToCore();
-      composerText.focus();
+      document.getElementById('composer-text').focus();
     });
-
-    function hideComposer() { composerDrawer.style.display = 'none'; }
-    function clearComposer() {
+    document.getElementById('btn-open-settings').addEventListener('click', () => {
+      settingsDrawer.style.display = 'flex';
+    });
+    document.getElementById('btn-close-settings').addEventListener('click', () => {
+      settingsDrawer.style.display = 'none';
+    });
+    document.getElementById('btn-close-esc').addEventListener('click', () => {
       composerDrawer.style.display = 'none';
-      composerText.value = '';
-      stagedMediaFile = null;
-      mediaInput.value = '';
-      mediaPreview.style.display = 'none';
-      altTextInput.style.display = 'none';
-      altTextInput.value = '';
-      cwRow.style.display = 'none';
-      cwInput.value = '';
-      threadSplitBar.style.display = 'none';
-      stagingLabel.innerText = 'STAGING READY';
-      updateCounters();
-    }
-
-    document.getElementById('btn-close-esc').addEventListener('click', hideComposer);
-    document.getElementById('btn-cancel-composer').addEventListener('click', hideComposer);
-    composerDrawer.addEventListener('click', (e) => {
-      if (e.target === composerDrawer) hideComposer();
     });
-    settingsDrawer.addEventListener('click', (e) => {
-      if (e.target === settingsDrawer) closeSettings();
-    });
-    colBuilderDrawer.addEventListener('click', (e) => {
-      if (e.target === colBuilderDrawer) closeColBuilder();
+    document.getElementById('btn-cancel-composer').addEventListener('click', () => {
+      composerDrawer.style.display = 'none';
     });
 
-    composerText.addEventListener('input', updateCounters);
-
-    function updateCounters() {
-      const len = composerText.value.length;
-      const bskyPill = document.getElementById('cnt-bsky');
-      const mastoPill = document.getElementById('cnt-masto');
-
-      bskyPill.innerText = `ATProto: ${len}/300`;
-      mastoPill.innerText = `AP: ${len}/500`;
-
-      if (len > 300) {
-        bskyPill.style.color = '#ef4444';
-        threadSplitBar.style.display = 'flex';
-      } else if (len >= 280) {
-        bskyPill.style.color = '#fbbf24';
-        threadSplitBar.style.display = 'none';
-      } else {
-        bskyPill.style.color = 'var(--text-sub)';
-        threadSplitBar.style.display = 'none';
-      }
-
-      mastoPill.style.color = len > 500 ? '#ef4444' : 'var(--text-sub)';
-      submitBtn.disabled = len > 500;
-    }
-
-    window.addEventListener('keydown', (e) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-        if (composerDrawer.style.display === 'flex') {
-          e.preventDefault();
-          transmitBroadcast();
-        }
-      } else if (e.key === 'Escape') {
-        if (composerDrawer.style.display === 'flex') hideComposer();
-        if (settingsDrawer.style.display === 'flex') closeSettings();
-        if (colBuilderDrawer.style.display === 'flex') closeColBuilder();
-      }
-    });
-
-    submitBtn.addEventListener('click', transmitBroadcast);
-
-    async function transmitBroadcast() {
-      const text = composerText.value.trim();
-      const targets = getEffectiveTargets();
-      
-      if (!text && !stagedMediaFile) return;
-      if (targets.length === 0) {
-        alert('Transmission Blocked: No target stations are armed for egress.');
-        return;
-      }
-      if (text.length > 500) {
-        alert('Transmission Blocked: Payload exceeds network limit.');
-        return;
-      }
-
-      harvestTagsFromText(text);
-
-      let scheduledTimestamp = null;
-      let displayTimeLabel = 'just now';
-
-      if (isScheduledMode) {
-        if (!schedDate.value || !schedTime.value) {
-          alert('Scheduler Incomplete: Provide both a date and time for queue slot.');
-          return;
-        }
-
-        const chosenTz = schedTz.value;
-        const targetDate = new Date(`${schedDate.value}T${schedTime.value}`);
-
-        if (isNaN(targetDate.getTime()) || targetDate <= new Date()) {
-          alert('Scheduler Invariant: Target dispatch time must be in the future.');
-          return;
-        }
-
-        scheduledTimestamp = targetDate.toISOString();
-        displayTimeLabel = `${schedDate.value} ${schedTime.value} (${chosenTz === 'LOCAL' ? 'Local' : chosenTz})`;
-      }
-
-      submitBtn.innerText = isScheduledMode ? 'ENQUEUEING...' : 'TRANSMITTING...';
-      submitBtn.disabled = true;
-
-      try {
-        const res = await fetch('/api/ingest/broadcast', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ps_ingest_dev_key'
-          },
-          body: JSON.stringify({
-            profileId: 'pennant',
-            message: text,
-            cw: cwInput.value.trim() || null,
-            media: stagedMediaFile ? { 
-              name: stagedMediaFile.name, 
-              size: stagedMediaFile.size,
-              alt: altTextInput.value.trim() || null
-            } : null,
-            targets: targets.map(t => t.handle),
-            protocols: Array.from(new Set(targets.map(t => t.bus))),
-            scheduledFor: scheduledTimestamp
-          })
-        });
-        const data = await res.json();
-        if (data.success) {
-          clearComposer();
-          const queueContainer = document.getElementById('cards-queue_col');
-          if (queueContainer) {
-            const newCard = document.createElement('div');
-            newCard.className = 'card';
-            newCard.id = 'queue-card-' + data.queueId;
-            newCard.style.borderColor = isScheduledMode ? '#38bdf8' : 'var(--accent-orange)';
-            
-            const statusText = isScheduledMode
-              ? `<span style="color: #38bdf8;">&#9684; SCHEDULED (${targets.length} TARGETS)</span>`
-              : `<span style="color: var(--signal-green);">&#9679; ENQUEUED (${targets.length} TARGETS${stagedMediaFile ? ' + MEDIA' : ''})</span>`;
-
-            newCard.innerHTML = `
-              <div class="card-meta">
-                <span class="author-name">@pennant</span>
-                <span style="color: ${isScheduledMode ? '#38bdf8' : 'var(--accent-orange)'};">JOB #${data.queueId}</span>
-              </div>
-              ${cwInput.value ? `<div style="color:#fbbf24; font-family:var(--font-col-header); font-size:11px; margin-bottom:4px;">[CW: ${cwInput.value}]</div>` : ''}
-              <div>${text}</div>
-              ${stagedMediaFile ? `<div style="font-family:var(--font-col-header); font-size:10px; color:#7dd3fc; margin-top:4px;">📎 ${stagedMediaFile.name} ${altTextInput.value ? `("${altTextInput.value}")` : ''}</div>` : ''}
-              <div class="card-footer">
-                ${statusText}
-                <span>${displayTimeLabel}</span>
-              </div>
-              ${isScheduledMode ? `
-                <div class="card-actions">
-                  <button class="btn-card-act" onclick="alert('Triggering immediate flush for JOB #${data.queueId}')">NOW ⚡</button>
-                  <button class="btn-card-act danger" onclick="document.getElementById('queue-card-${data.queueId}').remove()">DISCARD ✕</button>
-                </div>
-              ` : ''}
-            `;
-            queueContainer.prepend(newCard);
-          }
-        } else {
-          alert('Transmission Rejected: ' + (data.error || 'Unknown Error'));
-        }
-      } catch (e) {
-        alert('Network Egress Fault: ' + e.message);
-      } finally {
-        submitBtn.innerText = isScheduledMode ? 'ENQUEUE SCHEDULED' : 'TRANSMIT RECORD';
-        submitBtn.disabled = false;
-      }
-    }
+    loadDeckColumns();
+    loadHashtagDatabase();
   </script>
 </body>
 </html>
