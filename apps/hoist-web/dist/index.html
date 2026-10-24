@@ -767,7 +767,19 @@
 <body>
   <header>
     <div class="brand-section">
-      <div class="flag-mark"></div>
+      <svg class="brand-pennant-svg" viewBox="0 0 32 32" width="22" height="22" style="flex-shrink:0; vertical-align:middle; filter: drop-shadow(0 0 6px rgba(224,86,45,0.45));">
+  <!-- Mast -->
+  <line x1="8" y1="4" x2="8" y2="28" stroke="#4a5568" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="8" cy="4" r="2" fill="#2cee88"/>
+  <!-- Pennant Flag Wedge -->
+  <polygon points="9,6 26,14 9,22 13,14" fill="url(#flagGrad)"/>
+  <defs>
+    <linearGradient id="flagGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff6b3d"/>
+      <stop offset="100%" stop-color="#c83f18"/>
+    </linearGradient>
+  </defs>
+</svg>
       <div class="brand-title">PENNANT HOIST</div>
       <span class="chassis-badge">SERIES 02 // ALPHA</span>
       <div style="display:flex; align-items:center; gap:8px; font-family:var(--font-masthead); font-size:11px; font-weight:600; color:var(--text-sub); background:var(--socket); border:1px solid var(--border); padding:5px 12px; border-radius:2px;">

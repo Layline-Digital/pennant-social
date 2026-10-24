@@ -1,0 +1,12 @@
+{
+  "names": {
+    "pennant": "95a0553489ca700d46b17d7808f357bee487386bdefe4209d4b5e29c5fb0e021"
+  },
+  "relays": {
+    "95a0553489ca700d46b17d7808f357bee487386bdefe4209d4b5e29c5fb0e021": [
+      "wss://relay.damus.io",
+      "wss://nos.lol",
+      "wss://relay.primal.net"
+    ]
+  }
+}
