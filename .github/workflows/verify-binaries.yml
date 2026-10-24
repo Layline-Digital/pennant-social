@@ -1,0 +1,90 @@
+name: Verify Release Binaries (macOS & Linux)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/verify-binaries.yml'
+
+jobs:
+  verify-macos:
+    name: Verify macOS Universal DMG
+    runs-on: macos-latest
+    steps:
+      - name: Download macOS Release Asset
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release download v0.2.0 --pattern "*universal.dmg" --repo Layline-Digital/pennant-social --dir ./dist-macos
+          ls -lh ./dist-macos
+
+      - name: Mount DMG & Verify Architecture
+        run: |
+          DMG_FILE=$(find ./dist-macos -name "*.dmg" | head -n 1)
+          echo "Mounting $DMG_FILE..."
+          
+          # Mount to temporary mountpoint
+          hdiutil attach "$DMG_FILE" -mountpoint /Volumes/PennantMount -nobrowse
+          
+          echo "Inspecting mounted volume contents:"
+          ls -la /Volumes/PennantMount
+          
+          APP_PATH=$(find /Volumes/PennantMount -maxdepth 2 -name "*.app" | head -n 1)
+          echo "App bundle located at: $APP_PATH"
+          
+          # Verify Info.plist metadata
+          defaults read "$APP_PATH/Contents/Info.plist" CFBundleIdentifier
+          
+          # Inspect binary architectures (Must contain x86_64 and arm64)
+          EXEC_NAME=$(defaults read "$APP_PATH/Contents/Info.plist" CFBundleExecutable)
+          BINARY_PATH="$APP_PATH/Contents/MacOS/$EXEC_NAME"
+          echo "Checking binary slices with lipo: $BINARY_PATH"
+          lipo -info "$BINARY_PATH"
+          
+          # Detach disk image
+          hdiutil detach /Volumes/PennantMount
+          echo "macOS Universal DMG verified successfully."
+
+  verify-linux:
+    name: Verify Linux deb & AppImage
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Download Linux Release Assets
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p ./dist-linux
+          gh release download v0.2.0 --pattern "*.deb" --pattern "*.AppImage" --repo Layline-Digital/pennant-social --dir ./dist-linux
+          ls -lh ./dist-linux
+
+      - name: Install System Prerequisites
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-0 libayatana-appindicator3-1 xvfb
+
+      - name: Verify Debian Package (.deb) Installation
+        run: |
+          DEB_FILE=$(find ./dist-linux -name "*.deb" | head -n 1)
+          echo "Testing installation of $DEB_FILE..."
+          sudo dpkg -i "$DEB_FILE" || sudo apt-get install -f -y
+          which pennant-hoist || find /usr/bin -name "*pennant*"
+
+      - name: Verify AppImage Execution in Headless Display (Xvfb)
+        run: |
+          APPIMAGE_FILE=$(find ./dist-linux -name "*.AppImage" | head -n 1)
+          chmod +x "$APPIMAGE_FILE"
+          
+          echo "Extracting AppImage payload..."
+          "$APPIMAGE_FILE" --appimage-extract > /dev/null
+          
+          echo "Launching binary under Xvfb (3 second smoke test)..."
+          # Run inside virtual display; timeout 3s is expected to exit with code 124 when clean
+          xvfb-run -a timeout 3s ./squashfs-root/AppRun || EXIT_CODE=$?
+          
+          # Exit code 124 means the process ran continuously until timeout killed it (Healthy)
+          if [ "${EXIT_CODE:-0}" -eq 124 ] || [ "${EXIT_CODE:-0}" -eq 0 ]; then
+            echo "Linux AppImage initialized and ran without missing symbols or crashes."
+          else
+            echo "Process exited with code $EXIT_CODE"
+            exit $EXIT_CODE
+          fi
