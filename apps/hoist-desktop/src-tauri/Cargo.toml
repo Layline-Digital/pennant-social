@@ -1,4 +1,4 @@
-﻿[package]
+[package]
 name = "pennant-hoist"
 version = "0.2.0"
 description = "Sovereign Quad-Protocol Social Broadcasting Console"

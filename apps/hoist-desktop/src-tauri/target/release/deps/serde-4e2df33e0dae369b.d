@@ -1,0 +1,14 @@
+C:\dev\repos\pennant-social\apps\hoist-desktop\src-tauri\target\release\deps\serde-4e2df33e0dae369b.d: C:\Users\woody\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.229\src\lib.rs C:\Users\woody\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.229\src\integer128.rs C:\Users\woody\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.229\src\private\mod.rs C:\Users\woody\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.229\src\private\de.rs C:\Users\woody\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.229\src\private\ser.rs C:\dev\repos\pennant-social\apps\hoist-desktop\src-tauri\target\release\build\serde-3ea0e268674b7a1e\out/private.rs
+
+C:\dev\repos\pennant-social\apps\hoist-desktop\src-tauri\target\release\deps\libserde-4e2df33e0dae369b.rlib: C:\Users\woody\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.229\src\lib.rs C:\Users\woody\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.229\src\integer128.rs C:\Users\woody\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.229\src\private\mod.rs C:\Users\woody\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.229\src\private\de.rs C:\Users\woody\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.229\src\private\ser.rs C:\dev\repos\pennant-social\apps\hoist-desktop\src-tauri\target\release\build\serde-3ea0e268674b7a1e\out/private.rs
+
+C:\dev\repos\pennant-social\apps\hoist-desktop\src-tauri\target\release\deps\libserde-4e2df33e0dae369b.rmeta: C:\Users\woody\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.229\src\lib.rs C:\Users\woody\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.229\src\integer128.rs C:\Users\woody\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.229\src\private\mod.rs C:\Users\woody\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.229\src\private\de.rs C:\Users\woody\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.229\src\private\ser.rs C:\dev\repos\pennant-social\apps\hoist-desktop\src-tauri\target\release\build\serde-3ea0e268674b7a1e\out/private.rs
+
+C:\Users\woody\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.229\src\lib.rs:
+C:\Users\woody\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.229\src\integer128.rs:
+C:\Users\woody\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.229\src\private\mod.rs:
+C:\Users\woody\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.229\src\private\de.rs:
+C:\Users\woody\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.229\src\private\ser.rs:
+C:\dev\repos\pennant-social\apps\hoist-desktop\src-tauri\target\release\build\serde-3ea0e268674b7a1e\out/private.rs:
+
+# env-dep:OUT_DIR=C:\\dev\\repos\\pennant-social\\apps\\hoist-desktop\\src-tauri\\target\\release\\build\\serde-3ea0e268674b7a1e\\out

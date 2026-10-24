@@ -1,0 +1,15 @@
+C:\dev\repos\pennant-social\apps\hoist-desktop\src-tauri\target\release\deps\pennant_hoist.d: src\main.rs C:\dev\repos\pennant-social\apps\hoist-desktop\src-tauri\../../hoist-web/dist\index.html \\?\C:\dev\repos\pennant-social\apps\hoist-desktop\src-tauri\target\release\build\pennant-hoist-60d6e58234ccd833\out\tauri-codegen-assets\2f9a1247b154b44e9d988e99f7ef8b641da4a1aab48a226a4c27ce28f05121c3.html C:\dev\repos\pennant-social\apps\hoist-desktop\src-tauri\../../hoist-web/dist\_headers \\?\C:\dev\repos\pennant-social\apps\hoist-desktop\src-tauri\target\release\build\pennant-hoist-60d6e58234ccd833\out\tauri-codegen-assets\1e32869ab8db0ce5c0db11d76134d8ec1e868ca8efe32549a1e679f536e9000a C:\dev\repos\pennant-social\apps\hoist-desktop\src-tauri\../../hoist-web/dist\assets\main-P2Xu9kJm.js \\?\C:\dev\repos\pennant-social\apps\hoist-desktop\src-tauri\target\release\build\pennant-hoist-60d6e58234ccd833\out\tauri-codegen-assets\8bc0a70930abc0dd0f531a1ec832ab67a71382c8651bcd726cb7e9950378c0eb.js
+
+C:\dev\repos\pennant-social\apps\hoist-desktop\src-tauri\target\release\deps\pennant_hoist.exe: src\main.rs C:\dev\repos\pennant-social\apps\hoist-desktop\src-tauri\../../hoist-web/dist\index.html \\?\C:\dev\repos\pennant-social\apps\hoist-desktop\src-tauri\target\release\build\pennant-hoist-60d6e58234ccd833\out\tauri-codegen-assets\2f9a1247b154b44e9d988e99f7ef8b641da4a1aab48a226a4c27ce28f05121c3.html C:\dev\repos\pennant-social\apps\hoist-desktop\src-tauri\../../hoist-web/dist\_headers \\?\C:\dev\repos\pennant-social\apps\hoist-desktop\src-tauri\target\release\build\pennant-hoist-60d6e58234ccd833\out\tauri-codegen-assets\1e32869ab8db0ce5c0db11d76134d8ec1e868ca8efe32549a1e679f536e9000a C:\dev\repos\pennant-social\apps\hoist-desktop\src-tauri\../../hoist-web/dist\assets\main-P2Xu9kJm.js \\?\C:\dev\repos\pennant-social\apps\hoist-desktop\src-tauri\target\release\build\pennant-hoist-60d6e58234ccd833\out\tauri-codegen-assets\8bc0a70930abc0dd0f531a1ec832ab67a71382c8651bcd726cb7e9950378c0eb.js
+
+src\main.rs:
+C:\dev\repos\pennant-social\apps\hoist-desktop\src-tauri\../../hoist-web/dist\index.html:
+\\?\C:\dev\repos\pennant-social\apps\hoist-desktop\src-tauri\target\release\build\pennant-hoist-60d6e58234ccd833\out\tauri-codegen-assets\2f9a1247b154b44e9d988e99f7ef8b641da4a1aab48a226a4c27ce28f05121c3.html:
+C:\dev\repos\pennant-social\apps\hoist-desktop\src-tauri\../../hoist-web/dist\_headers:
+\\?\C:\dev\repos\pennant-social\apps\hoist-desktop\src-tauri\target\release\build\pennant-hoist-60d6e58234ccd833\out\tauri-codegen-assets\1e32869ab8db0ce5c0db11d76134d8ec1e868ca8efe32549a1e679f536e9000a:
+C:\dev\repos\pennant-social\apps\hoist-desktop\src-tauri\../../hoist-web/dist\assets\main-P2Xu9kJm.js:
+\\?\C:\dev\repos\pennant-social\apps\hoist-desktop\src-tauri\target\release\build\pennant-hoist-60d6e58234ccd833\out\tauri-codegen-assets\8bc0a70930abc0dd0f531a1ec832ab67a71382c8651bcd726cb7e9950378c0eb.js:
+
+# env-dep:CARGO_PKG_AUTHORS=Alan Woodyard <alan@alanwoodyard.com>
+# env-dep:CARGO_PKG_DESCRIPTION=Sovereign Quad-Protocol Social Broadcasting Console
+# env-dep:CARGO_PKG_NAME=pennant-hoist
