@@ -1,2 +1,0 @@
-cargo:rustc-link-search=native=C:\dev\repos\pennant-social\apps\hoist-desktop\src-tauri\target\debug\build\webview2-com-sys-d73b311cc852ec62\out\x64
-cargo:rustc-link-lib=advapi32

@@ -15,3 +15,7 @@ export/
 credentials.txt
 node_modules/
 .wrangler/
+
+# Rust build target
+apps/hoist-desktop/src-tauri/target/
+target/
