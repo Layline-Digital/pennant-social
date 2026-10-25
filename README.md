@@ -1,6 +1,6 @@
 ﻿<p align="center">
   <a href="https://pennant.laylinedigital.com" target="_blank" rel="noopener noreferrer">
-    <img src=".github/assets/layline-banner.jpg" alt="Layline Digital / Pennant" width="100%" style="max-width: 800px; border-radius: 6px;" />
+    <img src=".github/assets/pennant-banner.png" alt="Layline Digital / Pennant" width="100%" style="max-width: 800px; border-radius: 6px;" />
   </a>
 </p>
 
@@ -43,6 +43,7 @@ sec) and app passwords remain in a local, memory-scrubbed vault.
 
 ## License
 Open Core licensed under the MIT License.
+
 
 
 
