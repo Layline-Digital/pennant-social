@@ -1,6 +1,6 @@
 ﻿<p align="center">
   <a href="https://pennant.laylinedigital.com" target="_blank" rel="noopener noreferrer">
-    <img src=".github/assets/layline-banner.png" alt="Layline Digital / Pennant" width="100%" style="max-width: 800px; border-radius: 6px;" />
+    <img src=".github/assets/layline-banner.svg" alt="Layline Digital / Pennant" width="100%" style="max-width: 800px; border-radius: 6px;" />
   </a>
 </p>
 
@@ -36,3 +36,4 @@ A local-first desktop command deck for broadcasting across Bluesky, Mastodon, an
 
 ## License
 Open Core licensed under the MIT License.
+
