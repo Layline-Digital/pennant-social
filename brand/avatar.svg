@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#141824"/>
+      <stop offset="100%" stop-color="#0b0d11"/>
+    </linearGradient>
+    <linearGradient id="flagGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff6b3d"/>
+      <stop offset="100%" stop-color="#c83f18"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#e0562d" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+  <!-- Background with subtle technical border -->
+  <rect width="512" height="512" rx="40" fill="url(#bgGrad)"/>
+  <rect x="16" y="16" width="480" height="480" rx="32" fill="none" stroke="#222938" stroke-width="4"/>
+  <circle cx="256" cy="256" r="190" fill="none" stroke="#1c2333" stroke-width="2" stroke-dasharray="8 8"/>
+  
+  <!-- Pennant Flag Wedge (Centered & Dynamic) -->
+  <polygon points="170,140 375,256 170,372 215,256" fill="url(#flagGrad)" filter="url(#glow)"/>
+  
+  <!-- Signal Mast -->
+  <line x1="168" y1="120" x2="168" y2="392" stroke="#4a5568" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="168" cy="120" r="10" fill="#2cee88"/>
+</svg>

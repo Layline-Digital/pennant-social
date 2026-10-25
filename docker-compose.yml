@@ -1,0 +1,26 @@
+﻿services:
+  pennant-hoist:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pennant-hoist
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:7420:7420"
+    volumes:
+      - pennant_data:/home/pennant/.pennant
+    environment:
+      - PORT=7420
+      - NODE_ENV=production
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:7420/health').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+volumes:
+  pennant_data:
+    driver: local
