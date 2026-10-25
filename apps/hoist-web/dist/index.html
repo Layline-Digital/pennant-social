@@ -1,12 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="background-color: #131519;">
 <head>
+  <style id="pennant-prepaint">html, body { background-color: #131519 !important; color: #cbd5e1; margin: 0; padding: 0; }</style>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pennant Hoist — Operations Deck</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600;700&family=JetBrains+Mono:wght@700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600;700&family=JetBrains+Mono:wght@700;800&display=swap" rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <style>
     :root {
       --canvas: #131519;
@@ -763,8 +764,47 @@
     .drawer-footer { background: #14161c; border-top: 1px solid var(--border); padding: 11px 20px; display: flex; justify-content: flex-end; align-items: center; gap: 12px; flex-shrink: 0; }
     .btn-cancel { background: transparent; border: 1px solid var(--border); color: var(--text-muted); font-family: var(--font-col-header); font-size: 10.5px; font-weight: 700; padding: 7px 14px; border-radius: 2px; cursor: pointer; }
   </style>
+<style id="pennant-doc-readability">
+  .config-section, .doc-card, .faq-item {
+    font-size: 13px !important;
+    line-height: 1.6 !important;
+    color: #e2e8f0 !important;
+  }
+  .config-title, .doc-title, .faq-q {
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+    margin-bottom: 8px !important;
+    letter-spacing: 0.05em !important;
+  }
+  .doc-body, .faq-a {
+    font-size: 12.5px !important;
+    line-height: 1.65 !important;
+    color: #94a3b8 !important;
+  }
+</style>
+<style id="pennant-expanded-docs">
+  .config-section, .doc-card, .faq-item {
+    font-size: 13.5px !important;
+    line-height: 1.7 !important;
+    color: #e2e8f0 !important;
+    margin-bottom: 16px !important;
+  }
+  .config-title, .doc-title, .faq-q {
+    font-size: 14.5px !important;
+    font-weight: 700 !important;
+    color: #38bdf8 !important;
+    letter-spacing: 0.04em !important;
+    margin-bottom: 8px !important;
+  }
+  .doc-body, .faq-a {
+    font-size: 13px !important;
+    line-height: 1.65 !important;
+    color: #cbd5e1 !important;
+  }
+</style>
 </head>
-<body>
+<body style="background-color: #131519; margin: 0; padding: 0;">
   <header>
     <div class="brand-section">
       <svg class="brand-pennant-svg" viewBox="0 0 32 32" width="22" height="22" style="flex-shrink:0; vertical-align:middle; filter: drop-shadow(0 0 6px rgba(224,86,45,0.45));">
@@ -861,18 +901,18 @@
             </div>
 
             <!-- Mastodon Fediverse -->
-            <div class="social-card-btn" data-url="https://social.pennant.laylinedigital.com/@signal">
+            <div class="social-card-btn" data-url="https://social.pennant.laylinedigital.com/@pennant">
               <div class="social-icon-glyph icon-masto">
                 <svg viewBox="0 0 24 24"><path d="M23.268 5.313c-.35-2.578-2.617-4.61-5.304-5.004C16.495.093 14.54 0 12 0c-2.54 0-4.495.093-5.964.31-2.687.394-4.954 2.426-5.304 5.004C.35 8.162 0 12.008 0 12.008s.35 3.846.732 6.695c.29 2.137 1.884 3.948 4.024 4.54 2.213.613 4.707.757 7.244.757 2.052 0 4.14-.112 5.952-.45 1.706-.319 3.23-1.42 3.654-3.136.425-1.716.394-4.043.394-4.043s-2.07.728-4.526.963c-2.457.235-5.088-.046-5.088-.046v-1.636s2.585.127 5.088-.127c2.502-.255 5.518-1.579 5.86-5.04.053-.538.086-1.12.086-1.758 0-2.348-.15-4.413-.15-4.413zm-3.66 8.354h-2.553v-5.46c0-1.205-.515-1.82-1.545-1.82-1.144 0-1.715.738-1.715 2.216v3.138h-2.59V8.603c0-1.478-.57-2.216-1.715-2.216-1.03 0-1.545.615-1.545 1.82v5.46H5.392V8.04c0-1.205.312-2.164.936-2.877.625-.713 1.455-1.077 2.49-1.077 1.2 0 2.115.46 2.744 1.38L12 6.273l.438-.807c.63-.92 1.544-1.38 2.744-1.38 1.035 0 1.865.364 2.49 1.077.624.713.936 1.672.936 2.877v5.627z"/></svg>
               </div>
               <div class="card-text-slot">
                 <div class="card-title-line">Mastodon Fediverse</div>
-                <div class="card-handle-line">@signal@social.pennant ↗</div>
+                <div class="card-handle-line">@pennant@social.pennant ↗</div>
               </div>
             </div>
 
             <!-- Nostr Relay Pool -->
-            <div class="social-card-btn" data-url="https://primal.net/p/npub1jks92dyfefcq634304uq3u6hhmjgwwrtmmlyyzw5kh3fchasuqssy8lrf5">
+            <div class="social-card-btn" data-url="https://primal.net/p/npub1trdkj868kv87hhdkdf6wpku7lm7tacafvdmcy6y2zhj7k2vdee5qy4s70m">
               <div class="social-icon-glyph icon-nostr">
                 <svg viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
               </div>
@@ -883,13 +923,13 @@
             </div>
 
             <!-- Layline Digital Apex Home -->
-            <div class="social-card-btn" data-url="https://laylinedigital.com">
+            <div class="social-card-btn" data-url="https://pennant.laylinedigital.com">
               <div class="social-icon-glyph icon-web">
                 <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
               </div>
               <div class="card-text-slot">
                 <div class="card-title-line">Layline Digital Home</div>
-                <div class="card-handle-line">https://laylinedigital.com ↗</div>
+                <div class="card-handle-line">https://pennant.laylinedigital.com ↗</div>
               </div>
             </div>
           </div>
@@ -995,7 +1035,7 @@
               <span class="rocker-state-badge">[ ARMED ]</span>
             </div>
             <div class="station-key-rack" id="rack-activitypub">
-              <div class="station-key active" data-handle="@signal@social.pennant.laylinedigital.com" data-bus="activitypub">
+              <div class="station-key active" data-handle="@pennant@social.pennant.laylinedigital.com" data-bus="activitypub">
                 <div class="key-lamp-slit"></div><span class="key-label">@SIGNAL</span>
               </div>
             </div>
@@ -1076,7 +1116,7 @@
 
     const defaultDeckColumns = [
       { id: 'bsky_main', label: 'pennant.laylinedigital.com', protocol: 'ATProto', badge: 'badge-bsky', sub: 'Home Timeline', query: 'pennant.laylinedigital.com' },
-      { id: 'masto_signal', label: '@signal@social.pennant', protocol: 'ActivityPub', badge: 'badge-masto', sub: 'Mentions & Alerts', query: '@signal' },
+      { id: 'masto_signal', label: '@pennant@social.pennant', protocol: 'ActivityPub', badge: 'badge-masto', sub: 'Mentions & Alerts', query: '@signal' },
       { id: 'nostr_relay', label: 'Relay Damus Pool', protocol: 'Nostr', badge: 'badge-nostr', sub: 'Relay Firehose', query: 'wss://relay.damus.io' },
       { id: 'queue_col', label: 'Outbox Delivery Queue', protocol: 'SQLite WAL', badge: 'badge-queue', sub: 'Persistent Ledger', query: 'local_wal' }
     ];
@@ -1404,6 +1444,23 @@
     loadDeckColumns();
     loadHashtagDatabase();
   </script>
+<script id="pennant-external-links">
+  document.addEventListener('click', (e) => {
+    const target = e.target.closest('a[href^="http"], [data-url^="http"]');
+    if (!target) return;
+    const url = target.getAttribute('href') || target.getAttribute('data-url');
+    if (url && (url.startsWith('http://') || url.startsWith('https://'))) {
+      e.preventDefault();
+      if (window.__TAURI__ && window.__TAURI__.core) {
+        window.__TAURI__.core.invoke('open_external', { url }).catch(() => {
+          window.open(url, '_blank');
+        });
+      } else {
+        window.open(url, '_blank');
+      }
+    }
+  });
+</script>
 </body>
 </html>
 
