@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pennant Social — Unified Multi-Protocol Command Deck</title>
+  <title>Pennant Social â€” Unified Multi-Protocol Command Deck</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600;700&family=JetBrains+Mono:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -227,7 +227,7 @@
         <span>WINDOWS (.EXE)</span>
         <span style="opacity:0.7;">1.1 MB</span>
       </a>
-        <a href="https://buy.stripe.com/6oU9AT3wyaIY4rj5uPaEE00" target="_blank" rel="noopener noreferrer" class="btn btn-pro" style="background:#635bff; color:#fff; border:1px solid #4f46e5; padding:8px 16px; border-radius:4px; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">⚡ Buy Desktop Seat ($49/yr)</a>
+        <a href="https://buy.stripe.com/6oU9AT3wyaIY4rj5uPaEE00" target="_blank" rel="noopener noreferrer" class="btn btn-pro" style="background:#635bff; color:#fff; border:1px solid #4f46e5; padding:8px 16px; border-radius:4px; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">âš¡ Buy Desktop Seat ($49/yr)</a>
       <a id="btn-download-msi" href="https://github.com/Layline-Digital/pennant-social/releases/download/v0.2.0-beta/Pennant-Hoist.msi" class="btn-secondary track-link">
         <span>MSI</span>
         <span style="opacity:0.7;">1.6 MB</span>
@@ -254,7 +254,59 @@
     </div>
   </section>
 
-  <footer>
+    <!-- FAQ Section (Layline Digital Brand System) -->
+  <section id="faq" style="max-width: 900px; margin: 60px auto; padding: 0 20px;">
+    <div style="text-align: center; margin-bottom: 40px;">
+      <h2 style="font-family: 'Montserrat', sans-serif; font-size: 28px; font-weight: 800; letter-spacing: 0.05em; color: #ffffff; text-transform: uppercase; margin-bottom: 10px;">
+        Frequently Asked Questions
+      </h2>
+      <div style="width: 80px; height: 3px; background-color: #F6C343; margin: 0 auto 16px auto; border-radius: 2px;"></div>
+      <p style="color: #94a3b8; font-size: 15px; margin: 0;">Everything you need to know about Pennant Hoist and sovereign protocol broadcasting.</p>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 16px;">
+      <details style="background: rgba(7, 56, 116, 0.25); border: 1px solid rgba(246, 195, 67, 0.2); border-radius: 8px; padding: 18px 22px; cursor: pointer;">
+        <summary style="font-weight: 700; color: #ffffff; font-size: 16px; outline: none; list-style: none; display: flex; justify-content: space-between; align-items: center;">
+          Does Pennant Hoist require running an external server or cloud database?
+          <span style="color: #F6C343; font-size: 18px;">+</span>
+        </summary>
+        <p style="color: #cbd5e1; font-size: 14px; line-height: 1.6; margin: 14px 0 0 0;">
+          No. Pennant Hoist is strictly <strong>local-first</strong>. It runs on your workstation loopback (<code>127.0.0.1:7420</code>) or directly inside the native Windows desktop binary. All scheduled broadcasts, column states, and feed caches are stored in an embedded SQLite WAL database on your local disk.
+        </p>
+      </details>
+
+      <details style="background: rgba(7, 56, 116, 0.25); border: 1px solid rgba(246, 195, 67, 0.2); border-radius: 8px; padding: 18px 22px; cursor: pointer;">
+        <summary style="font-weight: 700; color: #ffffff; font-size: 16px; outline: none; list-style: none; display: flex; justify-content: space-between; align-items: center;">
+          Where are my private keys and app passwords stored?
+          <span style="color: #F6C343; font-size: 18px;">+</span>
+        </summary>
+        <p style="color: #cbd5e1; font-size: 14px; line-height: 1.6; margin: 14px 0 0 0;">
+          Your secrets never leave your hardware. Nostr private keys (<code>nsec</code>), Mastodon access tokens, and Bluesky app passwords stay in an isolated, memory-scrubbed local keystore. There are no analytics pings, no telemetry trackers, and zero central SaaS middleman servers.
+        </p>
+      </details>
+
+      <details style="background: rgba(7, 56, 116, 0.25); border: 1px solid rgba(246, 195, 67, 0.2); border-radius: 8px; padding: 18px 22px; cursor: pointer;">
+        <summary style="font-weight: 700; color: #ffffff; font-size: 16px; outline: none; list-style: none; display: flex; justify-content: space-between; align-items: center;">
+          How does multi-protocol broadcasting handle character limits?
+          <span style="color: #F6C343; font-size: 18px;">+</span>
+        </summary>
+        <p style="color: #cbd5e1; font-size: 14px; line-height: 1.6; margin: 14px 0 0 0;">
+          The Pennant composer features an adaptive constraint solver. As you type, dynamic meters evaluate ATProto's 300-grapheme ceiling, Mastodon's 500-character limit, and Nostr note specifications in real time, notifying you if a payload exceeds any armed station's limits before firing.
+        </p>
+      </details>
+
+      <details style="background: rgba(7, 56, 116, 0.25); border: 1px solid rgba(246, 195, 67, 0.2); border-radius: 8px; padding: 18px 22px; cursor: pointer;">
+        <summary style="font-weight: 700; color: #ffffff; font-size: 16px; outline: none; list-style: none; display: flex; justify-content: space-between; align-items: center;">
+          How do image and video uploads work without cloud bandwidth fees?
+          <span style="color: #F6C343; font-size: 18px;">+</span>
+        </summary>
+        <p style="color: #cbd5e1; font-size: 14px; line-height: 1.6; margin: 14px 0 0 0;">
+          Through the <strong>Media Airlock</strong> engine. Attachments are hashed with SHA-256 and uploaded straight from your local client to destination protocol endpoints (Bluesky PDS, Mastodon instance storage, or Blossom servers) with zero intermediate proxy hops.
+        </p>
+      </details>
+    </div>
+  </section>
+<footer>
     <div>Layline Digital &copy; 2026 // Open Core MIT License</div>
     <div>NIP-05: pennant@laylinedigital.com</div>
   </footer>

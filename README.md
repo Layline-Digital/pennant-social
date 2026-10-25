@@ -29,12 +29,20 @@ A local-first desktop command deck for broadcasting across Bluesky, Mastodon, an
 - 2D virtualized multi-column operations deck
 
 ## Documentation
-- [Quickstart Guide](docs/Quickstart.md)
-- [Protocol Setup](docs/Protocols.md)
-- [Media Airlock & Storage](docs/Airlock-and-Storage.md)
-- [Troubleshooting & FAQ](docs/Troubleshooting.md)
+- 🚀 **[Quickstart Guide](docs/Quickstart.md)** — Installation (Windows NSIS/MSI) and source boot in under 2 minutes.
+- 🔐 **[Protocol Setup & Key Configuration](docs/Protocols.md)** — Step-by-step credentials for Bluesky, Mastodon, and Nostr (NIP-05/NIP-07).
+- 📦 **[Media Airlock & Storage Engine](docs/Airlock-and-Storage.md)** — Client-side SHA-256 pre-staging, direct PDS/Blossom dispatch, and SQLite WAL queues.
+- 🛠️ **[Troubleshooting & FAQ](docs/Troubleshooting.md)** — Storage locations, relay retries, WebView2 setup, and zero-telemetry auditing.
+
+## Architecture & Sovereignty
+- **Local-First Runtime:** Dispatch daemon runs on 127.0.0.1:7420.
+- **Hardware Custody:** Private signing keys (
+sec) and app passwords remain in a local, memory-scrubbed vault.
+- **SQLite WAL Durability:** Scheduled dispatches survive workstation restarts without remote cloud dependencies.
+- **Adaptive Constraints:** Real-time grapheme and label tracking across ATProto (300 graphemes), Mastodon (500 chars), and Nostr.
 
 ## License
 Open Core licensed under the MIT License.
+
 
 

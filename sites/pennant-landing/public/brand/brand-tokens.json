@@ -1,0 +1,22 @@
+﻿{
+  "brand": "Layline Digital",
+  "colors": {
+    "blue": {
+      "dark": "#052852",
+      "primary": "#073874",
+      "light": "#0A4B96"
+    },
+    "gold": {
+      "primary": "#F6C343",
+      "muted": "#E5B032"
+    },
+    "white": "#FFFFFF"
+  },
+  "typography": {
+    "fontFamily": "Montserrat, Plus Jakarta Sans, -apple-system, sans-serif",
+    "wordmark": {
+      "primary": { "text": "LAYLINE", "weight": 900, "letterSpacing": "0.10em" },
+      "secondary": { "text": "DIGITAL", "weight": 300, "letterSpacing": "0.22em" }
+    }
+  }
+}
