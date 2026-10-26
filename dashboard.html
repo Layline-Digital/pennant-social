@@ -289,6 +289,10 @@
           <button class="btn btn-secondary" type="button" style="padding: 0.25rem 0.55rem; font-size: 0.75rem;" onclick="addHours(4)">+4 Hrs</button>
           <button class="btn btn-secondary" type="button" style="padding: 0.25rem 0.55rem; font-size: 0.75rem;" onclick="addDays(1)">Tomorrow 09:00</button>
         </div>
+        <label style="display:flex; align-items:center; gap:6px; margin-top:8px; font-size:12px; color:#2cee88; cursor:pointer;">
+          <input type="checkbox" id="sched-edge-sync" checked style="cursor:pointer;" />
+          <span>Unattended Edge Sync (Cloudflare Relay — runs 24/7 while laptop is asleep)</span>
+        </label>
       </div>
 
       <button class="btn" onclick="schedulePost()" style="width: 100%; margin-top: 1rem;">COMMIT TO QUEUE</button>
@@ -429,7 +433,8 @@
         message: document.getElementById('sched-message').value,
         url: document.getElementById('sched-url').value,
         targets: document.getElementById('sched-targets').value,
-        scheduled_at: new Date(document.getElementById('sched-time').value).toISOString()
+        scheduled_at: new Date(document.getElementById('sched-time').value).toISOString(),
+        sync_to_edge: document.getElementById('sched-edge-sync')?.checked ?? false
       };
 
       if (!payload.message || !document.getElementById('sched-time').value) {
@@ -527,5 +532,64 @@
     loadQueue();
     addHours(1);
   </script>
+
+      <!-- VOLUNTARY NEWSLETTER / UPDATES CARD -->
+      <div class="config-card" style="margin-top: 16px; padding: 14px; background: rgba(7, 56, 116, 0.25); border: 1px solid rgba(246, 195, 67, 0.3); border-radius: 6px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+          <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.08em; color: #f6c343; text-transform: uppercase;">Stay Informed (Optional)</span>
+          <span style="font-size: 10px; color: #8899a6; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px;">Public Beta Evaluation</span>
+        </div>
+        <p style="font-size: 12px; color: #b0bec5; line-height: 1.4; margin: 0 0 10px 0;">
+          Get notified when native macOS and Linux builds are released and when new protocol features land. Zero tracking, no spam.
+        </p>
+        <div style="display: flex; gap: 8px;">
+          <input type="email" id="pennant-sub-email" placeholder="you@domain.com" style="flex: 1; padding: 7px 10px; background: #0a1118; border: 1px solid #1e2d3d; border-radius: 4px; color: #fff; font-size: 12px; outline: none;" />
+          <button id="pennant-sub-btn" onclick="submitPennantSubscription()" style="padding: 7px 14px; background: #f6c343; color: #073874; border: none; border-radius: 4px; font-size: 11px; font-weight: 700; cursor: pointer; text-transform: uppercase;">Notify Me</button>
+        </div>
+        <div id="pennant-sub-status" style="display: none; font-size: 11px; margin-top: 8px;"></div>
+      </div>
+      <script>
+        async function submitPennantSubscription() {
+          const emailInput = document.getElementById('pennant-sub-email');
+          const btn = document.getElementById('pennant-sub-btn');
+          const status = document.getElementById('pennant-sub-status');
+          const email = (emailInput?.value || '').trim();
+
+          if (!email || !email.includes('@')) {
+            status.style.display = 'block';
+            status.style.color = '#ff6b6b';
+            status.textContent = 'Please enter a valid email address.';
+            return;
+          }
+
+          btn.disabled = true;
+          btn.textContent = 'Saving...';
+          status.style.display = 'none';
+
+          try {
+            const res = await fetch('https://pennant-relay-worker.aewoodyard.workers.dev/api/v1/subscribe', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email: email, product: 'pennant', source: 'about_menu' })
+            });
+            if (res.ok) {
+              status.style.display = 'block';
+              status.style.color = '#4ade80';
+              status.textContent = '✓ Subscribed. You will be notified on new releases.';
+              emailInput.value = '';
+              btn.textContent = 'Saved';
+            } else {
+              throw new Error('Server returned ' + res.status);
+            }
+          } catch (err) {
+            status.style.display = 'block';
+            status.style.color = '#ff6b6b';
+            status.textContent = 'Unable to reach relay. Please try again later.';
+            btn.disabled = false;
+            btn.textContent = 'Notify Me';
+          }
+        }
+      </script>
+
 </body>
 </html>

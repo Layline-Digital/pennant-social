@@ -26,7 +26,7 @@
   export let stageMediaFn: ((file: File) => Promise<PreStagedMedia>) | null = null;
 
   const dispatch = createEventDispatcher<{
-    broadcast: { payloads: any[]; scheduledFor?: string };
+    broadcast: { payloads: any[]; scheduledFor?: string; sync_to_edge?: boolean };
     cancel: void;
   }>();
 
@@ -47,6 +47,7 @@
 
   let baseInput = '';
   let showDrawer = false;
+  let syncToEdge = true;
   let activeOverrideTarget: TargetProfile | null = null;
   let overrideText = '';
   let isDragging = false;
@@ -150,6 +151,7 @@
     dispatch('broadcast', {
       payloads,
       scheduledFor: snapshot.scheduledFor,
+      sync_to_edge: syncToEdge && Boolean(snapshot.scheduledFor),
     });
   }
 
@@ -217,7 +219,7 @@
         />
       </div>
 
-      <div class="drawer-row">
+      <div class="drawer-row precision-scheduler-bay">
         <div class="drawer-field">
           <label for="schedule-input">Schedule Dispatch (T-10m Pre-Staging):</label>
           <input
@@ -225,6 +227,16 @@
             type="datetime-local"
             on:input={handleScheduleInput}
           />
+        </div>
+
+        <div class="drawer-field toggle-field">
+          <label class="toggle-label edge-sync-toggle">
+            <input
+              type="checkbox"
+              bind:checked={syncToEdge}
+            />
+            <span>Unattended Edge Sync (Cloudflare Relay — runs 24/7 while laptop is asleep)</span>
+          </label>
         </div>
 
         <div class="drawer-field toggle-field">

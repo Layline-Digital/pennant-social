@@ -236,7 +236,65 @@
         <span>GITHUB (MIT)</span>
       </a>
     </div>
-    <div id="ab-indicator" class="ab-indicator">EXPERIMENT ID: ACTIVE</div>
+    
+      <!-- VOLUNTARY EMAIL INTAKE AIRLOCK -->
+      <div id="pennant-landing-subscribe" style="margin: 24px auto; max-width: 480px; padding: 18px; background: rgba(7, 56, 116, 0.35); border: 1px solid rgba(246, 195, 67, 0.4); border-radius: 8px; text-align: left; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+          <span style="font-size: 11px; font-weight: 800; letter-spacing: 0.1em; color: #f6c343; text-transform: uppercase;">Stay Informed (Optional)</span>
+          <span style="font-size: 10px; color: #94a3b8; background: rgba(255,255,255,0.06); padding: 2px 8px; border-radius: 4px;">Public Beta Evaluation</span>
+        </div>
+        <p style="font-size: 13px; color: #cbd5e1; line-height: 1.45; margin: 0 0 12px 0;">
+          Get release updates when native macOS and Linux builds land, and when new protocol engines deploy. Zero tracking, no spam.
+        </p>
+        <div style="display: flex; gap: 8px;">
+          <input type="email" id="landing-sub-email" placeholder="you@domain.com" style="flex: 1; padding: 10px 12px; background: #071018; border: 1px solid #1e293b; border-radius: 5px; color: #ffffff; font-size: 13px; outline: none;" />
+          <button id="landing-sub-btn" onclick="submitLandingSubscription()" style="padding: 10px 18px; background: #f6c343; color: #073874; border: none; border-radius: 5px; font-size: 12px; font-weight: 800; cursor: pointer; text-transform: uppercase; letter-spacing: 0.05em;">Notify Me</button>
+        </div>
+        <div id="landing-sub-status" style="display: none; font-size: 12px; margin-top: 10px;"></div>
+      </div>
+      <script>
+        async function submitLandingSubscription() {
+          const emailInput = document.getElementById('landing-sub-email');
+          const btn = document.getElementById('landing-sub-btn');
+          const status = document.getElementById('landing-sub-status');
+          const email = (emailInput?.value || '').trim();
+
+          if (!email || !email.includes('@')) {
+            status.style.display = 'block';
+            status.style.color = '#f87171';
+            status.textContent = 'Please enter a valid email address.';
+            return;
+          }
+
+          btn.disabled = true;
+          btn.textContent = 'Submitting...';
+          status.style.display = 'none';
+
+          try {
+            const res = await fetch('https://pennant-relay-worker.aewoodyard.workers.dev/api/v1/subscribe', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email: email, product: 'pennant', source: 'landing_portal' })
+            });
+            if (res.ok) {
+              status.style.display = 'block';
+              status.style.color = '#4ade80';
+              status.textContent = '✓ Subscribed. You will be notified on new releases.';
+              emailInput.value = '';
+              btn.textContent = 'Saved';
+            } else {
+              throw new Error('Server status ' + res.status);
+            }
+          } catch (err) {
+            status.style.display = 'block';
+            status.style.color = '#f87171';
+            status.textContent = 'Unable to reach relay. Please try again later.';
+            btn.disabled = false;
+            btn.textContent = 'Notify Me';
+          }
+        }
+      </script>
+
   </section>
 
   <section class="grid">
@@ -343,7 +401,7 @@
       document.getElementById('hero-tag').innerText = data.tag;
       document.getElementById('hero-headline').innerText = data.headline;
       document.getElementById('hero-subtitle').innerText = data.subtitle;
-      document.getElementById('ab-indicator').innerText = 'EXPERIMENT ID: ' + v;
+      
 
       // 4. Tag Outbound Links with Variant Attribution
       document.querySelectorAll('.track-link').forEach(link => {

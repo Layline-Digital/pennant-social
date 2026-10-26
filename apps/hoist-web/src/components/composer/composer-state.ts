@@ -64,6 +64,7 @@ export interface ComposerSnapshot {
   splitThread: boolean;
   contentWarning: string;
   scheduledFor?: string;
+  syncToEdge: boolean;
   validations: TargetValidation[];
   isSubmittable: boolean;
 }
@@ -251,6 +252,7 @@ export class ComposerStateMachine {
   private splitThread = false;
   private contentWarning = '';
   private scheduledFor?: string;
+  private syncToEdge = true;
   private listeners: Array<(snapshot: ComposerSnapshot) => void> = [];
 
   constructor(initial?: {
@@ -381,6 +383,15 @@ export class ComposerStateMachine {
     this.notify();
   }
 
+  public setSyncToEdge(enabled: boolean): void {
+    this.syncToEdge = enabled;
+    this.notify();
+  }
+
+  public getSyncToEdge(): boolean {
+    return this.syncToEdge;
+  }
+
   /**
    * Calculates per-target constraints, character counts, and validity
    */
@@ -482,6 +493,7 @@ export class ComposerStateMachine {
         posts,
         media: this.media,
         scheduledFor: this.scheduledFor,
+        sync_to_edge: this.syncToEdge && Boolean(this.scheduledFor),
       });
     }
 
@@ -501,6 +513,7 @@ export class ComposerStateMachine {
       splitThread: this.splitThread,
       contentWarning: this.contentWarning,
       scheduledFor: this.scheduledFor,
+      syncToEdge: this.syncToEdge,
       validations,
       isSubmittable,
     };

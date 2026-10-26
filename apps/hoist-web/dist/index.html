@@ -1081,6 +1081,18 @@
 
         <textarea id="composer-text" placeholder="Draft transmission record for authenticated fleet egress..."></textarea>
 
+        <!-- Precision Scheduler Bay -->
+        <div class="schedule-control-bay" id="precision-scheduler-bay" style="margin: 10px 0; display: flex; align-items: center; justify-content: space-between; gap: 10px; background: #101318; border: 1px solid var(--border); border-radius: 2px; padding: 6px 10px;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-family: var(--font-col-header); font-size: 10px; font-weight: 700; color: var(--text-sub);">SCHEDULE DISPATCH:</span>
+            <input type="datetime-local" id="composer-schedule-time" style="background: #090a0d; border: 1px solid #232832; color: #f1f5f9; font-family: var(--font-col-header); font-size: 11px; padding: 3px 6px; border-radius: 2px; outline: none;" />
+          </div>
+          <label class="edge-sync-label" style="display: flex; align-items: center; gap: 6px; font-family: var(--font-col-header); font-size: 10px; color: var(--signal-green); cursor: pointer;">
+            <input type="checkbox" id="toggle-edge-sync" checked style="cursor: pointer;" />
+            <span>Unattended Edge Sync (Cloudflare Relay — runs 24/7 while laptop is asleep)</span>
+          </label>
+        </div>
+
         <div class="telemetry-row">
           <div class="counters-tray">
             <span class="counter-pill" id="cnt-bsky">ATProto: 0/300</span>
@@ -1440,6 +1452,53 @@
     document.getElementById('btn-cancel-composer').addEventListener('click', () => {
       composerDrawer.style.display = 'none';
     });
+    document.getElementById('btn-submit-broadcast').addEventListener('click', async () => {
+      const text = document.getElementById('composer-text').value.trim();
+      if (!text) {
+        alert('Please enter a transmission record message.');
+        return;
+      }
+
+      const activeBays = [];
+      if (document.querySelector('#bay-atproto .rocker-unit')?.classList.contains('active')) activeBays.push('bluesky');
+      if (document.querySelector('#bay-activitypub .rocker-unit')?.classList.contains('active')) activeBays.push('mastodon');
+      if (document.querySelector('#bay-nostr .rocker-unit')?.classList.contains('active')) activeBays.push('nostr');
+
+      const schedInput = document.getElementById('composer-schedule-time');
+      const edgeToggle = document.getElementById('toggle-edge-sync');
+      const schedVal = schedInput ? schedInput.value : '';
+      const isEdgeSync = edgeToggle ? edgeToggle.checked : false;
+
+      const payload = {
+        account: 'pennant',
+        message: text,
+        targets: activeBays.length > 0 ? activeBays.join(',') : 'mastodon,bluesky,nostr',
+        scheduled_at: schedVal ? new Date(schedVal).toISOString() : new Date().toISOString(),
+      };
+
+      if (schedVal && isEdgeSync) {
+        payload.sync_to_edge = true;
+      }
+
+      try {
+        const res = await fetch('/schedule', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (res.ok) {
+          document.getElementById('composer-text').value = '';
+          if (schedInput) schedInput.value = '';
+          composerDrawer.style.display = 'none';
+          alert('Transmission Record Enqueued Successfully' + (payload.sync_to_edge ? ' (Edge Relay Synced)' : '') + '!');
+        } else {
+          const err = await res.json();
+          alert('Failed to enqueue transmission: ' + (err.error || res.statusText));
+        }
+      } catch (e) {
+        alert('Transmission error: ' + e.message);
+      }
+    });
 
     loadDeckColumns();
     loadHashtagDatabase();
@@ -1465,6 +1524,65 @@
         <div class="stripe-btn-tray" style="margin-top:10px;">
           <a href="https://buy.stripe.com/6oU9AT3wyaIY4rj5uPaEE00" target="_blank" rel="noopener noreferrer" class="btn-stripe" style="text-decoration:none; padding:6px 12px; border-radius:4px; display:inline-flex; align-items:center; gap:6px; cursor:pointer;">⚡ BUY DESKTOP SEAT ($49/YR)</a>
         </div>
+
+      <!-- VOLUNTARY NEWSLETTER / UPDATES CARD -->
+      <div class="config-card" style="margin-top: 16px; padding: 14px; background: rgba(7, 56, 116, 0.25); border: 1px solid rgba(246, 195, 67, 0.3); border-radius: 6px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+          <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.08em; color: #f6c343; text-transform: uppercase;">Stay Informed (Optional)</span>
+          <span style="font-size: 10px; color: #8899a6; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px;">Public Beta Evaluation</span>
+        </div>
+        <p style="font-size: 12px; color: #b0bec5; line-height: 1.4; margin: 0 0 10px 0;">
+          Get notified when native macOS and Linux builds are released and when new protocol features land. Zero tracking, no spam.
+        </p>
+        <div style="display: flex; gap: 8px;">
+          <input type="email" id="pennant-sub-email" placeholder="you@domain.com" style="flex: 1; padding: 7px 10px; background: #0a1118; border: 1px solid #1e2d3d; border-radius: 4px; color: #fff; font-size: 12px; outline: none;" />
+          <button id="pennant-sub-btn" onclick="submitPennantSubscription()" style="padding: 7px 14px; background: #f6c343; color: #073874; border: none; border-radius: 4px; font-size: 11px; font-weight: 700; cursor: pointer; text-transform: uppercase;">Notify Me</button>
+        </div>
+        <div id="pennant-sub-status" style="display: none; font-size: 11px; margin-top: 8px;"></div>
+      </div>
+      <script>
+        async function submitPennantSubscription() {
+          const emailInput = document.getElementById('pennant-sub-email');
+          const btn = document.getElementById('pennant-sub-btn');
+          const status = document.getElementById('pennant-sub-status');
+          const email = (emailInput?.value || '').trim();
+
+          if (!email || !email.includes('@')) {
+            status.style.display = 'block';
+            status.style.color = '#ff6b6b';
+            status.textContent = 'Please enter a valid email address.';
+            return;
+          }
+
+          btn.disabled = true;
+          btn.textContent = 'Saving...';
+          status.style.display = 'none';
+
+          try {
+            const res = await fetch('https://pennant-relay-worker.aewoodyard.workers.dev/api/v1/subscribe', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email: email, product: 'pennant', source: 'about_menu' })
+            });
+            if (res.ok) {
+              status.style.display = 'block';
+              status.style.color = '#4ade80';
+              status.textContent = '✓ Subscribed. You will be notified on new releases.';
+              emailInput.value = '';
+              btn.textContent = 'Saved';
+            } else {
+              throw new Error('Server returned ' + res.status);
+            }
+          } catch (err) {
+            status.style.display = 'block';
+            status.style.color = '#ff6b6b';
+            status.textContent = 'Unable to reach relay. Please try again later.';
+            btn.disabled = false;
+            btn.textContent = 'Notify Me';
+          }
+        }
+      </script>
+
 </body>
 </html>
 
