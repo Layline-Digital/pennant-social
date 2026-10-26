@@ -1,6 +1,6 @@
 ﻿import type { IncomingMessage, ServerResponse } from 'node:http';
 import type Database from 'better-sqlite3';
-import { BroadcastDaemon } from '../queue/broadcast-daemon.ts';
+import type { BroadcastDaemon } from '../queue/broadcast-daemon.ts';
 
 export interface IngestBroadcastPayload {
   source?: string; // Arbitrary source name (e.g. 'cms', 'rss-bot', 'ci-runner')
@@ -50,11 +50,13 @@ export function handleBroadcastIngestRequest(
         tags: payload.tags || []
       });
 
-      const queueId = daemon 
+            const queueId = daemon 
         ? daemon.enqueue(payload)
         : (() => {
+            const tableInfo = db.prepare("PRAGMA table_info(broadcast_queue)").all();
+            const col = tableInfo.some(c => c.name === 'profile_id') ? 'profile_id' : 'account';
             const stmt = db.prepare(`
-              INSERT INTO broadcast_queue (profile_id, status, scheduled_for, payload_json, attempts)
+              INSERT INTO broadcast_queue (${col}, status, scheduled_for, payload_json, attempts)
               VALUES (?, 'pending', ?, ?, 0)
             `);
             const info = stmt.run(payload.profileId, scheduledFor, payloadJson);
@@ -77,4 +79,6 @@ export function handleBroadcastIngestRequest(
 
 // Backwards-compatibility alias
 export const handleFleetIngestRequest = handleBroadcastIngestRequest;
+
+
 

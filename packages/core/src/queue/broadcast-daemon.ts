@@ -18,7 +18,7 @@ import { MediaAirlock, globalMediaAirlock, type PreStagedMedia } from '../adapte
 import type { FleetIngestPayload } from '../adapters/fleet-ingest.ts';
 
 
-export type QueueStatus = 'pending' | 'staging' | 'dispatched' | 'partial' | 'failed';
+export type QueueStatus = 'pending' | 'staging' | 'dispatched' | 'partial' | 'failed' | 'synced_edge';
 
 export interface BroadcastTargetPayload {
   profileId: string;
@@ -110,11 +110,12 @@ export class BroadcastDaemon {
     this.db.exec(`
       CREATE TABLE IF NOT EXISTS broadcast_queue (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        status TEXT NOT NULL CHECK(status IN ('pending', 'staging', 'dispatched', 'partial', 'failed')),
+        status TEXT NOT NULL CHECK(status IN ('pending', 'staging', 'dispatched', 'partial', 'failed', 'synced_edge')),
         scheduled_for TEXT NOT NULL,
         payload_json TEXT NOT NULL,
         attempts INTEGER NOT NULL DEFAULT 0,
         last_error TEXT,
+        edge_job_id TEXT,
         created_at TEXT DEFAULT CURRENT_TIMESTAMP
       );
     `);
@@ -134,6 +135,24 @@ export class BroadcastDaemon {
       }
       if (!columns.includes('last_error')) {
         this.db.exec('ALTER TABLE broadcast_queue ADD COLUMN last_error TEXT;');
+      }
+      if (!columns.includes('edge_job_id')) {
+        this.db.exec('ALTER TABLE broadcast_queue ADD COLUMN edge_job_id TEXT;');
+      }
+
+      const tableInfo = this.db.prepare("SELECT sql FROM sqlite_master WHERE type='table' AND name='broadcast_queue'").get() as { sql?: string } | undefined;
+      if (tableInfo?.sql && tableInfo.sql.includes('CHECK(status IN') && !tableInfo.sql.includes('synced_edge')) {
+        const allCols = (this.db.pragma('table_info(broadcast_queue)') as any[]).map((c) => c.name);
+        const colList = allCols.join(', ');
+        const updatedSql = tableInfo.sql
+          .replace(/CHECK\(status IN \(([^)]+)\)\)/, "CHECK(status IN ($1, 'synced_edge'))")
+          .replace('CREATE TABLE broadcast_queue', 'CREATE TABLE broadcast_queue_migrated');
+        this.db.exec('PRAGMA foreign_keys = OFF;');
+        this.db.exec(updatedSql);
+        this.db.exec(`INSERT INTO broadcast_queue_migrated (${colList}) SELECT ${colList} FROM broadcast_queue;`);
+        this.db.exec('DROP TABLE broadcast_queue;');
+        this.db.exec('ALTER TABLE broadcast_queue_migrated RENAME TO broadcast_queue;');
+        this.db.exec('PRAGMA foreign_keys = ON;');
       }
     } catch {}
 

@@ -6,11 +6,12 @@
 
 CREATE TABLE IF NOT EXISTS broadcast_queue (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  status TEXT NOT NULL CHECK(status IN ('pending', 'staging', 'dispatched', 'partial', 'failed')),
+  status TEXT NOT NULL CHECK(status IN ('pending', 'staging', 'dispatched', 'partial', 'failed', 'synced_edge')),
   scheduled_for TEXT NOT NULL,
   payload_json TEXT NOT NULL,
   attempts INTEGER NOT NULL DEFAULT 0,
   last_error TEXT,
+  edge_job_id TEXT,
   created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 

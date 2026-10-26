@@ -1,8 +1,8 @@
-{
+﻿{
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "Pennant",
   "version": "0.2.0",
-  "identifier": "com.laylinedigital.pennant.hoist",
+  "identifier": "com.laylinedigital.pennant",
   "build": {
     "frontendDist": "../../hoist-web/dist"
   },
@@ -10,7 +10,7 @@
     "withGlobalTauri": true,
     "windows": [
       {
-        "title": "Pennant — Social Operations Deck",
+        "title": "Pennant â€” Social Operations Deck",
         "width": 1440,
         "height": 900,
         "minWidth": 900,
