@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" style="background-color: #131519;">
 <head>
   <style id="pennant-prepaint">html, body { background-color: #131519 !important; color: #cbd5e1; margin: 0; padding: 0; }</style>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pennant Hoist â€” Operations Deck</title>
+  <title>Pennant Hoist  &mdash;  Operations Deck</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600;700&family=JetBrains+Mono:wght@700;800&display=swap" rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -861,6 +861,132 @@
   </style>
 
   <script defer src="https://analytics.alanwoodyard.com/script.js" data-website-id="d69b4ff8-938d-41d0-87dd-090a902bc8a8"></script>
+<style>
+  /* Responsive Mobile Header & Modal Constraints */
+  @media (max-width: 768px) {
+    header {
+      flex-wrap: wrap !important;
+      height: auto !important;
+      padding: 8px 10px !important;
+      gap: 8px !important;
+    }
+    .header-actions {
+      width: 100% !important;
+      display: flex !important;
+      justify-content: space-between !important;
+      gap: 6px !important;
+    }
+    .btn-header, .btn-action {
+      flex: 1 1 auto !important;
+      padding: 6px 4px !important;
+      font-size: 10px !important;
+      text-align: center !important;
+      white-space: nowrap !important;
+    }
+    .settings-chassis, .composer-chassis, .col-modal-chassis {
+      width: 95vw !important;
+      max-width: 95vw !important;
+      margin: 10px auto !important;
+    }
+    .config-row {
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      gap: 8px !important;
+    }
+    .config-row > div {
+      width: 100% !important;
+      flex-wrap: wrap !important;
+    }
+    /* Stack verified channels & documentation cards vertically on mobile */
+    .official-channels-grid, [class*="channels-grid"], .config-section div[style*="display: grid"], .config-section div[style*="display:grid"] {
+      display: flex !important;
+      flex-direction: column !important;
+      width: 100% !important;
+    }
+    .config-section div[style*="display: grid"] > *, .config-section div[style*="display:grid"] > * {
+      width: 100% !important;
+      box-sizing: border-box !important;
+    }
+  }
+</style>
+
+<style id="modal-overflow-guard">
+  .settings-chassis, .composer-chassis, .col-modal-chassis {
+    box-sizing: border-box !important;
+    max-width: 95vw !important;
+    overflow-x: hidden !important;
+  }
+  .config-section {
+    box-sizing: border-box !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+  }
+  .config-row {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+  /* Grid containers within settings and composer wrap cleanly */
+  .official-channels-grid, .protocol-cluster, #identities-roster {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)) !important;
+    gap: 8px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .hashtag-stash-grid, #hashtag-select-grid {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    max-width: 100% !important;
+  }
+</style>
+
+
+<style id="clean-modal-scroll-fix">
+  /* Ensure a single smooth vertical scroll on the modal body */
+  .window-body {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    max-height: calc(88vh - 90px) !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: thin;
+  }
+  .config-section, .official-channels-grid, .doc-grid, .protocol-cluster {
+    overflow: visible !important;
+    max-height: none !important;
+  }
+  .chassis-window {
+    max-height: 90vh !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  .rocker-unit {
+    cursor: pointer !important;
+    user-select: none !important;
+  }
+</style>
+
+
+<style id="single-scrollbar-override">
+  /* Force single scrollbar for settings */
+  #settings-drawer .window-body, #composer-drawer .window-body {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    max-height: 80vh !important;
+  }
+  #settings-drawer .config-section,
+  #composer-drawer .config-section,
+  .config-section {
+    overflow: visible !important;
+    max-height: none !important;
+    height: auto !important;
+    scrollbar-width: none !important;
+  }
+  .config-section::-webkit-scrollbar {
+    display: none !important;
+  }
+</style>
+
 </head>
 <body style="background-color: #131519; margin: 0; padding: 0;">
   <header>
@@ -895,7 +1021,36 @@
   <div id="deck-viewport"></div>
 
   <!-- Settings Drawer -->
-  <div class="modal-overlay" id="settings-drawer">
+    <!-- Column Builder Modal -->
+  <div class="modal-overlay" id="col-builder-drawer">
+    <div class="chassis-window col-modal-chassis" style="width: 520px; max-width: 92vw;">
+      <div class="window-top">
+        <span>// MOUNT STREAM TO DECK</span>
+        <span style="cursor: pointer; color: var(--text-muted);" id="btn-close-col-builder">[ESC]</span>
+      </div>
+      <div class="window-body" style="padding: 16px; display: flex; flex-direction: column; gap: 12px;">
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          <label style="font-family: var(--font-col-header); font-size: 10px; color: var(--text-sub); text-transform: uppercase;">1. Protocol Stream Archetype</label>
+          <select id="new-col-type" style="background:#090a0d; border:1px solid #232832; color:#f1f5f9; padding:8px; font-family:var(--font-col-header); font-size:12px; border-radius:2px;">
+            <option value="bsky_home">ATProto (Bluesky) - Home Timeline</option>
+            <option value="bsky_tag">ATProto (Bluesky) - Tag / Topic Stream</option>
+            <option value="masto_feed">ActivityPub (Mastodon) - Federated Feed</option>
+            <option value="nostr_relay">Nostr - Relay Firehose</option>
+            <option value="outbox_queue">SQLite WAL - Outbox Queue</option>
+          </select>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          <label style="font-family: var(--font-col-header); font-size: 10px; color: var(--text-sub); text-transform: uppercase;">2. Stream Parameter / Tag (Optional)</label>
+          <input type="text" id="new-col-param" placeholder="#buildinpublic or wss://relay.damus.io" style="background:#090a0d; border:1px solid #232832; color:#f1f5f9; padding:8px; font-family:var(--font-col-header); font-size:12px; border-radius:2px;" />
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-top:10px;">
+          <button class="btn-header" id="btn-cancel-col-builder" style="padding: 8px 14px;">CANCEL</button>
+          <button class="btn-action" id="btn-confirm-mount-col" style="padding: 8px 14px;">MOUNT TO DECK &#8599;</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<div class="modal-overlay" id="settings-drawer">
     <div class="chassis-window settings-chassis">
       <div class="window-top">
         <span>// SYSTEM & ENVIRONMENT CONFIGURATION</span>
@@ -954,7 +1109,7 @@
               </div>
               <div class="card-text-slot">
                 <div class="card-title-line">Bluesky ATProto</div>
-                <div class="card-handle-line">pennant.laylinedigital.com â†—</div>
+                <div class="card-handle-line">pennant.laylinedigital.com  &bull; &#8599; &#8599;”</div>
               </div>
             </div>
 
@@ -965,7 +1120,7 @@
               </div>
               <div class="card-text-slot">
                 <div class="card-title-line">Mastodon Fediverse</div>
-                <div class="card-handle-line">@pennant@social.pennant â†—</div>
+                <div class="card-handle-line">@pennant@social.pennant  &bull; &#8599; &#8599;”</div>
               </div>
             </div>
 
@@ -976,7 +1131,7 @@
               </div>
               <div class="card-text-slot">
                 <div class="card-title-line">Nostr Relay Pool</div>
-                <div class="card-handle-line">pennant@laylinedigital.com â†—</div>
+                <div class="card-handle-line">pennant@laylinedigital.com  &bull; &#8599; &#8599;”</div>
               </div>
             </div>
 
@@ -987,7 +1142,7 @@
               </div>
               <div class="card-text-slot">
                 <div class="card-title-line">Layline Digital Home</div>
-                <div class="card-handle-line">https://pennant.laylinedigital.com â†—</div>
+                <div class="card-handle-line">https://pennant.laylinedigital.com  &bull; &#8599; &#8599;”</div>
               </div>
             </div>
           </div>
@@ -1030,7 +1185,7 @@
   <div id="covenant-modal">
     <div class="covenant-chassis">
       <div class="covenant-title">
-        <span>âš  // PROTOCOL NOTICE // NOSTR KEY CUSTODY</span>
+        <span> &bull; Å¡  // PROTOCOL NOTICE // NOSTR KEY CUSTODY</span>
       </div>
       <div class="covenant-body">
         <div class="covenant-point">
@@ -1132,7 +1287,7 @@
             </div>
           </div>
           <div style="font-family:var(--font-col-header); font-size:9px; color:var(--text-muted);">
-            [ Click tag to select â€¢ Click &#9733; to toggle Core Default (auto-checked on open) ]
+            [ Click tag to select &#8599;¢ Click &#9733; to toggle Core Default (auto-checked on open) ]
           </div>
           <div class="hashtag-select-grid" id="hashtag-select-grid"></div>
         </div>
@@ -1147,7 +1302,7 @@
           </div>
           <label class="edge-sync-label" style="display: flex; align-items: center; gap: 6px; font-family: var(--font-col-header); font-size: 10px; color: var(--signal-green); cursor: pointer;">
             <input type="checkbox" id="toggle-edge-sync" checked style="cursor: pointer;" />
-            <span>Unattended Edge Sync (Cloudflare Relay â€” runs 24/7 while laptop is asleep)</span>
+            <span>Unattended Edge Sync (Cloudflare Relay  &mdash;  runs 24/7 while laptop is asleep)</span>
           </label>
         </div>
 
@@ -1269,12 +1424,12 @@
 
     window.toggleBoost = function(btn) {
       btn.classList.toggle('boosted');
-      btn.innerText = btn.classList.contains('boosted') ? '&#10227; BOOSTED' : '&#10227; BOOST';
+      btn.innerHTML = btn.classList.contains('boosted') ? '&#10227; BOOSTED' : '&#10227; BOOST';
     };
 
     window.toggleLike = function(btn) {
       btn.classList.toggle('liked');
-      btn.innerText = btn.classList.contains('liked') ? '&#9733; LIKED' : '&#9733; LIKE';
+      btn.innerHTML = btn.classList.contains('liked') ? '&#9733; LIKED' : '&#9733; LIKE';
     };
 
     // Hashtag Manager
@@ -1315,7 +1470,7 @@
         pill.innerHTML = `
           <input type="checkbox" style="cursor:pointer;" ${isSelected ? 'checked' : ''} />
           <span style="margin: 0 4px; overflow:hidden; text-overflow:ellipsis;">${item.tag}</span>
-          <button class="btn-pin-core" title="${item.isCore ? 'Unpin from Core Defaults' : 'Pin to Core Defaults'}">${item.isCore ? '&#9733;' : '&#9733;†'}</button>
+          <button class="btn-pin-core" title="${item.isCore ? 'Unpin from Core Defaults' : 'Pin to Core Defaults'}">${item.isCore ? '&#9733;' : '&#9733;&#8599; '}</button>
         `;
 
         pill.querySelector('input').addEventListener('click', (e) => {
@@ -1492,7 +1647,7 @@
     });
 
     // Drawers & Modals
-    const composerDrawer = document.getElementById('composer-drawer');
+    var composerDrawer = window.composerDrawer || document.getElementById('composer-drawer');
     const settingsDrawer = document.getElementById('settings-drawer');
     document.getElementById('btn-open-composer').addEventListener('click', () => {
       composerDrawer.style.display = 'flex';
@@ -1559,69 +1714,78 @@
       }
     });
 
-    loadDeckColumns();
-    loadHashtagDatabase();
-  </script>
-<script id="pennant-external-links">
-  document.addEventListener('click', (e) => {
-    const target = e.target.closest('a[href^="http"], [data-url^="http"]');
-    if (!target) return;
-    const url = target.getAttribute('href') || target.getAttribute('data-url');
-    if (url && (url.startsWith('http://') || url.startsWith('https://'))) {
-      e.preventDefault();
-      if (window.__TAURI__ && window.__TAURI__.core) {
-        window.__TAURI__.core.invoke('open_external', { url }).catch(() => {
-          window.open(url, '_blank');
-        });
-      } else {
-        window.open(url, '_blank');
-      }
-    }
-  });
-</script>
+        // --- Header & Modal Interactivity Hooks ---
+    var btnOpenColBuilder = window.btnOpenColBuilder || document.getElementById('btn-open-col-builder');
+    var colBuilderDrawer = window.colBuilderDrawer || document.getElementById('col-builder-drawer');
+    const btnCloseColBuilder = document.getElementById('btn-close-col-builder');
+    const btnCancelColBuilder = document.getElementById('btn-cancel-col-builder');
+    const btnConfirmMountCol = document.getElementById('btn-confirm-mount-col');
 
+    if (btnOpenColBuilder && colBuilderDrawer) {
+      btnOpenColBuilder.onclick = () => { colBuilderDrawer.style.display = 'flex'; };
+    }
+    if (btnCloseColBuilder && colBuilderDrawer) {
+      btnCloseColBuilder.onclick = () => { colBuilderDrawer.style.display = 'none'; };
+    }
+    if (btnCancelColBuilder && colBuilderDrawer) {
+      btnCancelColBuilder.onclick = () => { colBuilderDrawer.style.display = 'none'; };
+    }
+
+    if (btnConfirmMountCol) {
+      btnConfirmMountCol.onclick = () => {
+        const type = document.getElementById('new-col-type').value;
+        const param = (document.getElementById('new-col-param').value || '').trim();
+        const cid = 'col_' + Date.now();
+
+        let newCol = { id: cid, label: 'Custom Stream', protocol: 'Custom', badge: 'badge-queue', sub: 'Active Stream', query: param };
+        if (type === 'bsky_home') {
+          newCol = { id: cid, label: param || 'Bluesky Timeline', protocol: 'ATProto', badge: 'badge-bsky', sub: 'Home Feed', query: param || 'home' };
+        } else if (type === 'bsky_tag') {
+          newCol = { id: cid, label: param || '#buildinpublic', protocol: 'ATProto', badge: 'badge-bsky', sub: 'Tag Stream', query: param || '#buildinpublic' };
+        } else if (type === 'masto_feed') {
+          newCol = { id: cid, label: param || 'Fediverse Public', protocol: 'ActivityPub', badge: 'badge-masto', sub: 'Federated Stream', query: param || 'public' };
+        } else if (type === 'nostr_relay') {
+          newCol = { id: cid, label: param || 'Relay Pool', protocol: 'Nostr', badge: 'badge-nostr', sub: 'Relay Firehose', query: param || 'wss://relay.damus.io' };
+        } else if (type === 'outbox_queue') {
+          newCol = { id: cid, label: 'Outbox Ledger', protocol: 'SQLite WAL', badge: 'badge-queue', sub: 'Persistent Ledger', query: 'local_wal' };
+        }
+
+        activeDeckColumns.push(newCol);
+        saveDeckColumns();
+        renderDeck();
+        colBuilderDrawer.style.display = 'none';
+        document.getElementById('new-col-param').value = '';
+      };
+    }
+
+    var btnOpenComposer = window.btnOpenComposer || document.getElementById('btn-open-composer');
+    var composerDrawer = window.composerDrawer || document.getElementById('composer-drawer');
+    if (btnOpenComposer && composerDrawer) {
+      btnOpenComposer.onclick = () => { composerDrawer.style.display = 'flex'; };
+    }
+    
+    // --- Interactive Protocol Rocker Switch Handlers ---
+    document.querySelectorAll('.rocker-unit').forEach(unit => {
+      unit.onclick = (e) => {
+        e.stopPropagation();
+        const bus = unit.getAttribute('data-bus');
+        const badge = unit.querySelector('.rocker-state-badge');
+        const bay = unit.closest('.protocol-bay');
         
+        const isCurrentlyActive = unit.classList.contains('active');
+        if (isCurrentlyActive) {
+          unit.classList.remove('active');
+          if (badge) badge.innerText = '[ BYPASS ]';
+          if (bay) bay.classList.add('bypassed');
+        } else {
+          unit.classList.add('active');
+          if (badge) badge.innerText = '[ ARMED ]';
+          if (bay) bay.classList.remove('bypassed');
+        }
+      };
+    });
 
-<script id="pennant-ugc-moderation">
-  function toggleCardMenu(btn, author) {
-    const existing = document.getElementById('pennant-mod-popover');
-    if (existing) { existing.remove(); return; }
-
-    const menu = document.createElement('div');
-    menu.id = 'pennant-mod-popover';
-    menu.style.cssText = 'position: absolute; z-index: 9999; background: #161922; border: 1px solid #384257; border-radius: 6px; padding: 6px; display: flex; flex-direction: column; gap: 4px; box-shadow: 0 8px 24px rgba(0,0,0,0.6); font-size: 12px;';
-
-    const rect = btn.getBoundingClientRect();
-    menu.style.top = (rect.bottom + window.scrollY + 4) + 'px';
-    menu.style.left = Math.max(10, (rect.left + window.scrollX - 80)) + 'px';
-
-    menu.innerHTML = `
-      <button style="background: none; border: none; color: #ff6b6b; padding: 6px 12px; text-align: left; cursor: pointer; font-weight: 600;" onclick="blockAuthor('${author}')">&#10005; Block @${author}</button>
-      <button style="background: none; border: none; color: #f6c343; padding: 6px 12px; text-align: left; cursor: pointer;" onclick="reportPost('${author}')">&#9873; Report Post</button>
-      <a href="https://pennant.laylinedigital.com/terms" target="_blank" style="color: #8899ac; padding: 4px 12px; text-decoration: none; font-size: 11px; border-top: 1px solid #222938; margin-top: 4px; display: block;">Terms of Service</a>
-    `;
-
-    document.body.appendChild(menu);
-    const closeListener = (e) => {
-      if (!menu.contains(e.target) && e.target !== btn) {
-        menu.remove();
-        document.removeEventListener('click', closeListener);
-      }
-    };
-    setTimeout(() => document.addEventListener('click', closeListener), 10);
-  }
-
-  function blockAuthor(author) {
-    const blocked = JSON.parse(localStorage.getItem('pennant_blocked_users') || '[]');
-    if (!blocked.includes(author)) {
-      blocked.push(author);
-      localStorage.setItem('pennant_blocked_users', JSON.stringify(blocked));
-    }
-    const pop = document.getElementById('pennant-mod-popover');
-    if (pop) pop.remove();
-    alert('User @' + author + ' has been blocked. Their posts will no longer appear.');
-    if (typeof loadDeckColumns === 'function') loadDeckColumns();
-  }
+    loadDeckColumns();
 
   function reportPost(author) {
     const pop = document.getElementById('pennant-mod-popover');
@@ -1633,3 +1797,7 @@
 </script>
 
 </body></html>
+
+
+
+

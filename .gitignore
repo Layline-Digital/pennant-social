@@ -19,3 +19,5 @@ node_modules/
 # Rust build target
 apps/hoist-desktop/src-tauri/target/
 target/
+
+*.log
