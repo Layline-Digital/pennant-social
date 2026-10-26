@@ -1,6 +1,6 @@
 ﻿[package]
 name = "pennant-social"
-version = "0.2.1"
+version = "0.2.2"
 description = "Sovereign Quad-Protocol Social Broadcasting Console"
 authors = ["Alan Woodyard <alan@alanwoodyard.com>"]
 edition = "2021"
