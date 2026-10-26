@@ -35,13 +35,16 @@ jobs:
           cd apps/hoist-web && npm run build
 
       - name: Configure Apple API Private Key
+        env:
+          KEY_CONTENT: ${{ secrets.APPLE_API_KEY }}
+          KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
         run: |
           mkdir -p ~/.appstoreconnect/private_keys ~/.private_keys
-          echo "${{ secrets.APPLE_API_KEY }}" > ~/.appstoreconnect/private_keys/AuthKey_${{ secrets.APPLE_API_KEY_ID }}.p8
-          cp ~/.appstoreconnect/private_keys/AuthKey_${{ secrets.APPLE_API_KEY_ID }}.p8 ~/.private_keys/
-          chmod 600 ~/.appstoreconnect/private_keys/AuthKey_${{ secrets.APPLE_API_KEY_ID }}.p8
-          chmod 600 ~/.private_keys/AuthKey_${{ secrets.APPLE_API_KEY_ID }}.p8
-          echo "API_PRIVATE_KEYS_DIR=$HOME/.appstoreconnect/private_keys" >> $GITHUB_ENV
+          P8_PATH="$HOME/.appstoreconnect/private_keys/AuthKey_${KEY_ID}.p8"
+          printf '%s\n' "$KEY_CONTENT" > "$P8_PATH"
+          cp "$P8_PATH" "$HOME/.private_keys/"
+          chmod 600 "$P8_PATH" "$HOME/.private_keys/AuthKey_${KEY_ID}.p8"
+          echo "APPLE_API_KEY_PATH=$P8_PATH" >> $GITHUB_ENV
 
       - name: Initialize Tauri iOS Workspace
         working-directory: apps/hoist-desktop
@@ -53,6 +56,7 @@ jobs:
         env:
           APPLE_API_KEY: ${{ secrets.APPLE_API_KEY_ID }}
           APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
+          APPLE_API_KEY_PATH: ${{ env.APPLE_API_KEY_PATH }}
           APPLE_DEVELOPMENT_TEAM: ${{ secrets.APPLE_TEAM_ID }}
         run: |
           npx @tauri-apps/cli ios build --export-method app-store-connect
