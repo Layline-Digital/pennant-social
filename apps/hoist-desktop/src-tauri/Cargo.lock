@@ -2134,7 +2134,7 @@ dependencies = [
 
 [[package]]
 name = "pennant-social"
-version = "0.2.0"
+version = "0.2.4"
 dependencies = [
  "serde",
  "serde_json",

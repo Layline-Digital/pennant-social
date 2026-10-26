@@ -21,3 +21,9 @@ apps/hoist-desktop/src-tauri/target/
 target/
 
 *.log
+
+# Packaging and runtime logs
+dist-cli/
+*.zip
+*.tgz
+daemon-*.log
