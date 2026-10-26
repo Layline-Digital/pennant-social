@@ -51,6 +51,22 @@ jobs:
         run: |
           npx @tauri-apps/cli ios init
 
+      - name: Inject Designed App Icons into Xcode Asset Catalog
+        run: |
+          echo "[*] Replacing stock Tauri icons with Pennant Social design..."
+          ASSET_DIR="apps/hoist-desktop/src-tauri/gen/apple/pennant-social_iOS/Assets.xcassets/AppIcon.appiconset"
+          if [ -d "$ASSET_DIR" ]; then
+            # Copy all generated iOS icons
+            cp apps/hoist-desktop/src-tauri/icons/ios/*.png "$ASSET_DIR/" || true
+            # Master 1024x1024 icon
+            cp apps/hoist-desktop/src-tauri/icons/ios/AppIcon-512@2x.png "$ASSET_DIR/AppIcon-512@2x.png"
+            cp apps/hoist-desktop/src-tauri/icons/ios/AppIcon-512@2x.png "$ASSET_DIR/iTunesArtwork@2x.png"
+            echo "[+] Installed custom Pennant icons into $ASSET_DIR"
+          else
+            echo "[-] Warning: $ASSET_DIR not found, searching for AppIcon.appiconset..."
+            find apps/hoist-desktop/src-tauri/gen/apple -name "AppIcon.appiconset" -exec cp apps/hoist-desktop/src-tauri/icons/ios/AppIcon-512@2x.png {}/ \;
+          fi
+
       - name: Build and Package Signed IPA
         working-directory: apps/hoist-desktop
         env:
@@ -85,4 +101,3 @@ jobs:
           name: pennant-testflight-ipa
           path: apps/hoist-desktop/src-tauri/gen/apple/build/**/*.ipa
           if-no-files-found: warn
-

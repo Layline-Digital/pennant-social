@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" style="background-color: #131519;">
 <head>
   <style id="pennant-prepaint">html, body { background-color: #131519 !important; color: #cbd5e1; margin: 0; padding: 0; }</style>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pennant Hoist — Operations Deck</title>
+  <title>Pennant Hoist â€” Operations Deck</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600;700&family=JetBrains+Mono:wght@700;800&display=swap" rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -803,6 +803,78 @@
     color: #cbd5e1 !important;
   }
 </style>
+<style id="pennant-mobile-override">
+  /* iOS Notch and Dynamic Island Safe Area Support */
+  :root {
+    --sat: env(safe-area-inset-top, 0px);
+    --sab: env(safe-area-inset-bottom, 0px);
+    --sal: env(safe-area-inset-left, 0px);
+    --sar: env(safe-area-inset-right, 0px);
+  }
+
+  body {
+    padding-top: var(--sat) !important;
+    padding-bottom: var(--sab) !important;
+    padding-left: var(--sal) !important;
+    padding-right: var(--sar) !important;
+    overflow-x: hidden !important;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* Mobile Screen Overrides (< 768px) */
+  @media (max-width: 768px) {
+    /* Hide desktop commercial upsells & newsletter modals */
+    [data-license-banner],
+    .desktop-license-bar,
+    .stay-informed-banner,
+    .stay-informed-modal,
+    button:has-text("$49"),
+    div:has(> button:has-text("$49")),
+    a[href*="buy"],
+    a[href*="stripe"] {
+      display: none !important;
+    }
+
+    /* Target specific desktop CTA elements by text / attribute */
+    div[class*="license"],
+    div[class*="newsletter"],
+    div[class*="subscribe"] {
+      display: none !important;
+    }
+
+    /* Fix header / top navigation bar squeeze */
+    header, nav, .masthead, [class*="header"], [class*="masthead"] {
+      display: flex !important;
+      flex-wrap: nowrap !important;
+      overflow-x: auto !important;
+      -webkit-overflow-scrolling: touch !important;
+      gap: 6px !important;
+      padding: 8px 12px !important;
+      scrollbar-width: none !important;
+    }
+    header::-webkit-scrollbar, nav::-webkit-scrollbar {
+      display: none !important;
+    }
+
+    /* Ensure buttons stay readable and touch-friendly */
+    header button, nav button, .masthead button {
+      flex-shrink: 0 !important;
+      padding: 6px 10px !important;
+      font-size: 12px !important;
+      min-height: 36px !important;
+      white-space: nowrap !important;
+    }
+
+    /* Single column deck flow on mobile screens */
+    .deck-container, .columns-wrapper, [class*="deck"] {
+      display: flex !important;
+      flex-direction: column !important;
+      width: 100% !important;
+      overflow-y: auto !important;
+    }
+  }
+</style>
 </head>
 <body style="background-color: #131519; margin: 0; padding: 0;">
   <header>
@@ -829,7 +901,7 @@
     </div>
     <div class="header-actions">
       <button class="btn-header" id="btn-open-col-builder">+ ADD COLUMN</button>
-      <button class="btn-header" id="btn-open-settings">⚙ CONFIG / ABOUT</button>
+      <button class="btn-header" id="btn-open-settings">âš™ CONFIG / ABOUT</button>
       <button class="btn-action" id="btn-open-composer">+ NEW BROADCAST</button>
     </div>
   </header>
@@ -896,7 +968,7 @@
               </div>
               <div class="card-text-slot">
                 <div class="card-title-line">Bluesky ATProto</div>
-                <div class="card-handle-line">pennant.laylinedigital.com ↗</div>
+                <div class="card-handle-line">pennant.laylinedigital.com â†—</div>
               </div>
             </div>
 
@@ -907,7 +979,7 @@
               </div>
               <div class="card-text-slot">
                 <div class="card-title-line">Mastodon Fediverse</div>
-                <div class="card-handle-line">@pennant@social.pennant ↗</div>
+                <div class="card-handle-line">@pennant@social.pennant â†—</div>
               </div>
             </div>
 
@@ -918,7 +990,7 @@
               </div>
               <div class="card-text-slot">
                 <div class="card-title-line">Nostr Relay Pool</div>
-                <div class="card-handle-line">pennant@laylinedigital.com ↗</div>
+                <div class="card-handle-line">pennant@laylinedigital.com â†—</div>
               </div>
             </div>
 
@@ -929,7 +1001,7 @@
               </div>
               <div class="card-text-slot">
                 <div class="card-title-line">Layline Digital Home</div>
-                <div class="card-handle-line">https://pennant.laylinedigital.com ↗</div>
+                <div class="card-handle-line">https://pennant.laylinedigital.com â†—</div>
               </div>
             </div>
           </div>
@@ -972,7 +1044,7 @@
   <div id="covenant-modal">
     <div class="covenant-chassis">
       <div class="covenant-title">
-        <span>⚠ // PROTOCOL NOTICE // NOSTR KEY CUSTODY</span>
+        <span>âš  // PROTOCOL NOTICE // NOSTR KEY CUSTODY</span>
       </div>
       <div class="covenant-body">
         <div class="covenant-point">
@@ -1074,7 +1146,7 @@
             </div>
           </div>
           <div style="font-family:var(--font-col-header); font-size:9px; color:var(--text-muted);">
-            [ Click tag to select • Click ★ to toggle Core Default (auto-checked on open) ]
+            [ Click tag to select â€¢ Click â˜… to toggle Core Default (auto-checked on open) ]
           </div>
           <div class="hashtag-select-grid" id="hashtag-select-grid"></div>
         </div>
@@ -1089,7 +1161,7 @@
           </div>
           <label class="edge-sync-label" style="display: flex; align-items: center; gap: 6px; font-family: var(--font-col-header); font-size: 10px; color: var(--signal-green); cursor: pointer;">
             <input type="checkbox" id="toggle-edge-sync" checked style="cursor: pointer;" />
-            <span>Unattended Edge Sync (Cloudflare Relay — runs 24/7 while laptop is asleep)</span>
+            <span>Unattended Edge Sync (Cloudflare Relay â€” runs 24/7 while laptop is asleep)</span>
           </label>
         </div>
 
@@ -1165,7 +1237,7 @@
             </div>
             <div class="col-header-controls">
               <span class="protocol-badge ${col.badge}">${col.protocol}</span>
-              <button class="btn-close-col" data-col-id="${col.id}" title="Close Stream Column">✕</button>
+              <button class="btn-close-col" data-col-id="${col.id}" title="Close Stream Column">âœ•</button>
             </div>
           </div>
           <div class="cards-container">
@@ -1176,12 +1248,12 @@
               </div>
               <div>Stream synchronized. Zero memory leakage across virtualized channels.</div>
               <div class="in-deck-actions">
-                <button class="btn-deck-act" onclick="openReply('${col.query || col.label}')">↩ REPLY</button>
-                <button class="btn-deck-act" onclick="toggleBoost(this)">⟳ BOOST</button>
-                <button class="btn-deck-act" onclick="toggleLike(this)">★ LIKE</button>
+                <button class="btn-deck-act" onclick="openReply('${col.query || col.label}')">â†© REPLY</button>
+                <button class="btn-deck-act" onclick="toggleBoost(this)">âŸ³ BOOST</button>
+                <button class="btn-deck-act" onclick="toggleLike(this)">â˜… LIKE</button>
               </div>
               <div class="card-footer">
-                <span>● SYNCHRONIZED</span>
+                <span>â— SYNCHRONIZED</span>
                 <span style="cursor: pointer;">INSPECT &#8599;</span>
               </div>
             </div>
@@ -1210,12 +1282,12 @@
 
     window.toggleBoost = function(btn) {
       btn.classList.toggle('boosted');
-      btn.innerText = btn.classList.contains('boosted') ? '⟳ BOOSTED' : '⟳ BOOST';
+      btn.innerText = btn.classList.contains('boosted') ? 'âŸ³ BOOSTED' : 'âŸ³ BOOST';
     };
 
     window.toggleLike = function(btn) {
       btn.classList.toggle('liked');
-      btn.innerText = btn.classList.contains('liked') ? '★ LIKED' : '★ LIKE';
+      btn.innerText = btn.classList.contains('liked') ? 'â˜… LIKED' : 'â˜… LIKE';
     };
 
     // Hashtag Manager
@@ -1256,7 +1328,7 @@
         pill.innerHTML = `
           <input type="checkbox" style="cursor:pointer;" ${isSelected ? 'checked' : ''} />
           <span style="margin: 0 4px; overflow:hidden; text-overflow:ellipsis;">${item.tag}</span>
-          <button class="btn-pin-core" title="${item.isCore ? 'Unpin from Core Defaults' : 'Pin to Core Defaults'}">${item.isCore ? '★' : '☆'}</button>
+          <button class="btn-pin-core" title="${item.isCore ? 'Unpin from Core Defaults' : 'Pin to Core Defaults'}">${item.isCore ? 'â˜…' : 'â˜†'}</button>
         `;
 
         pill.querySelector('input').addEventListener('click', (e) => {
@@ -1415,7 +1487,7 @@
         <h2>Q: Why use Pennant Hoist?</h2>
         <p>Pennant runs entirely on your local machine, avoiding cloud SaaS monthly subscription fees.</p>
         <h2>Q: How do Core Hashtags work?</h2>
-        <p>Clicking the star icon (<code>★</code>) marks that hashtag as a Core Default, auto-checking it whenever you open the composer.</p>
+        <p>Clicking the star icon (<code>â˜…</code>) marks that hashtag as a Core Default, auto-checking it whenever you open the composer.</p>
       `;
       manualModal.style.display = 'flex';
     });
@@ -1522,7 +1594,7 @@
 </script>
 
         <div class="stripe-btn-tray" style="margin-top:10px;">
-          <a href="https://buy.stripe.com/6oU9AT3wyaIY4rj5uPaEE00" target="_blank" rel="noopener noreferrer" class="btn-stripe" style="text-decoration:none; padding:6px 12px; border-radius:4px; display:inline-flex; align-items:center; gap:6px; cursor:pointer;">⚡ BUY DESKTOP SEAT ($49/YR)</a>
+          <a href="https://buy.stripe.com/6oU9AT3wyaIY4rj5uPaEE00" target="_blank" rel="noopener noreferrer" class="btn-stripe" style="text-decoration:none; padding:6px 12px; border-radius:4px; display:inline-flex; align-items:center; gap:6px; cursor:pointer;">âš¡ BUY DESKTOP SEAT ($49/YR)</a>
         </div>
 
       <!-- VOLUNTARY NEWSLETTER / UPDATES CARD -->
@@ -1567,7 +1639,7 @@
             if (res.ok) {
               status.style.display = 'block';
               status.style.color = '#4ade80';
-              status.textContent = '✓ Subscribed. You will be notified on new releases.';
+              status.textContent = 'âœ“ Subscribed. You will be notified on new releases.';
               emailInput.value = '';
               btn.textContent = 'Saved';
             } else {
@@ -1585,4 +1657,5 @@
 
 </body>
 </html>
+
 

@@ -2133,7 +2133,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "pennant"
+name = "pennant-social"
 version = "0.2.0"
 dependencies = [
  "serde",

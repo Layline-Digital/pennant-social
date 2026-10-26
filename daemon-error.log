@@ -1,0 +1,11 @@
+file:///C:/dev/repos/pennant-social/pennant-launcher.js:346
+    handleFleetIngestRequest(req, res, db, broadcastDaemon).catch((err) => {
+                                                           ^
+
+TypeError: Cannot read properties of undefined (reading 'catch')
+    at Server.<anonymous> (file:///C:/dev/repos/pennant-social/pennant-launcher.js:346:60)
+    at Server.emit (node:events:509:28)
+    at parserOnIncoming (node:_http_server:1270:18)
+    at HTTPParser.parserOnHeadersComplete (node:_http_common:125:17)
+
+Node.js v24.19.0

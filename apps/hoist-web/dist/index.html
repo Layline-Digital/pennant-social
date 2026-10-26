@@ -1,16 +1,88 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" style="background-color: #131519;">
 <head>
   <style id="pennant-prepaint">html,body{color:#cbd5e1;margin:0;padding:0;background-color:#131519!important}</style>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pennant Hoist — Operations Deck</title>
+  <title>Pennant Hoist â€” Operations Deck</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600;700&family=JetBrains+Mono:wght@700;800&display=swap" rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <style>:root{--canvas:#131519;--chassis:#1a1d23;--card-bg:#21252d;--socket:#0d0f13;--border:#2a303b;--border-bright:#3d4654;--accent-orange:#e0562d;--accent-orange-glow:#e0562d73;--signal-green:#2cee88;--signal-green-core:#e8ffef;--signal-green-glow:#2cee88bf;--signal-green-halo:#2cee8859;--text-header-pop:#fff;--text-col-pop:#f8fafc;--text-main:#cbd5e1;--text-sub:#94a3b8;--text-muted:#64748b;--col-width:360px;--font-masthead:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;--font-col-header:"IBM Plex Mono", "SF Mono", "Space Mono", Consolas, monospace;--font-grotesk:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", sans-serif}*{box-sizing:border-box;margin:0;padding:0}body{background-color:var(--canvas);color:var(--text-main);font-family:var(--font-grotesk);user-select:none;-webkit-font-smoothing:antialiased;flex-direction:column;height:100vh;display:flex;position:relative;overflow:hidden}header{box-shadow:0 1px 0 var(--border), 0 4px 14px #00000080;z-index:20;background:#16181f;border-bottom:2px solid #0a0b0e;flex-shrink:0;justify-content:space-between;align-items:center;height:56px;padding:0 24px;display:flex}.brand-section{align-items:center;gap:14px;display:flex}.flag-mark{background:var(--accent-orange);clip-path:polygon(0 0,100% 50%,0 100%,25% 50%);width:22px;height:22px;box-shadow:0 0 12px var(--accent-orange-glow)}.brand-title{font-family:var(--font-masthead);letter-spacing:.14em;color:var(--text-header-pop);text-shadow:0 1px 2px #0009;font-size:14px;font-weight:800}.chassis-badge{font-family:var(--font-masthead);color:var(--text-sub);border:1px solid var(--border);background:var(--socket);border-radius:2px;padding:3px 8px;font-size:10px;font-weight:700}.header-actions{align-items:center;gap:10px;display:flex}.btn-header{border:1px solid var(--border);color:var(--text-sub);font-family:var(--font-col-header);cursor:pointer;background:#14171e;border-radius:2px;justify-content:center;align-items:center;padding:6px 14px;font-size:10.5px;font-weight:700;transition:all .1s;display:inline-flex}.btn-header:hover{color:var(--text-col-pop);border-color:var(--border-bright)}.btn-header.active{color:var(--signal-green);background:#11241a;border-color:#235c3c}.btn-action{color:#fff;font-family:var(--font-masthead);letter-spacing:.08em;cursor:pointer;background:linear-gradient(#e55c32 0%,#b8401c 100%);border:1px solid #7c2409;border-radius:2px;padding:9px 18px;font-size:11px;font-weight:800;transition:all .1s;box-shadow:inset 0 1px #ffffff59,0 2px 4px #00000080}.btn-action:hover{background:linear-gradient(#f0683e 0%,#c44621 100%)}.btn-action:active{transform:translateY(1px);box-shadow:inset 0 1px 3px #000000e6}#deck-viewport{scroll-snap-type:x mandatory;flex:1;gap:16px;padding:16px;display:flex;overflow:auto hidden}.deck-column{flex:0 0 var(--col-width);background:var(--chassis);border:1px solid var(--border);border-top:1px solid var(--border-bright);scroll-snap-align:start;border-radius:3px;flex-direction:column;height:100%;display:flex;box-shadow:0 6px 18px #00000073}.column-header{border-bottom:1px solid var(--border);background:#14161c;justify-content:space-between;align-items:center;padding:13px 16px;display:flex}.col-title{font-family:var(--font-col-header);color:var(--text-col-pop);letter-spacing:.06em;text-transform:uppercase;text-overflow:ellipsis;white-space:nowrap;max-width:195px;font-size:12px;font-weight:700;overflow:hidden}.col-sub{font-family:var(--font-col-header);color:var(--text-sub);text-transform:uppercase;letter-spacing:.06em;text-overflow:ellipsis;white-space:nowrap;max-width:195px;margin-top:3px;font-size:9.5px;overflow:hidden}.col-header-controls{align-items:center;gap:6px;display:flex}.btn-close-col{color:var(--text-muted);cursor:pointer;font-family:var(--font-col-header);background:0 0;border:1px solid #0000;border-radius:2px;padding:2px 5px;font-size:11px;font-weight:700;line-height:1}.btn-close-col:hover{color:#f87171;background:#220e12;border-color:#551c24}.protocol-badge{font-family:var(--font-col-header);border:1px solid;border-radius:2px;padding:3px 8px;font-size:10px;font-weight:700}.badge-bsky{color:#60a5fa;background:#0c2035;border-color:#1a4d7d}.badge-masto{color:#c084fc;background:#241438;border-color:#55278c}.badge-nostr{color:#fbbf24;background:#2d1d06;border-color:#694109}.badge-queue{color:#4ade80;background:#11241a;border-color:#235c3c}.cards-container{background:var(--socket);flex-direction:column;flex:1;gap:10px;padding:12px;display:flex;overflow-y:auto}.card{background:var(--card-bg);border:1px solid var(--border);border-radius:2px;padding:12px 14px;font-size:13px;line-height:1.5;transition:border-color .12s;position:relative;box-shadow:0 1px 3px #0000004d}.card:hover{border-color:var(--border-bright)}.card-meta{font-family:var(--font-col-header);color:var(--text-sub);border-bottom:1px dashed #ffffff14;justify-content:space-between;margin-bottom:8px;padding-bottom:4px;font-size:11px;display:flex}.author-name{color:#e2e8f0;font-weight:600}.card-footer{font-family:var(--font-col-header);color:var(--text-muted);border-top:1px dashed #ffffff14;justify-content:space-between;align-items:center;margin-top:10px;padding-top:6px;font-size:10.5px;display:flex}.in-deck-actions{border-top:1px solid #ffffff0d;gap:6px;margin-top:8px;padding-top:6px;display:flex}.btn-deck-act{border:1px solid var(--border);color:var(--text-sub);font-family:var(--font-col-header);cursor:pointer;background:#161920;border-radius:2px;padding:3px 8px;font-size:9px;font-weight:700;transition:all .1s}.btn-deck-act:hover{color:var(--text-header-pop);border-color:var(--border-bright)}.btn-deck-act.liked{color:#f43f5e;background:#2c0b14;border-color:#9f1239}.btn-deck-act.boosted{color:var(--signal-green);background:#0c2317;border-color:#166534}.modal-overlay{backdrop-filter:blur(6px);z-index:100;background:#06080be0;justify-content:center;align-items:center;padding:20px 16px;display:none;position:fixed;inset:0}.chassis-window{background:var(--chassis);border:1px solid var(--border);border-top:2px solid var(--border-bright);border-radius:3px;flex-direction:column;display:flex;position:relative;box-shadow:0 24px 64px #000000d9}.window-top{border-bottom:1px solid var(--border);font-family:var(--font-masthead);color:var(--text-header-pop);letter-spacing:.08em;background:#14161c;flex-shrink:0;justify-content:space-between;align-items:center;padding:12px 18px;font-size:12px;font-weight:700;display:flex}.window-body{flex-direction:column;flex:1;gap:14px;padding:18px 20px;display:flex;overflow-y:auto}.window-body::-webkit-scrollbar{width:5px}.window-body::-webkit-scrollbar-track{background:#0c0e12}.window-body::-webkit-scrollbar-thumb{background:#2b313d;border-radius:2px}#covenant-modal{backdrop-filter:blur(8px);z-index:500;background:#040508f0;justify-content:center;align-items:center;padding:20px;display:none;position:fixed;inset:0}.covenant-chassis{background:#16181f;border:1px solid #fbbf24;border-top-width:3px;border-radius:3px;flex-direction:column;gap:16px;width:540px;padding:24px;display:flex;box-shadow:0 24px 64px #000000f2}.covenant-title{font-family:var(--font-masthead);color:#fbbf24;letter-spacing:.1em;font-size:13px;font-weight:800}.covenant-body{font-family:var(--font-col-header);color:#cbd5e1;flex-direction:column;gap:10px;font-size:11px;line-height:1.6;display:flex}.covenant-point{background:#0d0f14;border:1px solid #232733;border-radius:2px;padding:10px 12px}.covenant-point strong{color:#f8fafc}.btn-covenant-accept{color:#fff;font-family:var(--font-masthead);cursor:pointer;background:linear-gradient(#d97706 0%,#b45309 100%);border:1px solid #78350f;border-radius:2px;align-self:flex-end;padding:10px 18px;font-size:11px;font-weight:800;transition:all .1s}.btn-covenant-accept:hover{background:linear-gradient(#f59e0b 0%,#d97706 100%)}.hashtag-deck-card{background:#0d0f15;border:1px solid #242c3b;border-radius:2px;flex-direction:column;gap:6px;padding:8px 10px;display:flex}.hashtag-toolbar{flex-wrap:wrap;justify-content:space-between;align-items:center;gap:6px;display:flex}.hashtag-select-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:6px;max-height:120px;padding-right:2px;display:grid;overflow-y:auto}.hashtag-tag-pill{font-family:var(--font-col-header);cursor:pointer;user-select:none;background:#141822;border:1px solid #252f40;border-radius:2px;justify-content:space-between;align-items:center;padding:4px 6px;font-size:10px;transition:all .1s;display:flex}.hashtag-tag-pill:hover{background:#19202c;border-color:#38bdf8}.hashtag-tag-pill.selected{border-color:var(--signal-green);color:var(--signal-green);background:#0e2017}.hashtag-tag-pill .btn-pin-core{color:var(--text-muted);cursor:pointer;background:0 0;border:none;padding:0 2px;font-size:11px}.hashtag-tag-pill.core-pinned .btn-pin-core{color:#fbbf24;font-weight:700}.btn-tag-action{color:var(--text-sub);font-family:var(--font-col-header);cursor:pointer;background:#181c26;border:1px solid #2e3648;border-radius:2px;padding:3px 7px;font-size:9px;font-weight:700;transition:all .1s}.btn-tag-action:hover{color:#fff;border-color:var(--border-bright)}.btn-tag-action.accent{color:var(--signal-green);background:#0d1e15;border-color:#235c3c}.config-section{border:1px solid var(--border);background:#111319;border-radius:2px;flex-direction:column;gap:10px;padding:12px 14px;display:flex}.config-title{font-family:var(--font-col-header);letter-spacing:.08em;color:var(--text-col-pop);text-transform:uppercase;border-bottom:1px dashed #ffffff14;justify-content:space-between;align-items:center;padding-bottom:4px;font-size:11px;font-weight:700;display:flex}.config-row{font-family:var(--font-col-header);color:var(--text-sub);justify-content:space-between;align-items:center;font-size:11px;display:flex}.config-row select{color:#f8fafc;font-family:var(--font-col-header);background:#08090d;border:1px solid #28303d;border-radius:2px;outline:none;padding:4px 8px;font-size:10.5px}.stripe-btn-tray{gap:10px;margin-top:4px;display:flex}.btn-stripe{color:#fff;font-family:var(--font-masthead);cursor:pointer;background:#635bff;border:1px solid #4f46e5;border-radius:2px;align-items:center;gap:6px;padding:6px 14px;font-size:10.5px;font-weight:800;text-decoration:none;display:inline-flex}.btn-stripe:hover{background:#534be8}.centered-sub-banner{text-align:center;font-family:var(--font-col-header);letter-spacing:.14em;color:var(--accent-orange);border-top:1px dashed #ffffff14;margin-top:4px;padding-top:6px;font-size:9.5px;font-weight:700}.social-2col-grid{grid-template-columns:repeat(2,1fr);gap:10px;display:grid}.social-card-btn{cursor:pointer;color:var(--text-main);background:#141720;border:1px solid #28303e;border-radius:2px;align-items:center;padding:10px 14px;text-decoration:none;transition:all .12s;display:flex;position:relative}.social-card-btn:hover{border-color:var(--accent-orange);color:#fff;background:#1b212d;transform:translateY(-1px)}.social-icon-glyph{background:#0d0f15;border:1px solid;border-radius:2px;flex-shrink:0;justify-content:center;align-items:center;width:28px;height:28px;display:flex}.social-icon-glyph svg{width:16px;height:16px;display:block}.icon-bsky{color:#60a5fa;fill:#60a5fa;border-color:#1a4d7d}.icon-masto{color:#c084fc;fill:#c084fc;border-color:#55278c}.icon-nostr{color:#fbbf24;fill:#fbbf24;border-color:#694109}.icon-web{color:var(--signal-green);fill:var(--signal-green);border-color:#235c3c}.icon-doc{color:#38bdf8;fill:#38bdf8;border-color:#1e3a5f}.icon-mail{color:#f43f5e;fill:#f43f5e;border-color:#881337}.card-text-slot{text-align:center;flex-direction:column;flex:1;justify-content:center;align-items:center;padding:0 8px;display:flex;overflow:hidden}.card-title-line{font-family:var(--font-grotesk);color:#f8fafc;letter-spacing:.02em;font-size:11px;font-weight:700}.card-handle-line{font-family:var(--font-masthead);color:#94a3b8;text-transform:lowercase;letter-spacing:.02em;white-space:nowrap;text-overflow:ellipsis;width:100%;font-size:9.5px;overflow:hidden}#manual-modal{backdrop-filter:blur(8px);z-index:400;background:#040508f0;justify-content:center;align-items:center;padding:24px;display:none;position:fixed;inset:0}.manual-chassis{background:var(--chassis);border:1px solid var(--border);border-top:3px solid var(--accent-orange);border-radius:3px;flex-direction:column;width:820px;max-width:100%;height:85vh;display:flex;box-shadow:0 24px 64px #000000e6}.manual-content-view{font-family:var(--font-grotesk);color:var(--text-main);flex-direction:column;gap:16px;padding:20px 24px;font-size:13px;line-height:1.6;display:flex;overflow-y:auto}.manual-content-view h2{font-family:var(--font-col-header);color:var(--accent-orange);text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid var(--border);margin-top:8px;padding-bottom:4px;font-size:13px}.manual-content-view p{color:#cbd5e1}.manual-content-view code{font-family:var(--font-masthead);border:1px solid var(--border);color:#38bdf8;background:#0d0f14;border-radius:2px;padding:2px 6px;font-size:11px}.composer-chassis{width:740px;max-width:100%;max-height:calc(100vh - 40px)}.settings-chassis{width:680px;max-width:100%;max-height:calc(100vh - 40px)}.protocol-cluster{grid-template-columns:repeat(3,1fr);gap:8px;display:grid}.protocol-bay{background:var(--socket);border:1px solid #20242c;border-bottom:1px solid var(--border-bright);border-radius:3px;flex-direction:column;gap:8px;padding:10px 8px;transition:opacity .15s;display:flex;position:relative;box-shadow:inset 0 2px 6px #000c}.protocol-bay.bypassed{opacity:.38}.rocker-unit{cursor:pointer;user-select:none;flex-direction:column;align-items:center;gap:5px;display:flex;position:relative}.rocker-title-row{align-items:center;gap:4px;display:flex}.rocker-title{font-family:var(--font-col-header);letter-spacing:.06em;color:var(--text-col-pop);font-size:10px;font-weight:700}.btn-review-covenant{font-family:var(--font-col-header);color:#fbbf24;cursor:pointer;background:#231b07;border:1px solid #78350f;border-radius:2px;margin-left:2px;padding:1px 4px;font-size:8px}.btn-review-covenant:hover{color:#fff;background:#3b2a0c}.switch-well{background:#08090c;border:1px solid #1a1d24;border-bottom-color:#282e38;border-radius:2px;width:100%;height:36px;padding:3px;box-shadow:inset 0 3px 6px #000000e6}.rocker-button{border-radius:1px;justify-content:space-between;align-items:center;width:100%;height:100%;padding:0 8px;transition:all .1s;display:flex;position:relative}.ribs-texture{opacity:.6;background:repeating-linear-gradient(0deg,#0009 0 2px,#0000 2px 4px);width:10px;height:11px}.indicator-jewel{background:#111317;border:1px solid #000;border-radius:50%;width:7px;height:7px;transition:all .1s}.rocker-unit.active .rocker-button{background:linear-gradient(#242933 0%,#191c23 100%);transform:translateY(1px);box-shadow:inset 0 2px 3px #000000e6}.rocker-unit.active .indicator-jewel{background:var(--accent-orange);box-shadow:0 0 10px var(--accent-orange)}.rocker-unit.active .rocker-state-badge{color:var(--accent-orange)}.rocker-unit:not(.active) .rocker-button{background:linear-gradient(#2b313c 0%,#1d2128 100%);transform:translateY(-1px);box-shadow:0 2px 4px #0009}.rocker-unit:not(.active) .indicator-jewel{background:#101216}.rocker-unit:not(.active) .rocker-state-badge{color:var(--text-muted)}.rocker-state-badge{font-family:var(--font-col-header);letter-spacing:.08em;font-size:8.5px;font-weight:700}.station-key-rack{border-top:1px solid #ffffff0f;flex-direction:column;gap:4px;max-height:100px;padding-top:6px;padding-right:2px;display:flex;overflow-y:auto}.station-key-rack::-webkit-scrollbar{width:3px}.station-key-rack::-webkit-scrollbar-track{background:#090a0d}.station-key-rack::-webkit-scrollbar-thumb{background:#2b313d}.station-key{cursor:pointer;user-select:none;background:#13161c;border:1px solid #232731;border-bottom-color:#2c3240;border-radius:2px;flex-shrink:0;align-items:center;gap:6px;padding:5px 6px;transition:all .1s;display:flex;box-shadow:0 1px 3px #0009,inset 0 1px #ffffff0a}.station-key:hover{background:#171b22;border-color:#353c4c}.key-lamp-slit{background:#090a0d;border:1px solid #1e222a;border-radius:1px;flex-shrink:0;width:3px;height:10px}.key-label{font-family:var(--font-col-header);color:var(--text-muted);letter-spacing:.03em;white-space:nowrap;text-overflow:ellipsis;font-size:9px;font-weight:700;overflow:hidden}.station-key.active{background:#191d26;border-color:#2e3646 #2e3646 #1e232e;transform:translateY(1px);box-shadow:inset 0 2px 4px #000000d9}.station-key.active .key-lamp-slit{background:var(--signal-green);box-shadow:0 0 6px var(--signal-green), 0 0 16px var(--signal-green-glow);border-color:#a7f3d0}.station-key.active .key-label{color:var(--text-col-pop);text-shadow:0 1px 2px #000c}#cw-row{background:#11141a;border:1px solid #262c37;border-radius:2px;align-items:center;gap:8px;padding:6px 10px;display:none}#cw-input{color:#fbbf24;font-family:var(--font-col-header);background:#08090d;border:1px solid #232832;border-radius:2px;outline:none;flex:1;padding:4px 8px;font-size:11px}textarea{border:1px solid var(--border);border-bottom:1px solid var(--border-bright);color:#f1f5f9;width:100%;height:90px;font-family:var(--font-grotesk);resize:vertical;background:#0d0f13;border-radius:2px;outline:none;padding:10px 12px;font-size:13.5px;line-height:1.5;box-shadow:inset 0 2px 6px #000000d9}textarea:focus{border-color:var(--accent-orange)}.schedule-control-bay{border:1px solid var(--border);background:#101318;border-radius:2px;justify-content:space-between;align-items:center;gap:10px;padding:6px 10px;display:flex}.schedule-mode-toggle{background:#090a0d;border:1px solid #222733;border-radius:2px;gap:2px;padding:2px;display:flex}.schedule-mode-btn{color:var(--text-muted);font-family:var(--font-col-header);cursor:pointer;background:0 0;border:none;border-radius:2px;padding:3px 8px;font-size:9.5px;font-weight:700}.schedule-mode-btn.active{color:var(--text-header-pop);background:#202633}.telemetry-row{font-family:var(--font-col-header);justify-content:space-between;align-items:center;font-size:10.5px;display:flex}.counters-tray{gap:6px;display:flex}.counter-pill{background:var(--socket);border:1px solid var(--border);color:var(--text-sub);border-radius:2px;padding:2px 7px;font-weight:600}.drawer-footer{border-top:1px solid var(--border);background:#14161c;flex-shrink:0;justify-content:flex-end;align-items:center;gap:12px;padding:11px 20px;display:flex}.btn-cancel{border:1px solid var(--border);color:var(--text-muted);font-family:var(--font-col-header);cursor:pointer;background:0 0;border-radius:2px;padding:7px 14px;font-size:10.5px;font-weight:700}</style>
 <style id="pennant-doc-readability">.config-section,.doc-card,.faq-item{color:#e2e8f0!important;font-size:13px!important;line-height:1.6!important}.config-title,.doc-title,.faq-q{color:#fff!important;letter-spacing:.05em!important;margin-bottom:8px!important;font-size:14px!important;font-weight:700!important}.doc-body,.faq-a{color:#94a3b8!important;font-size:12.5px!important;line-height:1.65!important}</style>
 <style id="pennant-expanded-docs">.config-section,.doc-card,.faq-item{color:#e2e8f0!important;margin-bottom:16px!important;font-size:13.5px!important;line-height:1.7!important}.config-title,.doc-title,.faq-q{color:#38bdf8!important;letter-spacing:.04em!important;margin-bottom:8px!important;font-size:14.5px!important;font-weight:700!important}.doc-body,.faq-a{color:#cbd5e1!important;font-size:13px!important;line-height:1.65!important}</style>
+<style id="pennant-mobile-override">
+  /* iOS Notch and Dynamic Island Safe Area Support */
+  :root {
+    --sat: env(safe-area-inset-top, 0px);
+    --sab: env(safe-area-inset-bottom, 0px);
+    --sal: env(safe-area-inset-left, 0px);
+    --sar: env(safe-area-inset-right, 0px);
+  }
+
+  body {
+    padding-top: var(--sat) !important;
+    padding-bottom: var(--sab) !important;
+    padding-left: var(--sal) !important;
+    padding-right: var(--sar) !important;
+    overflow-x: hidden !important;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* Mobile Screen Overrides (< 768px) */
+  @media (max-width: 768px) {
+    /* Hide desktop commercial upsells & newsletter modals */
+    [data-license-banner],
+    .desktop-license-bar,
+    .stay-informed-banner,
+    .stay-informed-modal,
+    button:has-text("$49"),
+    div:has(> button:has-text("$49")),
+    a[href*="buy"],
+    a[href*="stripe"] {
+      display: none !important;
+    }
+
+    /* Target specific desktop CTA elements by text / attribute */
+    div[class*="license"],
+    div[class*="newsletter"],
+    div[class*="subscribe"] {
+      display: none !important;
+    }
+
+    /* Fix header / top navigation bar squeeze */
+    header, nav, .masthead, [class*="header"], [class*="masthead"] {
+      display: flex !important;
+      flex-wrap: nowrap !important;
+      overflow-x: auto !important;
+      -webkit-overflow-scrolling: touch !important;
+      gap: 6px !important;
+      padding: 8px 12px !important;
+      scrollbar-width: none !important;
+    }
+    header::-webkit-scrollbar, nav::-webkit-scrollbar {
+      display: none !important;
+    }
+
+    /* Ensure buttons stay readable and touch-friendly */
+    header button, nav button, .masthead button {
+      flex-shrink: 0 !important;
+      padding: 6px 10px !important;
+      font-size: 12px !important;
+      min-height: 36px !important;
+      white-space: nowrap !important;
+    }
+
+    /* Single column deck flow on mobile screens */
+    .deck-container, .columns-wrapper, [class*="deck"] {
+      display: flex !important;
+      flex-direction: column !important;
+      width: 100% !important;
+      overflow-y: auto !important;
+    }
+  }
+</style>
 </head>
 <body style="background-color: #131519; margin: 0; padding: 0;">
   <header>
@@ -37,7 +109,7 @@
     </div>
     <div class="header-actions">
       <button class="btn-header" id="btn-open-col-builder">+ ADD COLUMN</button>
-      <button class="btn-header" id="btn-open-settings">⚙ CONFIG / ABOUT</button>
+      <button class="btn-header" id="btn-open-settings">âš™ CONFIG / ABOUT</button>
       <button class="btn-action" id="btn-open-composer">+ NEW BROADCAST</button>
     </div>
   </header>
@@ -104,7 +176,7 @@
               </div>
               <div class="card-text-slot">
                 <div class="card-title-line">Bluesky ATProto</div>
-                <div class="card-handle-line">pennant.laylinedigital.com ↗</div>
+                <div class="card-handle-line">pennant.laylinedigital.com â†—</div>
               </div>
             </div>
 
@@ -115,7 +187,7 @@
               </div>
               <div class="card-text-slot">
                 <div class="card-title-line">Mastodon Fediverse</div>
-                <div class="card-handle-line">@pennant@social.pennant ↗</div>
+                <div class="card-handle-line">@pennant@social.pennant â†—</div>
               </div>
             </div>
 
@@ -126,7 +198,7 @@
               </div>
               <div class="card-text-slot">
                 <div class="card-title-line">Nostr Relay Pool</div>
-                <div class="card-handle-line">pennant@laylinedigital.com ↗</div>
+                <div class="card-handle-line">pennant@laylinedigital.com â†—</div>
               </div>
             </div>
 
@@ -137,7 +209,7 @@
               </div>
               <div class="card-text-slot">
                 <div class="card-title-line">Layline Digital Home</div>
-                <div class="card-handle-line">https://pennant.laylinedigital.com ↗</div>
+                <div class="card-handle-line">https://pennant.laylinedigital.com â†—</div>
               </div>
             </div>
           </div>
@@ -180,7 +252,7 @@
   <div id="covenant-modal">
     <div class="covenant-chassis">
       <div class="covenant-title">
-        <span>⚠ // PROTOCOL NOTICE // NOSTR KEY CUSTODY</span>
+        <span>âš  // PROTOCOL NOTICE // NOSTR KEY CUSTODY</span>
       </div>
       <div class="covenant-body">
         <div class="covenant-point">
@@ -282,7 +354,7 @@
             </div>
           </div>
           <div style="font-family:var(--font-col-header); font-size:9px; color:var(--text-muted);">
-            [ Click tag to select • Click ★ to toggle Core Default (auto-checked on open) ]
+            [ Click tag to select â€¢ Click â˜… to toggle Core Default (auto-checked on open) ]
           </div>
           <div class="hashtag-select-grid" id="hashtag-select-grid"></div>
         </div>
@@ -297,7 +369,7 @@
           </div>
           <label class="edge-sync-label" style="display: flex; align-items: center; gap: 6px; font-family: var(--font-col-header); font-size: 10px; color: var(--signal-green); cursor: pointer;">
             <input type="checkbox" id="toggle-edge-sync" checked style="cursor: pointer;" />
-            <span>Unattended Edge Sync (Cloudflare Relay — runs 24/7 while laptop is asleep)</span>
+            <span>Unattended Edge Sync (Cloudflare Relay â€” runs 24/7 while laptop is asleep)</span>
           </label>
         </div>
 
@@ -373,7 +445,7 @@
             </div>
             <div class="col-header-controls">
               <span class="protocol-badge ${col.badge}">${col.protocol}</span>
-              <button class="btn-close-col" data-col-id="${col.id}" title="Close Stream Column">✕</button>
+              <button class="btn-close-col" data-col-id="${col.id}" title="Close Stream Column">âœ•</button>
             </div>
           </div>
           <div class="cards-container">
@@ -384,12 +456,12 @@
               </div>
               <div>Stream synchronized. Zero memory leakage across virtualized channels.</div>
               <div class="in-deck-actions">
-                <button class="btn-deck-act" onclick="openReply('${col.query || col.label}')">↩ REPLY</button>
-                <button class="btn-deck-act" onclick="toggleBoost(this)">⟳ BOOST</button>
-                <button class="btn-deck-act" onclick="toggleLike(this)">★ LIKE</button>
+                <button class="btn-deck-act" onclick="openReply('${col.query || col.label}')">â†© REPLY</button>
+                <button class="btn-deck-act" onclick="toggleBoost(this)">âŸ³ BOOST</button>
+                <button class="btn-deck-act" onclick="toggleLike(this)">â˜… LIKE</button>
               </div>
               <div class="card-footer">
-                <span>● SYNCHRONIZED</span>
+                <span>â— SYNCHRONIZED</span>
                 <span style="cursor: pointer;">INSPECT &#8599;</span>
               </div>
             </div>
@@ -418,12 +490,12 @@
 
     window.toggleBoost = function(btn) {
       btn.classList.toggle('boosted');
-      btn.innerText = btn.classList.contains('boosted') ? '⟳ BOOSTED' : '⟳ BOOST';
+      btn.innerText = btn.classList.contains('boosted') ? 'âŸ³ BOOSTED' : 'âŸ³ BOOST';
     };
 
     window.toggleLike = function(btn) {
       btn.classList.toggle('liked');
-      btn.innerText = btn.classList.contains('liked') ? '★ LIKED' : '★ LIKE';
+      btn.innerText = btn.classList.contains('liked') ? 'â˜… LIKED' : 'â˜… LIKE';
     };
 
     // Hashtag Manager
@@ -464,7 +536,7 @@
         pill.innerHTML = `
           <input type="checkbox" style="cursor:pointer;" ${isSelected ? 'checked' : ''} />
           <span style="margin: 0 4px; overflow:hidden; text-overflow:ellipsis;">${item.tag}</span>
-          <button class="btn-pin-core" title="${item.isCore ? 'Unpin from Core Defaults' : 'Pin to Core Defaults'}">${item.isCore ? '★' : '☆'}</button>
+          <button class="btn-pin-core" title="${item.isCore ? 'Unpin from Core Defaults' : 'Pin to Core Defaults'}">${item.isCore ? 'â˜…' : 'â˜†'}</button>
         `;
 
         pill.querySelector('input').addEventListener('click', (e) => {
@@ -623,7 +695,7 @@
         <h2>Q: Why use Pennant Hoist?</h2>
         <p>Pennant runs entirely on your local machine, avoiding cloud SaaS monthly subscription fees.</p>
         <h2>Q: How do Core Hashtags work?</h2>
-        <p>Clicking the star icon (<code>★</code>) marks that hashtag as a Core Default, auto-checking it whenever you open the composer.</p>
+        <p>Clicking the star icon (<code>â˜…</code>) marks that hashtag as a Core Default, auto-checking it whenever you open the composer.</p>
       `;
       manualModal.style.display = 'flex';
     });
@@ -730,7 +802,7 @@
 </script>
 
         <div class="stripe-btn-tray" style="margin-top:10px;">
-          <a href="https://buy.stripe.com/6oU9AT3wyaIY4rj5uPaEE00" target="_blank" rel="noopener noreferrer" class="btn-stripe" style="text-decoration:none; padding:6px 12px; border-radius:4px; display:inline-flex; align-items:center; gap:6px; cursor:pointer;">⚡ BUY DESKTOP SEAT ($49/YR)</a>
+          <a href="https://buy.stripe.com/6oU9AT3wyaIY4rj5uPaEE00" target="_blank" rel="noopener noreferrer" class="btn-stripe" style="text-decoration:none; padding:6px 12px; border-radius:4px; display:inline-flex; align-items:center; gap:6px; cursor:pointer;">âš¡ BUY DESKTOP SEAT ($49/YR)</a>
         </div>
 
       <!-- VOLUNTARY NEWSLETTER / UPDATES CARD -->
@@ -775,7 +847,7 @@
             if (res.ok) {
               status.style.display = 'block';
               status.style.color = '#4ade80';
-              status.textContent = '✓ Subscribed. You will be notified on new releases.';
+              status.textContent = 'âœ“ Subscribed. You will be notified on new releases.';
               emailInput.value = '';
               btn.textContent = 'Saved';
             } else {
@@ -793,4 +865,5 @@
 
 </body>
 </html>
+
 
