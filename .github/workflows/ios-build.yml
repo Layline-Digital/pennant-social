@@ -1,16 +1,14 @@
-﻿name: iOS Mobile Build
+﻿name: iOS TestFlight Build
 
 on:
   workflow_dispatch:
   push:
-    paths:
-      - 'apps/hoist-desktop/**'
-      - 'apps/hoist-web/**'
-      - '.github/workflows/ios-build.yml'
+    tags:
+      - 'v*'
 
 jobs:
-  build-ios:
-    name: Build iOS Native Shell
+  build-and-upload-testflight:
+    name: Build & Upload to TestFlight
     runs-on: macos-15
     steps:
       - name: Checkout repository
@@ -22,14 +20,10 @@ jobs:
           node-version: 22
           cache: 'npm'
 
-      - name: Verify Xcode 16+
-        run: |
-          xcodebuild -version
-
-      - name: Install Rust Stable & iOS Targets
+      - name: Install Rust Stable & iOS Device Target
         uses: dtolnay/rust-toolchain@stable
         with:
-          targets: aarch64-apple-ios,aarch64-apple-ios-sim
+          targets: aarch64-apple-ios
 
       - name: Install Monorepo & Web Dependencies
         run: |
@@ -40,21 +34,32 @@ jobs:
         run: |
           cd apps/hoist-web && npm run build
 
-      - name: Initialize Tauri iOS Project
+      - name: Initialize Tauri iOS Workspace
         working-directory: apps/hoist-desktop
         run: |
           npx @tauri-apps/cli ios init
 
-      - name: Build Tauri iOS Simulator Package
-        working-directory: apps/hoist-desktop
+      - name: Configure Apple API Private Key
+        if: env.APPLE_API_KEY != ''
+        env:
+          APPLE_API_KEY: ${{ secrets.APPLE_API_KEY }}
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
         run: |
-          npx @tauri-apps/cli ios build --target aarch64-apple-ios-sim --ci
+          mkdir -p ~/.appstoreconnect/private_keys
+          echo "$APPLE_API_KEY" > ~/.appstoreconnect/private_keys/AuthKey_${APPLE_API_KEY_ID}.p8
 
-      - name: Archive iOS Build Output
+      - name: Build and Package Signed IPA for TestFlight
+        working-directory: apps/hoist-desktop
+        env:
+          APPLE_API_KEY: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
+          APPLE_DEVELOPMENT_TEAM: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          npx @tauri-apps/cli ios build --target aarch64 --export-method app-store-connect
+
+      - name: Archive Production IPA Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: pennant-ios-bundle
-          path: |
-            apps/hoist-desktop/src-tauri/gen/apple/build/**/*.app
-            apps/hoist-desktop/src-tauri/target/aarch64-apple-ios-sim/release/*.app
+          name: pennant-testflight-ipa
+          path: apps/hoist-desktop/src-tauri/gen/apple/build/**/*.ipa
           if-no-files-found: warn
