@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" style="background-color: #131519;">
 <head>
   <style id="pennant-prepaint">html, body { background-color: #131519 !important; color: #cbd5e1; margin: 0; padding: 0; }</style>
@@ -875,7 +875,81 @@
     }
   }
 </style>
-</head>
+    <style id="pennant-mobile-viewport-engine">
+      :root {
+        --sat: env(safe-area-inset-top, 0px);
+        --sab: env(safe-area-inset-bottom, 0px);
+        --sal: env(safe-area-inset-left, 0px);
+        --sar: env(safe-area-inset-right, 0px);
+      }
+
+      @media (max-width: 820px) {
+        body {
+          padding-top: max(var(--sat), 8px) !important;
+          padding-bottom: max(var(--sab), 16px) !important;
+          padding-left: max(var(--sal), 8px) !important;
+          padding-right: max(var(--sar), 8px) !important;
+          overflow-x: hidden !important;
+          -webkit-user-select: none;
+          user-select: none;
+        }
+
+        /* 1. Eliminate desktop-only commercial upsells & stay informed modals */
+        [data-license-banner],
+        .desktop-license-bar,
+        .stay-informed-banner,
+        .stay-informed-modal,
+        div[class*="license"],
+        div[class*="newsletter"],
+        div[class*="subscribe"],
+        div[class*="pricing"],
+        a[href*="buy"],
+        a[href*="stripe"] {
+          display: none !important;
+        }
+
+        /* 2. Format top navigation into a smooth horizontal touch carousel */
+        header, nav, .masthead, [class*="header"], [class*="masthead"], .deck-header {
+          display: flex !important;
+          flex-direction: row !important;
+          flex-wrap: nowrap !important;
+          overflow-x: auto !important;
+          -webkit-overflow-scrolling: touch !important;
+          gap: 8px !important;
+          padding: 8px 12px !important;
+          scrollbar-width: none !important;
+        }
+        header::-webkit-scrollbar, nav::-webkit-scrollbar, .masthead::-webkit-scrollbar {
+          display: none !important;
+        }
+
+        header button, nav button, .masthead button, .deck-header button {
+          flex: 0 0 auto !important;
+          padding: 8px 14px !important;
+          font-size: 13px !important;
+          min-height: 40px !important;
+          white-space: nowrap !important;
+          border-radius: 6px !important;
+        }
+
+        /* 3. Stack columns into a responsive vertical stream */
+        .deck-container, .columns-wrapper, [class*="deck-container"], [class*="grid"] {
+          display: flex !important;
+          flex-direction: column !important;
+          width: 100% !important;
+          gap: 16px !important;
+          overflow-y: auto !important;
+          overflow-x: hidden !important;
+        }
+
+        .column, [class*="column-card"] {
+          width: 100% !important;
+          min-width: 100% !important;
+          max-width: 100% !important;
+        }
+      }
+    </style>
+  </head>
 <body style="background-color: #131519; margin: 0; padding: 0;">
   <header>
     <div class="brand-section">
