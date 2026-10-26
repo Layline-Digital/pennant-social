@@ -860,6 +860,7 @@
     }
   </style>
 
+  <script defer src="https://analytics.alanwoodyard.com/script.js" data-website-id="d69b4ff8-938d-41d0-87dd-090a902bc8a8"></script>
 </head>
 <body style="background-color: #131519; margin: 0; padding: 0;">
   <header>
@@ -1236,6 +1237,7 @@
                 <button class="btn-deck-act" onclick="openReply('${col.query || col.label}')">&#8617; REPLY</button>
                 <button class="btn-deck-act" onclick="toggleBoost(this)">&#10227; BOOST</button>
                 <button class="btn-deck-act" onclick="toggleLike(this)">&#9733; LIKE</button>
+                <button class="btn-deck-act" onclick="toggleCardMenu(this, '${col.query || col.label}')">&#8226;&#8226;&#8226;</button>
               </div>
               <div class="card-footer">
                 <span>&#9679;  SYNCHRONIZED</span>
@@ -1579,4 +1581,55 @@
 </script>
 
         
+
+<script id="pennant-ugc-moderation">
+  function toggleCardMenu(btn, author) {
+    const existing = document.getElementById('pennant-mod-popover');
+    if (existing) { existing.remove(); return; }
+
+    const menu = document.createElement('div');
+    menu.id = 'pennant-mod-popover';
+    menu.style.cssText = 'position: absolute; z-index: 9999; background: #161922; border: 1px solid #384257; border-radius: 6px; padding: 6px; display: flex; flex-direction: column; gap: 4px; box-shadow: 0 8px 24px rgba(0,0,0,0.6); font-size: 12px;';
+
+    const rect = btn.getBoundingClientRect();
+    menu.style.top = (rect.bottom + window.scrollY + 4) + 'px';
+    menu.style.left = Math.max(10, (rect.left + window.scrollX - 80)) + 'px';
+
+    menu.innerHTML = `
+      <button style="background: none; border: none; color: #ff6b6b; padding: 6px 12px; text-align: left; cursor: pointer; font-weight: 600;" onclick="blockAuthor('${author}')">&#10005; Block @${author}</button>
+      <button style="background: none; border: none; color: #f6c343; padding: 6px 12px; text-align: left; cursor: pointer;" onclick="reportPost('${author}')">&#9873; Report Post</button>
+      <a href="https://pennant.laylinedigital.com/terms" target="_blank" style="color: #8899ac; padding: 4px 12px; text-decoration: none; font-size: 11px; border-top: 1px solid #222938; margin-top: 4px; display: block;">Terms of Service</a>
+    `;
+
+    document.body.appendChild(menu);
+    const closeListener = (e) => {
+      if (!menu.contains(e.target) && e.target !== btn) {
+        menu.remove();
+        document.removeEventListener('click', closeListener);
+      }
+    };
+    setTimeout(() => document.addEventListener('click', closeListener), 10);
+  }
+
+  function blockAuthor(author) {
+    const blocked = JSON.parse(localStorage.getItem('pennant_blocked_users') || '[]');
+    if (!blocked.includes(author)) {
+      blocked.push(author);
+      localStorage.setItem('pennant_blocked_users', JSON.stringify(blocked));
+    }
+    const pop = document.getElementById('pennant-mod-popover');
+    if (pop) pop.remove();
+    alert('User @' + author + ' has been blocked. Their posts will no longer appear.');
+    if (typeof loadDeckColumns === 'function') loadDeckColumns();
+  }
+
+  function reportPost(author) {
+    const pop = document.getElementById('pennant-mod-popover');
+    if (pop) pop.remove();
+    const subject = encodeURIComponent('Content Report: @' + author);
+    const body = encodeURIComponent('Reporting abusive or objectionable content from account: ' + author + '\n\nPlease describe the violation:');
+    window.location.href = 'mailto:compliance@laylinedigital.com?subject=' + subject + '&body=' + body;
+  }
+</script>
+
 </body></html>
