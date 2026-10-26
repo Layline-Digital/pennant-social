@@ -10,6 +10,7 @@ param(
     [Parameter(Mandatory=$true)][string]$Message,
     [Parameter(Mandatory=$false)][string]$Url = "",
     [Parameter(Mandatory=$false)][string]$ImagePath = "",
+    [string]$ScheduledAt = "",
     [Parameter(Mandatory=$false)][object]$Targets = @("mastodon", "bluesky", "nostr"),
     [switch]$DryRun
 )
@@ -118,6 +119,7 @@ if ($targetList.Contains("mastodon")) {
             if ($mediaIds.Count -gt 0) {
                 $payloadObj["media_ids"] = $mediaIds
             }
+            if ($ScheduledAt) { $payloadObj["scheduled_at"] = $ScheduledAt }
             $jsonBody =$payloadObj | ConvertTo-Json -Compress
             try {
                 $mastoResp = Invoke-RestMethod -Uri "$instance/api/v1/statuses" -Method Post -Headers @{ "Authorization" = "Bearer $token"; "Content-Type" = "application/json" } -Body $jsonBody

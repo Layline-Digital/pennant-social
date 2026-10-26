@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 function getMimeType(filePath) {
   const ext = path.extname(filePath).toLowerCase();
   switch (ext) {
@@ -26,6 +26,12 @@ import { MediaAirlock } from './packages/core/src/adapters/media-airlock.ts';
 import { BroadcastDaemon } from './packages/core/src/queue/broadcast-daemon.ts';
 import { globalStreamHub } from './packages/core/src/adapters/stream-hub.ts';
 import { handleFleetIngestRequest } from './packages/core/src/adapters/fleet-ingest.ts';
+import {
+  syncJobToEdge,
+  reconcileEdgeJob,
+  ensureBroadcastQueueEdgeSchema,
+  DEFAULT_RELAY_URL,
+} from './packages/core/src/scheduler/edge-bridge.ts';
 
 
 const APP_ROOT = path.dirname(fileURLToPath(import.meta.url));
@@ -34,6 +40,7 @@ const APP_ROOT = path.dirname(fileURLToPath(import.meta.url));
 export function parseLauncherFlags(args = process.argv.slice(2), env = process.env) {
   const isTui = args.includes('--tui');
   const isDaemon = args.includes('--daemon');
+  const isQueueSyncEdge = args[0] === 'queue' && args[1] === 'sync-edge';
   const noBrowser = args.includes('--no-browser') || env.NO_BROWSER === '1' || env.HEADLESS === '1' || env.NODE_ENV === 'test';
   const port = Number(env.PORT || 7420);
   const host = env.HOST || (isDaemon ? '127.0.0.1' : 'localhost');
@@ -41,6 +48,7 @@ export function parseLauncherFlags(args = process.argv.slice(2), env = process.e
   return {
     isTui,
     isDaemon,
+    isQueueSyncEdge,
     noBrowser,
     port,
     host,
@@ -124,7 +132,7 @@ const BROWSER_PATH = detectBrowser();
 
 const DATA_DIR = path.resolve(process.env.DATA_DIR || path.join(os.homedir(), '.pennant'));
 fs.mkdirSync(DATA_DIR, { recursive: true });
-const DB_PATH = path.join(DATA_DIR, 'pennant_schedule.db');
+const DB_PATH = process.env.PENNANT_DB_PATH || (fs.existsSync(path.resolve(APP_ROOT, 'pennant.db')) ? path.resolve(APP_ROOT, 'pennant.db') : path.join(DATA_DIR, 'pennant_schedule.db'));
 const PROFILES_PATH = path.resolve(process.env.PROFILES_FILE || path.join(APP_ROOT, 'profiles.json'));
 const BROADCAST_SCRIPT = path.join(APP_ROOT, 'Publish-FleetBroadcast.ps1');
 
@@ -146,9 +154,11 @@ try {
       published_at TEXT,
       receipts TEXT,
       error TEXT,
+      edge_job_id TEXT,
       created_at TEXT DEFAULT CURRENT_TIMESTAMP
     );
   `);
+  ensureBroadcastQueueEdgeSchema(db);
 } catch (e) {
   console.error("[-] Failed to open SQLite database:", e.message);
 }
@@ -222,14 +232,16 @@ function isSameOriginRequest(req) {
   }
 }
 
-// 4. Background Dispatch Worker (Runs every 30 seconds)
-function runSchedulerTick() {
+// 4. Background Dispatch Worker & Edge Relay Synchronization (Runs every 30 seconds)
+let lastEdgePollTime = 0;
+
+async function runSchedulerTick() {
   if (!db) return;
   try {
     const nowIso = new Date().toISOString();
     const pending = db.prepare(
-      "SELECT * FROM broadcast_queue WHERE status = 'pending' AND scheduled_at <= ? ORDER BY scheduled_at ASC LIMIT 3"
-    ).all(nowIso);
+      "SELECT * FROM broadcast_queue WHERE status = 'pending' AND (scheduled_at <= ? OR (scheduled_at IS NULL AND scheduled_for <= ?)) ORDER BY COALESCE(scheduled_at, scheduled_for) ASC LIMIT 3"
+    ).all(nowIso, nowIso);
 
     for (const item of pending) {
       console.log(`[PENNANT SCHEDULER] Dispatching post #${item.id} for [${item.account}]...`);
@@ -278,6 +290,57 @@ function runSchedulerTick() {
         }
       });
     }
+
+    // Unattended Cloud Edge Relay handoff and reconciliation
+    const relayUrl = process.env.PENNANT_RELAY_URL || (process.env.RELAY_AUTH_SECRET ? DEFAULT_RELAY_URL : undefined);
+    const authSecret = process.env.RELAY_AUTH_SECRET;
+
+    if (relayUrl && authSecret) {
+      // 1. Hand off any status = 'pending' future posts to edge-bridge
+      const futurePending = db.prepare(
+        "SELECT id, account, targets FROM broadcast_queue WHERE status = 'pending' AND (scheduled_at > ? OR (scheduled_at IS NULL AND scheduled_for > ?)) ORDER BY COALESCE(scheduled_at, scheduled_for) ASC LIMIT 5"
+      ).all(nowIso, nowIso);
+
+      for (const item of futurePending) {
+        try {
+          const targets = String(item.targets || '').toLowerCase();
+          if (targets.includes('nostr') || targets.includes('bluesky') || targets.includes('atproto')) {
+            const edgeJobId = await syncJobToEdge(item.id, {
+              db,
+              sessionVault: globalSessionVault,
+              relayUrl,
+              authSecret,
+            });
+            console.log(`[EDGE RELAY] Post #${item.id} handed off to edge relay (edge_job_id: ${edgeJobId})`);
+          }
+        } catch (edgeErr) {
+          console.warn(`[EDGE RELAY] Failed to sync post #${item.id} to edge:`, edgeErr.message);
+        }
+      }
+
+      // 2. Poll jobs with status = 'synced_edge' every 60s
+      if (Date.now() - lastEdgePollTime >= 60000) {
+        lastEdgePollTime = Date.now();
+        const syncedJobs = db.prepare(
+          "SELECT id, edge_job_id FROM broadcast_queue WHERE status = 'synced_edge' AND edge_job_id IS NOT NULL LIMIT 20"
+        ).all();
+
+        for (const job of syncedJobs) {
+          try {
+            const res = await reconcileEdgeJob(job.id, {
+              db,
+              relayUrl,
+              authSecret,
+            });
+            if (res.reconciled) {
+              console.log(`[EDGE RELAY] Reconciled post #${job.id} (${job.edge_job_id}) -> ${res.status}`);
+            }
+          } catch (pollErr) {
+            console.warn(`[EDGE RELAY] Polling job ${job.edge_job_id} failed:`, pollErr.message);
+          }
+        }
+      }
+    }
   } catch (err) {
     console.error("[SCHEDULER ERROR]", err.message);
   }
@@ -310,6 +373,21 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+
+    // Downstream Fleet Ingestion Harness Route
+    if (parsedUrl.pathname === '/api/ingest/fleet') {
+      try {
+        handleFleetIngestRequest(req, res, db, broadcastDaemon);
+      } catch (err) {
+        console.error('[-] Fleet ingest error:', err);
+        if (!res.headersSent) {
+          res.writeHead(500, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: err.message }));
+        }
+      }
+      return;
+    }
+
   // Stream API - Dynamic multi-identity upstream authorization proxy
   if (parsedUrl.pathname === '/api/stream') {
     globalSessionVault.handleStreamRequest(req, res).catch((err) => {
@@ -341,18 +419,6 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // Downstream Fleet Ingestion Harness Route
-  if (parsedUrl.pathname === '/api/ingest/fleet') {
-    handleFleetIngestRequest(req, res, db, broadcastDaemon).catch((err) => {
-      console.error('[-] Fleet ingest error:', err);
-      if (!res.headersSent) {
-        res.writeHead(500, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: err.message }));
-      }
-    });
-    return;
-  }
-
   // Pennant Hoist Broadcast Queue API (Enqueue & Ledger Inspection)
   if (parsedUrl.pathname === '/api/broadcast/queue') {
     if (!broadcastDaemon) {
@@ -368,6 +434,22 @@ const server = http.createServer((req, res) => {
         try {
           const payload = JSON.parse(body);
           const queueId = broadcastDaemon.enqueueBroadcast(payload, payload.scheduledFor);
+
+          const relayUrl = process.env.PENNANT_RELAY_URL || (process.env.RELAY_AUTH_SECRET ? DEFAULT_RELAY_URL : undefined);
+          const authSecret = process.env.RELAY_AUTH_SECRET;
+          const isFuture = payload.scheduledFor && new Date(payload.scheduledFor).getTime() > Date.now();
+
+          if ((payload.sync_to_edge || payload.syncToEdge) && isFuture && relayUrl && authSecret && db) {
+            syncJobToEdge(queueId, {
+              db,
+              sessionVault: globalSessionVault,
+              relayUrl,
+              authSecret,
+            }).catch((e) => {
+              console.warn(`[EDGE RELAY] Immediate edge sync failed for broadcast #${queueId}:`, e.message);
+            });
+          }
+
           res.writeHead(200, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify({ queueId, status: 'pending', scheduledFor: payload.scheduledFor }));
         } catch (err) {
@@ -583,22 +665,40 @@ const server = http.createServer((req, res) => {
           const payload = JSON.parse(body);
           const entries = Array.isArray(payload) ? payload : [payload];
           const insertStmt = db.prepare(`
-            INSERT INTO broadcast_queue (account, message, url, image_path, targets, scheduled_at, status)
-            VALUES (?, ?, ?, ?, ?, ?, 'pending')
+            INSERT INTO broadcast_queue (account, message, url, image_path, targets, scheduled_at, status, payload_json)
+            VALUES (?, ?, ?, ?, ?, ?, 'pending', ?)
           `);
 
           let count = 0;
           for (const item of entries) {
             if (!item.account || !item.message || !item.scheduled_at) continue;
-            insertStmt.run(
+            const info = insertStmt.run(
               item.account,
               item.message,
               item.url || '',
               item.image_path || '',
               item.targets || 'mastodon,bluesky',
-              item.scheduled_at
+              item.scheduled_at,
+              JSON.stringify(item)
             );
             count++;
+
+            const relayUrl = process.env.PENNANT_RELAY_URL || (process.env.RELAY_AUTH_SECRET ? DEFAULT_RELAY_URL : undefined);
+            const authSecret = process.env.RELAY_AUTH_SECRET;
+            const isFuture = new Date(item.scheduled_at).getTime() > Date.now();
+
+            if ((item.sync_to_edge || item.syncToEdge) && isFuture && relayUrl && authSecret) {
+              syncJobToEdge(Number(info.lastInsertRowid), {
+                db,
+                sessionVault: globalSessionVault,
+                relayUrl,
+                authSecret,
+              }).then((edgeId) => {
+                console.log(`[EDGE RELAY] Post #${info.lastInsertRowid} synced immediately to edge (ID: ${edgeId})`);
+              }).catch((e) => {
+                console.warn(`[EDGE RELAY] Immediate edge sync failed for post #${info.lastInsertRowid}:`, e.message);
+              });
+            }
           }
 
           res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -683,7 +783,7 @@ export function startServer(customPort = PORT, customHost = HOST) {
       if (IS_TUI_MODE) {
         console.log(`[PENNANT TUI] Starting interactive ASCII terminal dashboard on http://${customHost}:${customPort}/`);
         import('./apps/hoist-cli/src/tui.ts').then(({ HoistTUI }) => {
-          const tui = new HoistTUI({ db, vault: globalSessionVault, hub: globalStreamHub });
+          const tui = new HoistTUI(globalSessionVault, db);
           tui.startInteractive();
           resolve(server);
         }).catch(reject);
@@ -715,8 +815,20 @@ const isDirectExecution = process.argv[1] && (
 );
 
 if (isDirectExecution) {
-  startServer();
+  const cliArgs = process.argv.slice(2);
+  if (cliArgs[0] === 'queue' && cliArgs[1] === 'sync-edge') {
+    import('./apps/hoist-cli/src/queue-edge-cli.ts').then(({ runQueueSyncEdgeCli }) => {
+      runQueueSyncEdgeCli(cliArgs.slice(2)).catch((err) => {
+        console.error('[-] Queue Sync-Edge CLI Error:', err.message);
+        process.exit(1);
+      });
+    });
+  } else {
+    startServer();
+  }
 }
+
+
 
 
 
