@@ -1,5 +1,5 @@
 [package]
-name = "pennant-hoist"
+name = "pennant"
 version = "0.2.0"
 description = "Sovereign Quad-Protocol Social Broadcasting Console"
 authors = ["Alan Woodyard <alan@alanwoodyard.com>"]

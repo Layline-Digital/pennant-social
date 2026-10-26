@@ -2133,7 +2133,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "pennant-hoist"
+name = "pennant"
 version = "0.2.0"
 dependencies = [
  "serde",
