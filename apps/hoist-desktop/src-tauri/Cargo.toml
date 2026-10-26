@@ -1,4 +1,4 @@
-﻿[package]
+[package]
 name = "pennant-social"
 version = "0.2.4"
 description = "Sovereign Quad-Protocol Social Broadcasting Console"

@@ -56,8 +56,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           projectPath: './apps/hoist-desktop'
-          tagName: v0.2.0
-          releaseName: 'Pennant Social v0.2.0'
+          tagName: v0.2.5
+          releaseName: 'Pennant Social v0.2.5'
           releaseBody: 'Pennant Social desktop binaries for macOS and Linux.'
           releaseDraft: false
           prerelease: true
