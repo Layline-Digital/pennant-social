@@ -1,15 +1,19 @@
-[package]
+﻿[package]
 name = "pennant-social"
 version = "0.2.0"
 description = "Sovereign Quad-Protocol Social Broadcasting Console"
 authors = ["Alan Woodyard <alan@alanwoodyard.com>"]
 edition = "2021"
 
+[lib]
+name = "pennant_social_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
 [build-dependencies]
 tauri-build = { version = "2.0.0", features = [] }
 
 [dependencies]
-tauri = { version = "2.0.0", features = ["devtools"] }
+tauri = { version = "2.0.0", features = [] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 
