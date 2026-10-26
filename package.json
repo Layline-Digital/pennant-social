@@ -1,29 +1,33 @@
 {
-  "name": "pennant-social",
-  "version": "0.1.0",
-  "description": "Sovereign tri-protocol broadcast console and scheduler for ActivityPub, ATProto, and Nostr",
-  "type": "module",
-  "main": "pennant-launcher.js",
-  "bin": {
-    "pennant": "./pennant-launcher.js"
-  },
-  "scripts": {
-    "start": "node pennant-launcher.js",
-    "dev": "node pennant-launcher.js",
-    "test": "node test/smoke.test.js && node test/session-vault.test.ts && node test/media-airlock.test.ts && node test/deck-grid.test.ts && node test/composer-state.test.ts && node test/broadcast-daemon.test.ts && node test/stream-hub.test.ts && node test/hoist-deck.test.ts && node test/launcher-cli.test.ts && node test/fleet-ingest.test.ts && node test/license-verifier.test.ts && node test/matrix-sanitization.test.ts && node test/signer-enclave-edge-cases.test.ts && node test/security-hardening-audit.test.mjs && node test/deep-edge-cases-stress.test.mjs && node test/institutional-edge-cases.test.mjs && node packages/core/tests/edge-bridge.test.ts"
-  },
-  "keywords": [
-    "activitypub",
-    "atproto",
-    "nostr",
-    "mastodon",
-    "bluesky",
-    "gotosocial",
-    "scheduler",
-    "social-media"
-  ],
-  "license": "MIT",
-  "dependencies": {
-    "better-sqlite3": "^13.0.3"
-  }
+    "name": "pennant-social",
+    "version": "0.1.0",
+    "description": "Sovereign tri-protocol broadcast console and scheduler for ActivityPub, ATProto, and Nostr",
+    "type": "module",
+    "main": "pennant-launcher.js",
+    "bin": {
+        "pennant": "./pennant-launcher.js"
+    },
+    "scripts": {
+        "start": "node pennant-launcher.js",
+        "dev": "node pennant-launcher.js",
+        "test": "node test/smoke.test.js && node test/session-vault.test.ts && node test/media-airlock.test.ts && node test/deck-grid.test.ts && node test/composer-state.test.ts && node test/broadcast-daemon.test.ts && node test/stream-hub.test.ts && node test/hoist-deck.test.ts && node test/launcher-cli.test.ts && node test/fleet-ingest.test.ts && node test/license-verifier.test.ts && node test/matrix-sanitization.test.ts && node test/signer-enclave-edge-cases.test.ts && node test/security-hardening-audit.test.mjs && node test/deep-edge-cases-stress.test.mjs && node test/institutional-edge-cases.test.mjs && node packages/core/tests/edge-bridge.test.ts",
+        "tauri": "tauri"
+    },
+    "keywords": [
+        "activitypub",
+        "atproto",
+        "nostr",
+        "mastodon",
+        "bluesky",
+        "gotosocial",
+        "scheduler",
+        "social-media"
+    ],
+    "license": "MIT",
+    "dependencies": {
+        "better-sqlite3": "^13.0.3"
+    },
+    "devDependencies": {
+        "@tauri-apps/cli": "^2.12.4"
+    }
 }
