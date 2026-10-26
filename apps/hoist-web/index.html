@@ -886,7 +886,7 @@
     </div>
     <div class="header-actions">
       <button class="btn-header" id="btn-open-col-builder">+ ADD COLUMN</button>
-      <button class="btn-header" id="btn-open-settings">âš™ CONFIG / ABOUT</button>
+      <button class="btn-header" id="btn-open-settings">&#9881; CONFIG / ABOUT</button>
       <button class="btn-action" id="btn-open-composer">+ NEW BROADCAST</button>
     </div>
   </header>
@@ -1131,7 +1131,7 @@
             </div>
           </div>
           <div style="font-family:var(--font-col-header); font-size:9px; color:var(--text-muted);">
-            [ Click tag to select â€¢ Click â˜… to toggle Core Default (auto-checked on open) ]
+            [ Click tag to select â€¢ Click &#9733; to toggle Core Default (auto-checked on open) ]
           </div>
           <div class="hashtag-select-grid" id="hashtag-select-grid"></div>
         </div>
@@ -1222,7 +1222,7 @@
             </div>
             <div class="col-header-controls">
               <span class="protocol-badge ${col.badge}">${col.protocol}</span>
-              <button class="btn-close-col" data-col-id="${col.id}" title="Close Stream Column">âœ•</button>
+              <button class="btn-close-col" data-col-id="${col.id}" title="Close Stream Column">&#10005;</button>
             </div>
           </div>
           <div class="cards-container">
@@ -1233,12 +1233,12 @@
               </div>
               <div>Stream synchronized. Zero memory leakage across virtualized channels.</div>
               <div class="in-deck-actions">
-                <button class="btn-deck-act" onclick="openReply('${col.query || col.label}')">â†© REPLY</button>
-                <button class="btn-deck-act" onclick="toggleBoost(this)">âŸ³ BOOST</button>
-                <button class="btn-deck-act" onclick="toggleLike(this)">â˜… LIKE</button>
+                <button class="btn-deck-act" onclick="openReply('${col.query || col.label}')">&#8617; REPLY</button>
+                <button class="btn-deck-act" onclick="toggleBoost(this)">&#10227; BOOST</button>
+                <button class="btn-deck-act" onclick="toggleLike(this)">&#9733; LIKE</button>
               </div>
               <div class="card-footer">
-                <span>â— SYNCHRONIZED</span>
+                <span>&#9679;  SYNCHRONIZED</span>
                 <span style="cursor: pointer;">INSPECT &#8599;</span>
               </div>
             </div>
@@ -1267,12 +1267,12 @@
 
     window.toggleBoost = function(btn) {
       btn.classList.toggle('boosted');
-      btn.innerText = btn.classList.contains('boosted') ? 'âŸ³ BOOSTED' : 'âŸ³ BOOST';
+      btn.innerText = btn.classList.contains('boosted') ? '&#10227; BOOSTED' : '&#10227; BOOST';
     };
 
     window.toggleLike = function(btn) {
       btn.classList.toggle('liked');
-      btn.innerText = btn.classList.contains('liked') ? 'â˜… LIKED' : 'â˜… LIKE';
+      btn.innerText = btn.classList.contains('liked') ? '&#9733; LIKED' : '&#9733; LIKE';
     };
 
     // Hashtag Manager
@@ -1313,7 +1313,7 @@
         pill.innerHTML = `
           <input type="checkbox" style="cursor:pointer;" ${isSelected ? 'checked' : ''} />
           <span style="margin: 0 4px; overflow:hidden; text-overflow:ellipsis;">${item.tag}</span>
-          <button class="btn-pin-core" title="${item.isCore ? 'Unpin from Core Defaults' : 'Pin to Core Defaults'}">${item.isCore ? 'â˜…' : 'â˜†'}</button>
+          <button class="btn-pin-core" title="${item.isCore ? 'Unpin from Core Defaults' : 'Pin to Core Defaults'}">${item.isCore ? '&#9733;' : '&#9733;†'}</button>
         `;
 
         pill.querySelector('input').addEventListener('click', (e) => {
@@ -1472,7 +1472,7 @@
         <h2>Q: Why use Pennant Hoist?</h2>
         <p>Pennant runs entirely on your local machine, avoiding cloud SaaS monthly subscription fees.</p>
         <h2>Q: How do Core Hashtags work?</h2>
-        <p>Clicking the star icon (<code>â˜…</code>) marks that hashtag as a Core Default, auto-checking it whenever you open the composer.</p>
+        <p>Clicking the star icon (<code>&#9733;</code>) marks that hashtag as a Core Default, auto-checking it whenever you open the composer.</p>
       `;
       manualModal.style.display = 'flex';
     });
