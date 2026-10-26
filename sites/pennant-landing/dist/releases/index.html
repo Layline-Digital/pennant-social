@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pennant Releases & Distribution Hub</title>
+  <style>
+    :root {
+      --bg: #090b0e;
+      --card-bg: #11141a;
+      --border: #1e2430;
+      --accent: #d97706;
+      --text: #e2e8f0;
+      --muted: #8492a6;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .container { max-width: 900px; width: 100%; }
+    .header { margin-bottom: 30px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
+    .header h1 { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; margin: 0 0 8px; }
+    .header p { color: var(--muted); margin: 0; font-size: 14px; }
+    .section-title { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; color: var(--accent); letter-spacing: 0.1em; margin: 24px 0 12px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+    .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 6px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between; }
+    .card h3 { margin: 0 0 6px; font-size: 16px; font-weight: 700; }
+    .card p { color: var(--muted); font-size: 12px; margin: 0 0 16px; line-height: 1.4; }
+    .btn { background: #1a202c; border: 1px solid #2d3748; color: #fff; text-decoration: none; padding: 8px 14px; font-family: var(--font-mono); font-size: 12px; font-weight: 600; border-radius: 4px; text-align: center; transition: all 0.15s ease; }
+    .btn:hover { background: var(--accent); border-color: var(--accent); color: #000; }
+    .tag { font-family: var(--font-mono); font-size: 10px; background: #000; padding: 2px 6px; border-radius: 3px; border: 1px solid var(--border); color: #38bdf8; display: inline-block; margin-bottom: 8px; }
+    .footer { margin-top: 40px; text-align: center; font-size: 12px; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>// PENNANT DISTRIBUTION DIRECTORY</h1>
+      <p>Sovereign multi-protocol broadcast deck and daemon binaries. Always pointing to the latest stable release.</p>
+    </div>
+
+    <div class="section-title">DESKTOP WORKSTATIONS (GUI)</div>
+    <div class="grid">
+      <div class="card">
+        <div>
+          <span class="tag">WINDOWS X64</span>
+          <h3>Windows Installer (.exe)</h3>
+          <p>Standard NSIS setup installer. Desktop shortcut and Start menu integration.</p>
+        </div>
+        <a class="btn" href="/download/windows-exe">DOWNLOAD .EXE ↗</a>
+      </div>
+      <div class="card">
+        <div>
+          <span class="tag">WINDOWS ENTERPRISE</span>
+          <h3>Windows MSI Package</h3>
+          <p>Silent enterprise installer for managed workstation deployment.</p>
+        </div>
+        <a class="btn" href="/download/windows-msi">DOWNLOAD .MSI ↗</a>
+      </div>
+      <div class="card">
+        <div>
+          <span class="tag">MACOS UNIVERSAL</span>
+          <h3>macOS Package (.dmg)</h3>
+          <p>Universal binary for Apple Silicon (M1/M2/M3/M4) and Intel Macs.</p>
+        </div>
+        <a class="btn" href="/download/mac">DOWNLOAD .DMG ↗</a>
+      </div>
+      <div class="card">
+        <div>
+          <span class="tag">LINUX X64</span>
+          <h3>Linux Universal (.AppImage)</h3>
+          <p>Standalone Linux executable. Works across all modern Linux distributions.</p>
+        </div>
+        <a class="btn" href="/download/linux-appimage">DOWNLOAD .APPIMAGE ↗</a>
+      </div>
+      <div class="card">
+        <div>
+          <span class="tag">LINUX DEBIAN</span>
+          <h3>Debian / Ubuntu (.deb)</h3>
+          <p>Native Debian package for apt-based package managers.</p>
+        </div>
+        <a class="btn" href="/download/linux-deb">DOWNLOAD .DEB ↗</a>
+      </div>
+      <div class="card">
+        <div>
+          <span class="tag">LINUX REDHAT</span>
+          <h3>Fedora / RHEL (.rpm)</h3>
+          <p>Native RPM package for yum/dnf environments.</p>
+        </div>
+        <a class="btn" href="/download/linux-rpm">DOWNLOAD .RPM ↗</a>
+      </div>
+    </div>
+
+    <div class="section-title">MOBILE & FLEET SERVICES</div>
+    <div class="grid">
+      <div class="card">
+        <div>
+          <span class="tag">APPLE IOS / IPADOS</span>
+          <h3>TestFlight Mobile App</h3>
+          <p>Touch-optimized command deck with offline SQLite queueing and hardware biometric guards.</p>
+        </div>
+        <a class="btn" href="/ios" target="_blank">JOIN TESTFLIGHT ↗</a>
+      </div>
+      <div class="card">
+        <div>
+          <span class="tag">WEB APPARATUS</span>
+          <h3>Live Web Deck</h3>
+          <p>Full-fidelity virtualized command deck running directly in any modern browser.</p>
+        </div>
+        <a class="btn" href="/app" target="_blank">LAUNCH WEB DECK ↗</a>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>Source code and commit hashes archived on <a href="https://github.com/Layline-Digital/pennant-social" style="color:var(--text);">GitHub</a> under MIT License.</p>
+    </div>
+  </div>
+</body>
+</html>

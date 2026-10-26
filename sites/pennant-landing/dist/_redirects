@@ -1,0 +1,14 @@
+# Permanent Canonical Download Slugs -> Latest GitHub Releases
+/download/windows-exe    https://github.com/Layline-Digital/pennant-social/releases/latest/download/Pennant.Social_0.2.5_x64-setup.exe 302
+/download/windows-msi    https://github.com/Layline-Digital/pennant-social/releases/latest/download/Pennant.Social_0.2.5_x64_en-US.msi 302
+/download/mac            https://github.com/Layline-Digital/pennant-social/releases/latest/download/Pennant.Social_0.2.5_universal.dmg 302
+/download/mac-universal  https://github.com/Layline-Digital/pennant-social/releases/latest/download/Pennant.Social_0.2.5_universal.dmg 302
+/download/linux-appimage https://github.com/Layline-Digital/pennant-social/releases/latest/download/Pennant.Social_0.2.5_amd64.AppImage 302
+/download/linux-deb      https://github.com/Layline-Digital/pennant-social/releases/latest/download/Pennant.Social_0.2.5_amd64.deb 302
+/download/linux-rpm      https://github.com/Layline-Digital/pennant-social/releases/latest/download/Pennant.Social-0.2.5-1.x86_64.rpm 302
+/download/cli            https://github.com/Layline-Digital/pennant-social/releases/latest/download/pennant-cli-v0.2.5-portable.zip 302
+/download/cli-windows    https://github.com/Layline-Digital/pennant-social/releases/latest/download/pennant-cli-v0.2.5-portable.zip 302
+/download/npm            https://github.com/Layline-Digital/pennant-social/releases/latest/download/pennant-social-0.2.5.tgz 302
+/download/cli-mac        https://github.com/Layline-Digital/pennant-social/releases/latest/download/pennant-cli-macos-x64 302
+/app                     https://app.pennant.laylinedigital.com 302
+/ios                     https://testflight.apple.com/join/1trCYAhB 302
