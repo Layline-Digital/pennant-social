@@ -11,21 +11,25 @@ on:
 jobs:
   build-ios:
     name: Build iOS Native Shell
-    runs-on: macos-14
+    runs-on: macos-15
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js 20
+      - name: Setup Node.js 22
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: 'npm'
 
-      - name: Install Rust Stable
+      - name: Verify Xcode 16+
+        run: |
+          xcodebuild -version
+
+      - name: Install Rust Stable & iOS Targets
         uses: dtolnay/rust-toolchain@stable
         with:
-          targets: aarch64-apple-ios,aarch64-apple-ios-sim,x86_64-apple-ios
+          targets: aarch64-apple-ios,aarch64-apple-ios-sim
 
       - name: Install Monorepo & Web Dependencies
         run: |
@@ -41,14 +45,16 @@ jobs:
         run: |
           npx @tauri-apps/cli ios init
 
-      - name: Build Tauri iOS Package
+      - name: Build Tauri iOS Simulator Package
         working-directory: apps/hoist-desktop
         run: |
-          npx @tauri-apps/cli ios build --ci
+          npx @tauri-apps/cli ios build --target aarch64-apple-ios-sim --ci
 
       - name: Archive iOS Build Output
         uses: actions/upload-artifact@v4
         with:
           name: pennant-ios-bundle
-          path: apps/hoist-desktop/src-tauri/gen/apple/build/**/*.app
+          path: |
+            apps/hoist-desktop/src-tauri/gen/apple/build/**/*.app
+            apps/hoist-desktop/src-tauri/target/aarch64-apple-ios-sim/release/*.app
           if-no-files-found: warn
