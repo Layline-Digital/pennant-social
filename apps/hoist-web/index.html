@@ -987,6 +987,51 @@
   }
 </style>
 
+
+<style id="pennant-mobile-hotfix">
+@media (max-width: 768px) {
+  .settings-chassis, .composer-chassis, .col-modal-chassis {
+    width: 95vw !important;
+    max-width: 95vw !important;
+    margin: 10px auto !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+  }
+  .config-section {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+  }
+  /* Force all grids and social link blocks in Section 3 to stack vertically */
+  .config-section div[style*="grid"], 
+  .official-channels-grid, 
+  [class*="channels-grid"],
+  .protocol-cluster {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+  .config-section div[style*="grid"] > *,
+  .doc-card, .channel-link, .station-key, .protocol-bay {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    word-break: break-word !important;
+  }
+  .config-row {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+}
+</style>
+
 </head>
 <body style="background-color: #131519; margin: 0; padding: 0;">
   <header>
@@ -1057,6 +1102,44 @@
         <span style="cursor: pointer; color: var(--text-muted);" id="btn-close-settings">[ESC]</span>
       </div>
       <div class="window-body">
+
+        <!-- Section 0: Authenticated Fleet Identities (Native & Mobile) -->
+        <div class="config-section" id="section-account-manager" style="border:1px solid #00ffaa44; background:#0b1117;">
+          <div class="config-title" style="color:#00ffaa; display:flex; justify-content:space-between; align-items:center;">
+            <span>// AUTHENTICATED FLEET IDENTITIES</span>
+            <button id="btn-toggle-add-acct" style="background:#00ffaa22; border:1px solid #00ffaa; color:#00ffaa; padding:3px 8px; font-size:11px; font-family:var(--font-col-header); cursor:pointer; border-radius:2px;">+ CONNECT ACCOUNT</button>
+          </div>
+          
+          <!-- Add Account Form Tray -->
+          <div id="add-acct-tray" style="display:none; flex-direction:column; gap:8px; margin:10px 0; padding:10px; background:#070a0e; border:1px solid #232832; border-radius:2px;">
+            <div style="display:flex; flex-direction:column; gap:4px;">
+              <label style="font-size:10px; color:#94a3b8; text-transform:uppercase;">Protocol Bus</label>
+              <select id="input-acct-bus" style="background:#111319; border:1px solid #2b313d; color:#f1f5f9; padding:6px; font-size:12px; font-family:var(--font-mono);">
+                <option value="bluesky">ATProto (Bluesky)</option>
+                <option value="mastodon">ActivityPub (Mastodon)</option>
+                <option value="nostr">Nostr (Sovereign Key / nsec)</option>
+              </select>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:4px;">
+              <label style="font-size:10px; color:#94a3b8; text-transform:uppercase;">Handle / Identifier</label>
+              <input id="input-acct-handle" placeholder="e.g. handle.bsky.social, @user@instance, or NIP-05" style="background:#111319; border:1px solid #2b313d; color:#f1f5f9; padding:6px; font-size:12px; font-family:var(--font-mono);" />
+            </div>
+            <div style="display:flex; flex-direction:column; gap:4px;">
+              <label style="font-size:10px; color:#94a3b8; text-transform:uppercase;">Secret Key / App Password / Token</label>
+              <input id="input-acct-secret" type="password" placeholder="App Password, OAuth Token, or nsec" style="background:#111319; border:1px solid #2b313d; color:#f1f5f9; padding:6px; font-size:12px; font-family:var(--font-mono);" />
+            </div>
+            <div style="display:flex; gap:8px; margin-top:4px;">
+              <button id="btn-save-acct" style="flex:1; background:#00ffaa; color:#000; border:none; padding:8px; font-weight:bold; font-family:var(--font-col-header); font-size:11px; cursor:pointer;">SAVE IDENTITY ↗</button>
+              <button id="btn-cancel-acct" style="background:#2b313d; color:#fff; border:none; padding:8px 12px; font-family:var(--font-col-header); font-size:11px; cursor:pointer;">CANCEL</button>
+            </div>
+          </div>
+
+          <!-- Connected Accounts List -->
+          <div id="roster-connected-accounts" style="display:flex; flex-direction:column; gap:6px; margin-top:8px;">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
         
         <!-- Section 1: Data Management (Clean Spacing, No Giant File Input) -->
         <div class="config-section">
@@ -1794,6 +1877,88 @@
     const body = encodeURIComponent('Reporting abusive or objectionable content from account: ' + author + '\n\nPlease describe the violation:');
     window.location.href = 'mailto:compliance@laylinedigital.com?subject=' + subject + '&body=' + body;
   }
+</script>
+
+
+<script id="pennant-account-manager-script">
+(function() {
+  function getAccounts() {
+    try {
+      return JSON.parse(localStorage.getItem('pennant_accounts') || '[]');
+    } catch(e) {
+      return [];
+    }
+  }
+
+  function saveAccounts(accounts) {
+    localStorage.setItem('pennant_accounts', JSON.stringify(accounts));
+    renderAccounts();
+  }
+
+  function renderAccounts() {
+    const roster = document.getElementById('roster-connected-accounts');
+    if (!roster) return;
+    const accounts = getAccounts();
+    if (accounts.length === 0) {
+      roster.innerHTML = '<div style="color:#64748b; font-size:11px; font-style:italic;">No authenticated accounts connected yet. Tap + CONNECT ACCOUNT above.</div>';
+      return;
+    }
+    roster.innerHTML = '';
+    accounts.forEach((acct, idx) => {
+      const row = document.createElement('div');
+      row.style.cssText = 'display:flex; justify-content:space-between; align-items:center; background:#111319; padding:8px 10px; border:1px solid #232832; border-radius:2px; font-size:12px; font-family:var(--font-mono);';
+      row.innerHTML = '<span><strong style="color:#00ffaa; text-transform:uppercase;">[' + acct.bus + ']</strong> ' + acct.handle + '</span>' +
+        '<button data-idx="' + idx + '" class="btn-remove-account" style="background:#ef444422; border:1px solid #ef4444; color:#ef4444; padding:2px 6px; font-size:10px; cursor:pointer;">DISCONNECT ✕</button>';
+      roster.appendChild(row);
+    });
+
+    document.querySelectorAll('.btn-remove-account').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const index = parseInt(this.getAttribute('data-idx'));
+        const current = getAccounts();
+        current.splice(index, 1);
+        saveAccounts(current);
+      });
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const toggleBtn = document.getElementById('btn-toggle-add-acct');
+    const tray = document.getElementById('add-acct-tray');
+    const cancelBtn = document.getElementById('btn-cancel-acct');
+    const saveBtn = document.getElementById('btn-save-acct');
+
+    if (toggleBtn && tray) {
+      toggleBtn.addEventListener('click', () => {
+        tray.style.display = tray.style.display === 'flex' ? 'none' : 'flex';
+      });
+    }
+    if (cancelBtn && tray) {
+      cancelBtn.addEventListener('click', () => {
+        tray.style.display = 'none';
+      });
+    }
+    if (saveBtn) {
+      saveBtn.addEventListener('click', () => {
+        const bus = document.getElementById('input-acct-bus').value;
+        const handle = document.getElementById('input-acct-handle').value.trim();
+        const secret = document.getElementById('input-acct-secret').value.trim();
+        if (!handle || !secret) {
+          alert('Error: Handle and Secret/Password are required.');
+          return;
+        }
+        const accounts = getAccounts();
+        accounts.push({ bus, handle, secret });
+        saveAccounts(accounts);
+        document.getElementById('input-acct-handle').value = '';
+        document.getElementById('input-acct-secret').value = '';
+        tray.style.display = 'none';
+      });
+    }
+    renderAccounts();
+  });
+})();
 </script>
 
 </body></html>
