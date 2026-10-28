@@ -259,9 +259,35 @@ async function runSchedulerTick() {
       ];
 
       if (item.url && item.url.trim() !== "") args.push("-Url", item.url);
-      if (item.image_path && item.image_path.trim() !== "") args.push("-ImagePath", item.image_path);
+      let resolvedImagePath = item.image_path || "";
+        if (resolvedImagePath.startsWith('data:image/')) {
+          try {
+            const cacheDir = path.join(APP_ROOT, '.cache', 'staged_media');
+            if (!fs.existsSync(cacheDir)) fs.mkdirSync(cacheDir, { recursive: true });
+            const commaIdx = resolvedImagePath.indexOf(',');
+            if (commaIdx !== -1) {
+              const header = resolvedImagePath.slice(0, commaIdx);
+              const b64Data = resolvedImagePath.slice(commaIdx + 1);
+              const mimePart = (header.split(';')[0] || '').split('/')[1] || 'png';
+              const ext = mimePart.toLowerCase() === 'jpeg' ? 'jpg' : mimePart.toLowerCase();
+              const filePath = path.join(cacheDir, `staged_${item.id}.${ext}`);
+              fs.writeFileSync(filePath, Buffer.from(b64Data, 'base64'));
+              resolvedImagePath = filePath;
+            }
+          } catch (e) {
+            console.error('[IMAGE STAGING ERROR]', e.message);
+          }
+        }
+        if (resolvedImagePath && resolvedImagePath.trim() !== "") args.push("-ImagePath", resolvedImagePath);
 
-      const runner = spawn(cmd, args);
+      let runner;
+        try {
+          runner = spawn(cmd, args);
+        } catch (spawnErr) {
+          console.error('[SPAWN SYNC ERROR]', spawnErr.message);
+          db.prepare("UPDATE broadcast_queue SET status = 'failed', last_error = ? WHERE id = ?").run(spawnErr.message, item.id);
+          continue;
+        }
       let stdout = "";
       let stderr = "";
 
@@ -272,7 +298,7 @@ async function runSchedulerTick() {
       runner.on("error", (err) => {
         runnerError = err.message;
         db.prepare(
-          "UPDATE broadcast_queue SET status = 'failed', error = ? WHERE id = ?"
+          "UPDATE broadcast_queue SET status = 'failed', last_error = ? WHERE id = ?"
         ).run(runnerError, item.id);
       });
 
@@ -285,7 +311,7 @@ async function runSchedulerTick() {
         } else {
           console.error(`[PENNANT SCHEDULER] Post #${item.id} exit code ${code}`);
           db.prepare(
-            "UPDATE broadcast_queue SET status = 'failed', error = ? WHERE id = ?"
+            "UPDATE broadcast_queue SET status = 'failed', last_error = ? WHERE id = ?"
           ).run(runnerError || stderr.trim() || stdout.trim(), item.id);
         }
       });
@@ -665,22 +691,30 @@ const server = http.createServer((req, res) => {
           const payload = JSON.parse(body);
           const entries = Array.isArray(payload) ? payload : [payload];
           const insertStmt = db.prepare(`
-            INSERT INTO broadcast_queue (account, message, url, image_path, targets, scheduled_at, status, payload_json)
-            VALUES (?, ?, ?, ?, ?, ?, 'pending', ?)
+            INSERT INTO broadcast_queue (account, message, url, image_path, targets, scheduled_at, scheduled_for, status, payload_json)
+            VALUES (?, ?, ?, ?, ?, ?, ?, 'pending', ?)
           `);
 
           let count = 0;
           for (const item of entries) {
-            if (!item.account || !item.message || !item.scheduled_at) continue;
-            const info = insertStmt.run(
-              item.account,
-              item.message,
-              item.url || '',
-              item.image_path || '',
-              item.targets || 'mastodon,bluesky',
-              item.scheduled_at,
-              JSON.stringify(item)
-            );
+            if (!item.message) continue;
+              if (!item.account) item.account = 'pennant';
+                          const schedTime = item.scheduled_at || item.scheduled_for || new Date().toISOString();
+              const info = insertStmt.run(
+                item.account || 'pennant',
+                item.message,
+                item.url || '',
+                item.image_path || '',
+                item.targets || 'mastodon,bluesky',
+                schedTime,
+                schedTime,
+                JSON.stringify({
+                    ...item,
+                    targets: Array.isArray(item.targets) 
+                      ? item.targets 
+                      : (typeof item.targets === 'string' ? item.targets.split(',').map(t => t.trim().toLowerCase()).filter(Boolean) : ['bluesky', 'mastodon'])
+                  })
+              );
             count++;
 
             const relayUrl = process.env.PENNANT_RELAY_URL || (process.env.RELAY_AUTH_SECRET ? DEFAULT_RELAY_URL : undefined);

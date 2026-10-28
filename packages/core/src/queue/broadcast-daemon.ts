@@ -353,7 +353,10 @@ export class BroadcastDaemon {
     const payload = JSON.parse(job.payload_json) as BroadcastPayload;
     const endpointResults: EndpointDispatchResult[] = [];
 
-    const tasks = payload.targets.map(async (target) => {
+    const targetList = Array.isArray(payload.targets) 
+      ? payload.targets 
+      : (typeof payload.targets === 'string' ? (payload.targets as string).split(',').map(s => ({ protocol: s.trim() })) : []);
+    const tasks = targetList.map(async (target: any) => {
       const res = await this.dispatchTarget(jobId, target);
       endpointResults.push(res);
       this.recordLedgerEntry(jobId, res);

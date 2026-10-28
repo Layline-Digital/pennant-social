@@ -1,7 +1,186 @@
 ﻿<!DOCTYPE html>
 <html lang="en" style="background-color: #131519;">
 <head>
-  <style id="pennant-prepaint">html, body { background-color: #131519 !important; color: #cbd5e1; margin: 0; padding: 0; }</style>
+  <style id="pennant-prepaint">html, body { background-color: #131519 !important; color: #cbd5e1; margin: 0; padding: 0; }
+/* --- Card Body, Links & ActivityPub Typography --- */
+.card {
+  background: #0d1117 !important;
+  border: 1px solid #1e2633 !important;
+  border-radius: 4px !important;
+  padding: 10px 12px !important;
+  margin-bottom: 8px !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3) !important;
+  transition: border-color 0.15s ease, background 0.15s ease !important;
+}
+.card:hover {
+  border-color: #2e3b4e !important;
+  background: #111620 !important;
+}
+.card p {
+  margin: 0 0 6px 0 !important;
+  line-height: 1.45 !important;
+}
+.card p:last-child {
+  margin-bottom: 0 !important;
+}
+.card a, .card a:visited {
+  color: #38bdf8 !important;
+  text-decoration: none !important;
+  word-break: break-word !important;
+  transition: color 0.15s ease !important;
+}
+.card a:hover {
+  color: #7dd3fc !important;
+  text-decoration: underline !important;
+}
+.card a.mention, .card a[href*="@"] {
+  color: #00ffaa !important;
+}
+.card a.hashtag, .card a[href*="/tags/"], .card a[href*="/tagged/"] {
+  color: #c084fc !important;
+}
+.card .author-name {
+  font-family: var(--font-mono, monospace) !important;
+  letter-spacing: 0.02em !important;
+}
+.card .in-deck-actions {
+  margin-top: 8px !important;
+  padding-top: 6px !important;
+  border-top: 1px solid #192231 !important;
+}
+.card .btn-deck-act {
+  background: transparent !important;
+  border: 1px solid #232d3d !important;
+  color: #94a3b8 !important;
+  padding: 3px 8px !important;
+  font-size: 10px !important;
+  border-radius: 2px !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+}
+.card .btn-deck-act:hover {
+  border-color: #00ffaa !important;
+  color: #00ffaa !important;
+  background: #00ffaa11 !important;
+}
+
+
+/* --- Strict Uniform Column Symmetry & Media Grids --- */
+:root {
+  --col-width: 360px;
+}
+.deck-column {
+  width: var(--col-width, 360px) !important;
+  min-width: var(--col-width, 360px) !important;
+  max-width: var(--col-width, 360px) !important;
+  box-sizing: border-box !important;
+  flex: 0 0 var(--col-width, 360px) !important;
+  overflow: hidden !important;
+}
+.cards-container {
+  width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+}
+.card {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
+}
+.card a {
+  overflow-wrap: anywhere !important;
+  word-break: break-all !important;
+}
+/* Post Media Grids */
+.card-media-deck {
+  display: grid;
+  gap: 4px;
+  margin-top: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid #1e2633;
+}
+.card-media-deck.grid-1 {
+  grid-template-columns: 1fr;
+}
+.card-media-deck.grid-2 {
+  grid-template-columns: 1fr 1fr;
+}
+.card-media-deck.grid-3 {
+  grid-template-columns: 1fr 1fr;
+}
+.card-media-deck.grid-3 .media-thumb:first-child {
+  grid-column: span 2;
+}
+.card-media-deck.grid-4 {
+  grid-template-columns: 1fr 1fr;
+}
+.card-media-deck .media-thumb {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  background: #090c10;
+  cursor: pointer;
+  display: block;
+  transition: opacity 0.15s ease;
+}
+.card-media-deck .media-thumb:hover {
+  opacity: 0.88;
+}
+.card-media-deck.grid-1 .media-thumb {
+  max-height: 280px;
+  height: auto;
+}
+
+
+/* --- Scheduler Bay & Preset Styling --- */
+.btn-sched-preset {
+  background: #111520;
+  border: 1px solid #283347;
+  color: #94a3b8;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+.btn-sched-preset:hover {
+  background: #1c2333;
+  color: #00ffaa;
+  border-color: #00ffaa;
+}
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.8) sepia(100%) saturate(300%) hue-rotate(90deg);
+  cursor: pointer;
+}
+
+
+/* --- Enhanced Composer & Media Airlock Styles --- */
+#composer-dropzone:focus-within {
+  border-color: var(--accent-orange, #ff6b35) !important;
+  box-shadow: 0 0 12px rgba(255, 107, 53, 0.25);
+}
+#btn-trigger-file-select:hover {
+  background: #1c2436 !important;
+  border-color: #38bdf8 !important;
+  color: #7dd3fc !important;
+}
+#btn-toggle-alt-text:hover {
+  background: #27334d !important;
+  color: #fff !important;
+}
+#btn-discard-media:hover {
+  background: #ef4444 !important;
+  color: #fff !important;
+}
+
+</style>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pennant Hoist  &mdash;  Operations Deck</title>
@@ -1032,6 +1211,63 @@
 }
 </style>
 
+
+<style id="tweetdeck-parity-suite">
+/* --- Mobile Responsive Lockdown for Section 3 & Chassis --- */
+@media (max-width: 768px) {
+  .social-2col-grid,
+  .official-channels-grid,
+  [class*="channels-grid"],
+  .config-section div[style*="grid"] {
+    display: flex !important;
+    flex-direction: column !important;
+    grid-template-columns: 1fr !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+  .social-card-btn, .doc-card, .channel-link {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+  .settings-chassis, .composer-chassis, .col-modal-chassis {
+    width: 95vw !important;
+    max-width: 95vw !important;
+    margin: 10px auto !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+  }
+  .config-section {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+}
+
+/* --- TweetDeck Column Shift & Keyboard Navigation --- */
+.btn-col-shift {
+  background: transparent;
+  border: 1px solid var(--border, #232832);
+  color: var(--text-muted, #94a3b8);
+  font-size: 10px;
+  padding: 2px 6px;
+  cursor: pointer;
+  border-radius: 2px;
+  line-height: 1;
+  margin-right: 2px;
+}
+.btn-col-shift:hover {
+  color: var(--text-col-pop, #00ffaa);
+  border-color: var(--text-col-pop, #00ffaa);
+}
+.card.card-kb-active {
+  outline: 2px solid #00ffaa !important;
+  outline-offset: -2px;
+}
+</style>
+
 </head>
 <body style="background-color: #131519; margin: 0; padding: 0;">
   <header>
@@ -1111,28 +1347,39 @@
           </div>
           
           <!-- Add Account Form Tray -->
-          <div id="add-acct-tray" style="display:none; flex-direction:column; gap:8px; margin:10px 0; padding:10px; background:#070a0e; border:1px solid #232832; border-radius:2px;">
-            <div style="display:flex; flex-direction:column; gap:4px;">
-              <label style="font-size:10px; color:#94a3b8; text-transform:uppercase;">Protocol Bus</label>
-              <select id="input-acct-bus" style="background:#111319; border:1px solid #2b313d; color:#f1f5f9; padding:6px; font-size:12px; font-family:var(--font-mono);">
-                <option value="bluesky">ATProto (Bluesky)</option>
-                <option value="mastodon">ActivityPub (Mastodon)</option>
-                <option value="nostr">Nostr (Sovereign Key / nsec)</option>
-              </select>
+          <div id="add-acct-tray" style="display:none; flex-direction:column; gap:10px; margin:10px 0; padding:12px; background:#070a0e; border:1px solid #232832; border-radius:2px;">
+              <div style="display:flex; flex-direction:column; gap:4px;">
+                <label style="font-size:10px; color:#94a3b8; text-transform:uppercase; font-family:var(--font-col-header);">Protocol Bus</label>
+                <select id="input-acct-bus" style="background:#111319; border:1px solid #2b313d; color:#00ffaa; padding:7px; font-size:12px; font-family:var(--font-mono); border-radius:2px;">
+                  <option value="bluesky">ATProto (Bluesky)</option>
+                  <option value="mastodon">ActivityPub (Mastodon)</option>
+                  <option value="nostr">Nostr (Sovereign Key / nsec)</option>
+                </select>
+              </div>
+
+              <!-- Dedicated NIP-07 Zero-Custody Button for Nostr -->
+              <div id="box-nip07-option" style="display:none; flex-direction:column; gap:6px; background:#111827; border:1px solid #38bdf844; padding:10px; border-radius:2px;">
+                <div style="font-size:11px; color:#38bdf8; font-family:var(--font-mono); font-weight:bold;">RECOMMENDED ZERO-CUSTODY PATH:</div>
+                <div style="font-size:10px; color:#94a3b8; font-family:var(--font-mono); line-height:1.4;">Use a browser signer (Alby, nos2x, Amber). Your private key (nsec) never leaves your extension.</div>
+                <button type="button" id="btn-connect-nip07" style="background:#38bdf822; border:1px solid #38bdf8; color:#38bdf8; padding:8px; font-family:var(--font-col-header); font-size:11px; cursor:pointer; font-weight:bold; border-radius:2px;">CONNECT VIA NIP-07 EXTENSION (ZERO KEY CUSTODY) &#8599;</button>
+              </div>
+
+              <div id="box-acct-inputs" style="display:flex; flex-direction:column; gap:8px;">
+                <div style="display:flex; flex-direction:column; gap:4px;">
+                  <label id="lbl-acct-handle" style="font-size:10px; color:#94a3b8; text-transform:uppercase; font-family:var(--font-col-header);">Bluesky Handle</label>
+                  <input id="input-acct-handle" placeholder="e.g. username.bsky.social" style="background:#111319; border:1px solid #2b313d; color:#f1f5f9; padding:7px; font-size:12px; font-family:var(--font-mono); border-radius:2px;" />
+                </div>
+                <div style="display:flex; flex-direction:column; gap:4px;">
+                  <label id="lbl-acct-secret" style="font-size:10px; color:#94a3b8; text-transform:uppercase; font-family:var(--font-col-header);">App Password</label>
+                  <input id="input-acct-secret" type="password" placeholder="xxxx-xxxx-xxxx-xxxx" style="background:#111319; border:1px solid #2b313d; color:#f1f5f9; padding:7px; font-size:12px; font-family:var(--font-mono); border-radius:2px;" />
+                  <span id="help-acct-secret" style="font-size:10px; color:#64748b; font-family:var(--font-mono); line-height:1.4;">Do NOT use your main account password. Generate an App Password in Bluesky Settings &rarr; App Passwords.</span>
+                </div>
+                <div style="display:flex; gap:8px; margin-top:4px;">
+                  <button id="btn-save-acct" style="flex:1; background:#00ffaa; color:#000; border:none; padding:8px; font-weight:bold; font-family:var(--font-col-header); font-size:11px; cursor:pointer; border-radius:2px;">SAVE IDENTITY &#8599;</button>
+                  <button id="btn-cancel-acct" style="background:#2b313d; color:#fff; border:none; padding:8px 14px; font-family:var(--font-col-header); font-size:11px; cursor:pointer; border-radius:2px;">CANCEL</button>
+                </div>
+              </div>
             </div>
-            <div style="display:flex; flex-direction:column; gap:4px;">
-              <label style="font-size:10px; color:#94a3b8; text-transform:uppercase;">Handle / Identifier</label>
-              <input id="input-acct-handle" placeholder="e.g. handle.bsky.social, @user@instance, or NIP-05" style="background:#111319; border:1px solid #2b313d; color:#f1f5f9; padding:6px; font-size:12px; font-family:var(--font-mono);" />
-            </div>
-            <div style="display:flex; flex-direction:column; gap:4px;">
-              <label style="font-size:10px; color:#94a3b8; text-transform:uppercase;">Secret Key / App Password / Token</label>
-              <input id="input-acct-secret" type="password" placeholder="App Password, OAuth Token, or nsec" style="background:#111319; border:1px solid #2b313d; color:#f1f5f9; padding:6px; font-size:12px; font-family:var(--font-mono);" />
-            </div>
-            <div style="display:flex; gap:8px; margin-top:4px;">
-              <button id="btn-save-acct" style="flex:1; background:#00ffaa; color:#000; border:none; padding:8px; font-weight:bold; font-family:var(--font-col-header); font-size:11px; cursor:pointer;">SAVE IDENTITY ↗</button>
-              <button id="btn-cancel-acct" style="background:#2b313d; color:#fff; border:none; padding:8px 12px; font-family:var(--font-col-header); font-size:11px; cursor:pointer;">CANCEL</button>
-            </div>
-          </div>
 
           <!-- Connected Accounts List -->
           <div id="roster-connected-accounts" style="display:flex; flex-direction:column; gap:6px; margin-top:8px;">
@@ -1375,21 +1622,87 @@
           <div class="hashtag-select-grid" id="hashtag-select-grid"></div>
         </div>
 
-        <textarea id="composer-text" placeholder="Draft transmission record for authenticated fleet egress..."></textarea>
+        <!-- Enhanced Ergonomic Writing Deck -->
+          <div class="composer-canvas-container" style="display: flex; flex-direction: column; gap: 6px; margin: 8px 0;">
+            <div id="composer-dropzone" style="position: relative; border-radius: 4px; border: 1px solid #232a38; background: #080a0f; transition: all 0.15s ease;">
+              <textarea id="composer-text" placeholder="What's happening across the fleet? (ATProto, Mastodon, Nostr)..." style="width: 100%; min-height: 150px; background: transparent; border: none; padding: 12px 14px; color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 14.5px; line-height: 1.6; resize: vertical; outline: none; box-sizing: border-box;"></textarea>
+              <div id="drop-indicator-overlay" style="display: none; position: absolute; inset: 0; background: rgba(0, 255, 170, 0.08); border: 2px dashed #00ffaa; border-radius: 4px; align-items: center; justify-content: center; color: #00ffaa; font-family: var(--font-col-header); font-size: 13px; font-weight: 700; pointer-events: none;">
+                DROP IMAGE OR VIDEO TO ATTACH
+              </div>
+            </div>
+
+            <!-- Media Attachment Action Bar -->
+            <div style="display: flex; justify-content: space-between; align-items: center; background: #0c0e14; border: 1px solid #1c2331; border-radius: 3px; padding: 6px 10px;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <input type="file" id="media-file-input" style="display: none;" accept="image/*,video/*" />
+                <button type="button" id="btn-trigger-file-select" style="display: flex; align-items: center; gap: 6px; background: #131824; border: 1px solid #28354d; color: #38bdf8; font-family: var(--font-col-header); font-size: 11px; font-weight: 700; padding: 5px 10px; border-radius: 3px; cursor: pointer; transition: all 0.15s ease;">
+                  <span style="font-size: 13px;">📷</span> ATTACH IMAGE / MEDIA
+                </button>
+                <span style="font-size: 10px; color: #64748b; font-family: var(--font-col-header);">or drag & drop anywhere on text box</span>
+              </div>
+              <div id="media-staging-badge" style="display: none; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 10px; color: #00ffaa;">
+                <span style="width: 7px; height: 7px; border-radius: 50%; background: #00ffaa; box-shadow: 0 0 8px #00ffaa; display: inline-block;"></span>
+                <span>MEDIA ATTACHED</span>
+              </div>
+            </div>
+
+            <!-- Visual Media Attachment Preview Tray (Hidden until file selected) -->
+            <div id="media-preview-tray" style="display: none; flex-direction: column; gap: 8px; background: #0c1018; border: 1px solid #1e283d; border-radius: 4px; padding: 10px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                <div style="display: flex; align-items: center; gap: 10px; overflow: hidden;">
+                  <img id="media-thumbnail-img" src="" alt="Staged Preview" style="width: 48px; height: 48px; object-fit: cover; border-radius: 3px; border: 1px solid #334155; background: #000;" />
+                  <div style="display: flex; flex-direction: column; gap: 2px; overflow: hidden;">
+                    <span id="media-preview-filename" style="font-family: var(--font-col-header); font-size: 11px; font-weight: 700; color: #f1f5f9; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; max-width: 260px;">file.png</span>
+                    <span id="media-preview-filesize" style="font-family: var(--font-mono); font-size: 10px; color: #94a3b8;">0.0 MB</span>
+                  </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <button type="button" id="btn-toggle-alt-text" style="background: #1e2638; border: 1px solid #3b4b6b; color: #cbd5e1; font-family: var(--font-col-header); font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 2px; cursor: pointer;">+ ALT TEXT</button>
+                  <button type="button" id="btn-discard-media" style="background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; color: #fca5a5; font-family: var(--font-col-header); font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 2px; cursor: pointer;">✕ DISCARD</button>
+                </div>
+              </div>
+
+              <!-- Alt Text Drawer -->
+              <div id="alt-text-container" style="display: none; padding-top: 6px; border-top: 1px dashed #1e293b;">
+                <input type="text" id="composer-alt-text" placeholder="Accessible image description for screen readers & ATProto / ActivityPub..." style="width: 100%; background: #080a0f; border: 1px solid #28354a; color: #fbbf24; font-family: var(--font-col-header); font-size: 11px; padding: 6px 10px; border-radius: 2px; outline: none; box-sizing: border-box;" />
+              </div>
+            </div>
+          </div>
 
         <!-- Precision Scheduler Bay -->
-        <div class="schedule-control-bay" id="precision-scheduler-bay" style="margin: 10px 0; display: flex; align-items: center; justify-content: space-between; gap: 10px; background: #101318; border: 1px solid var(--border); border-radius: 2px; padding: 6px 10px;">
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <span style="font-family: var(--font-col-header); font-size: 10px; font-weight: 700; color: var(--text-sub);">SCHEDULE DISPATCH:</span>
-            <input type="datetime-local" id="composer-schedule-time" style="background: #090a0d; border: 1px solid #232832; color: #f1f5f9; font-family: var(--font-col-header); font-size: 11px; padding: 3px 6px; border-radius: 2px; outline: none;" />
-          </div>
-          <label class="edge-sync-label" style="display: flex; align-items: center; gap: 6px; font-family: var(--font-col-header); font-size: 10px; color: var(--signal-green); cursor: pointer;">
-            <input type="checkbox" id="toggle-edge-sync" checked style="cursor: pointer;" />
-            <span>Unattended Edge Sync (Cloudflare Relay  &mdash;  runs 24/7 while laptop is asleep)</span>
-          </label>
-        </div>
+          <div class="schedule-control-bay" id="precision-scheduler-bay" style="margin: 10px 0; display: flex; flex-direction: column; gap: 8px; background: #0c0e14; border: 1px solid #1f2735; border-radius: 4px; padding: 10px 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+              <!-- Dispatch Mode Switcher -->
+              <div style="display: flex; background: #07090d; border: 1px solid #232a38; border-radius: 3px; padding: 2px;">
+                <button type="button" id="btn-mode-now" class="sched-tab-btn active" style="background:#00ffaa22; border:1px solid #00ffaa; color:#00ffaa; padding:4px 10px; font-family:var(--font-col-header); font-size:10px; font-weight:700; cursor:pointer; border-radius:2px;">⚡ DISPATCH NOW</button>
+                <button type="button" id="btn-mode-sched" class="sched-tab-btn" style="background:transparent; border:1px solid transparent; color:#94a3b8; padding:4px 10px; font-family:var(--font-col-header); font-size:10px; font-weight:700; cursor:pointer; border-radius:2px; margin-left:2px;">📅 SCHEDULE LATER</button>
+              </div>
 
-        <div class="telemetry-row">
+              <!-- Edge Sync Toggle -->
+              <label class="edge-sync-label" style="display: flex; align-items: center; gap: 6px; font-family: var(--font-col-header); font-size: 10px; color: #4ade80; cursor: pointer;">
+                <input type="checkbox" id="toggle-edge-sync" checked style="cursor: pointer; accent-color: #00ffaa;" />
+                <span>Edge Relay Sync (24/7 autonomous dispatch)</span>
+              </label>
+            </div>
+
+            <!-- Schedule Timing Drawer (hidden in Now mode) -->
+            <div id="sched-picker-tray" style="display: none; flex-direction: column; gap: 8px; padding-top: 8px; border-top: 1px dashed #1e2634;">
+              <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                <input type="datetime-local" id="composer-schedule-time" style="background: #11141d; border: 1px solid #2b3548; color: #00ffaa; font-family: var(--font-mono); font-size: 11.5px; padding: 5px 8px; border-radius: 3px; outline: none; color-scheme: dark; cursor: pointer;" />
+                <span style="font-size: 10px; color: #64748b; font-family: var(--font-col-header);">PRESETS:</span>
+                <div style="display: flex; gap: 4px; flex-wrap: wrap;">
+                  <button type="button" class="btn-sched-preset" onclick="window.applySchedPreset(15)">+15m</button>
+                  <button type="button" class="btn-sched-preset" onclick="window.applySchedPreset(60)">+1h</button>
+                  <button type="button" class="btn-sched-preset" onclick="window.applySchedPreset(240)">+4h</button>
+                  <button type="button" class="btn-sched-preset" onclick="window.applySchedPreset('tomorrow9')">Tomorrow 9 AM</button>
+                  <button type="button" class="btn-sched-preset" onclick="window.clearSchedPreset()" style="color:#f87171; border-color:#7f1d1d;">Clear</button>
+                </div>
+              </div>
+              <div id="sched-preview-label" style="font-size: 10px; color: #38bdf8; font-family: var(--font-mono);">Dispatch Target: Immediate</div>
+            </div>
+          </div>
+
+          <div class="telemetry-row">
           <div class="counters-tray">
             <span class="counter-pill" id="cnt-bsky">ATProto: 0/300</span>
             <span class="counter-pill" id="cnt-masto">AP: 0/500</span>
@@ -1423,10 +1736,10 @@
     })();
 
     const defaultDeckColumns = [
-      { id: 'bsky_main', label: 'pennant.laylinedigital.com', protocol: 'ATProto', badge: 'badge-bsky', sub: 'Home Timeline', query: 'pennant.laylinedigital.com' },
-      { id: 'masto_signal', label: '@pennant@social.pennant', protocol: 'ActivityPub', badge: 'badge-masto', sub: 'Mentions & Alerts', query: '@signal' },
-      { id: 'nostr_relay', label: 'Relay Damus Pool', protocol: 'Nostr', badge: 'badge-nostr', sub: 'Relay Firehose', query: 'wss://relay.damus.io' },
-      { id: 'queue_col', label: 'Outbox Delivery Queue', protocol: 'SQLite WAL', badge: 'badge-queue', sub: 'Persistent Ledger', query: 'local_wal' }
+      { id: 'bsky_pub', label: 'Bluesky: @bsky.app', protocol: 'ATProto', badge: 'badge-bsky', sub: 'Public ATProto Feed', query: 'bsky.app', account: '' },
+      { id: 'masto_fed', label: 'Fosstodon (Federated)', protocol: 'ActivityPub', badge: 'badge-masto', sub: 'Public Instance Firehose', query: 'https://fosstodon.org', account: '' },
+      { id: 'nostr_relay', label: 'Damus Relay Firehose', protocol: 'Nostr', badge: 'badge-nostr', sub: 'wss://relay.damus.io', query: 'wss://relay.damus.io', account: '' },
+      { id: 'queue_col', label: 'Outbox Delivery Queue', protocol: 'SQLite WAL', badge: 'badge-queue', sub: 'SQLite WAL • Device Buffer', query: 'local_wal', account: '' }
     ];
 
     let activeDeckColumns = [];
@@ -1460,30 +1773,15 @@
               <div class="col-sub">${col.sub}</div>
             </div>
             <div class="col-header-controls">
-              <span class="protocol-badge ${col.badge}">${col.protocol}</span>
-              <button class="btn-close-col" data-col-id="${col.id}" title="Close Stream Column">&#10005;</button>
-            </div>
+                <button class="btn-col-shift" onclick="shiftColumn('${col.id}', -1)" title="Move Left">&#9664;</button>
+                <button class="btn-col-shift" onclick="shiftColumn('${col.id}', 1)" title="Move Right">&#9654;</button>
+                <button class="btn-col-shift" onclick="openColumnInspector('${col.id}')" title="Inspect & Configure Stream">&#9881;</button>
+                <span class="protocol-badge ${col.badge}">${col.protocol}</span>
+                <button class="btn-close-col" data-col-id="${col.id}" title="Close Stream Column">&#10005;</button>
+              </div>
           </div>
-          <div class="cards-container">
-            <div class="card">
-              <div class="card-meta">
-                <span class="author-name">${col.query || col.label}</span>
-                <span>10:46 PM</span>
-              </div>
-              <div></div>
-              <div class="in-deck-actions">
-                <button class="btn-deck-act" onclick="openReply('${col.query || col.label}')">&#8617; REPLY</button>
-                <button class="btn-deck-act" onclick="toggleBoost(this)">&#10227; BOOST</button>
-                <button class="btn-deck-act" onclick="toggleLike(this)">&#9733; LIKE</button>
-                <button class="btn-deck-act" onclick="toggleCardMenu(this, '${col.query || col.label}')">&#8226;&#8226;&#8226;</button>
-              </div>
-              <div class="card-footer">
-                <span>&#9679;  SYNCHRONIZED</span>
-                <span style="cursor: pointer;">INSPECT &#8599;</span>
-              </div>
-            </div>
-          </div>
-        `;
+          <div class="cards-container" id="cards-${col.id}"></div>
+          `;
         viewport.appendChild(el);
       });
 
@@ -1730,13 +2028,47 @@
     });
 
     // Drawers & Modals
-    var composerDrawer = window.composerDrawer || document.getElementById('composer-drawer');
+    
+  // Global Composer Cleanup
+  
+  // Global Composer Cleanup & Reset
+  window.resetComposerState = function() {
+    window.currentStagedMedia = null;
+    const fileInput = document.getElementById('media-file-input');
+    if (fileInput) fileInput.value = '';
+    const previewTray = document.getElementById('media-preview-tray');
+    if (previewTray) previewTray.style.display = 'none';
+    const stagingBadge = document.getElementById('media-staging-badge');
+    if (stagingBadge) stagingBadge.style.display = 'none';
+    const altContainer = document.getElementById('alt-text-container');
+    if (altContainer) altContainer.style.display = 'none';
+    const altInput = document.getElementById('composer-alt-text');
+    if (altInput) altInput.value = '';
+    const previewImg = document.getElementById('media-thumbnail-img');
+    if (previewImg) {
+      previewImg.src = '';
+      previewImg.style.display = 'none';
+    }
+    const previewFilename = document.getElementById('media-preview-filename');
+    if (previewFilename) previewFilename.innerText = '';
+    const previewFilesize = document.getElementById('media-preview-filesize');
+    if (previewFilesize) previewFilesize.innerText = '';
+  };
+
+  window.openComposer = function() {
+    window.resetComposerState();
+    const drawer = window.composerDrawer || document.getElementById('composer-drawer');
+    if (drawer) drawer.style.display = 'flex';
+    if (typeof resetSelectionToCore === 'function') resetSelectionToCore();
+    const textEl = document.getElementById('composer-text');
+    if (textEl) {
+      textEl.value = '';
+      textEl.focus();
+    }
+  };
+var composerDrawer = window.composerDrawer || document.getElementById('composer-drawer');
     const settingsDrawer = document.getElementById('settings-drawer');
-    document.getElementById('btn-open-composer').addEventListener('click', () => {
-      composerDrawer.style.display = 'flex';
-      resetSelectionToCore();
-      document.getElementById('composer-text').focus();
-    });
+    document.getElementById('btn-open-composer').addEventListener('click', () => { window.openComposer(); });
     document.getElementById('btn-open-settings').addEventListener('click', () => {
       settingsDrawer.style.display = 'flex';
     });
@@ -1744,11 +2076,13 @@
       settingsDrawer.style.display = 'none';
     });
     document.getElementById('btn-close-esc').addEventListener('click', () => {
-      composerDrawer.style.display = 'none';
-    });
+        window.resetComposerState();
+        composerDrawer.style.display = 'none';
+      });
     document.getElementById('btn-cancel-composer').addEventListener('click', () => {
-      composerDrawer.style.display = 'none';
-    });
+        window.resetComposerState();
+        composerDrawer.style.display = 'none';
+      });
     document.getElementById('btn-submit-broadcast').addEventListener('click', async () => {
       const text = document.getElementById('composer-text').value.trim();
       if (!text) {
@@ -1767,11 +2101,18 @@
       const isEdgeSync = edgeToggle ? edgeToggle.checked : false;
 
       const payload = {
-        account: 'pennant',
-        message: text,
-        targets: activeBays.length > 0 ? activeBays.join(',') : 'mastodon,bluesky,nostr',
-        scheduled_at: schedVal ? new Date(schedVal).toISOString() : new Date().toISOString(),
-      };
+          account: 'pennant',
+          message: text,
+          targets: activeBays.length > 0 ? activeBays.join(',') : 'mastodon,bluesky,nostr',
+          scheduled_at: schedVal ? new Date(schedVal).toISOString() : new Date().toISOString(),
+          image_path: '',
+        };
+
+        const previewImgEl = document.getElementById('media-thumbnail-img');
+        if (window.currentStagedMedia && previewImgEl && previewImgEl.src && previewImgEl.style.display !== 'none') {
+          payload.image_path = previewImgEl.src;
+          payload.alt_text = document.getElementById('composer-alt-text')?.value || '';
+        }
 
       if (schedVal && isEdgeSync) {
         payload.sync_to_edge = true;
@@ -1784,18 +2125,21 @@
           body: JSON.stringify(payload),
         });
         if (res.ok) {
-          document.getElementById('composer-text').value = '';
-          if (schedInput) schedInput.value = '';
-          composerDrawer.style.display = 'none';
-          alert('Transmission Record Enqueued Successfully' + (payload.sync_to_edge ? ' (Edge Relay Synced)' : '') + '!');
-        } else {
-          const err = await res.json();
-          alert('Failed to enqueue transmission: ' + (err.error || res.statusText));
+              document.getElementById('composer-text').value = '';
+              if (schedInput) schedInput.value = '';
+              window.resetComposerState();
+              composerDrawer.style.display = 'none';
+            if (typeof window.hydrateAllDeckStreams === 'function') {
+              window.hydrateAllDeckStreams();
+            }
+          } else {
+            const err = await res.json();
+            alert('Failed to enqueue transmission: ' + (err.error || res.statusText));
+          }
+        } catch (e) {
+          alert('Transmission error: ' + e.message);
         }
-      } catch (e) {
-        alert('Transmission error: ' + e.message);
-      }
-    });
+      });
 
         // --- Header & Modal Interactivity Hooks ---
     var btnOpenColBuilder = window.btnOpenColBuilder || document.getElementById('btn-open-col-builder');
@@ -1818,19 +2162,21 @@
       btnConfirmMountCol.onclick = () => {
         const type = document.getElementById('new-col-type').value;
         const param = (document.getElementById('new-col-param').value || '').trim();
+          const acctEl = document.getElementById('new-col-account');
+          const chosenAcct = (acctEl && acctEl.value) ? acctEl.value.trim() : '';
         const cid = 'col_' + Date.now();
 
         let newCol = { id: cid, label: 'Custom Stream', protocol: 'Custom', badge: 'badge-queue', sub: 'Active Stream', query: param };
         if (type === 'bsky_home') {
-          newCol = { id: cid, label: param || 'Bluesky Timeline', protocol: 'ATProto', badge: 'badge-bsky', sub: 'Home Feed', query: param || 'home' };
+          newCol = { id: cid, label: chosenAcct ? chosenAcct : (param || 'Bluesky Timeline'), protocol: 'ATProto', badge: 'badge-bsky', sub: chosenAcct ? 'Home Feed (' + chosenAcct + ')' : 'Home Feed', query: param || 'home', account: chosenAcct };
         } else if (type === 'bsky_tag') {
           newCol = { id: cid, label: param || '#buildinpublic', protocol: 'ATProto', badge: 'badge-bsky', sub: 'Tag Stream', query: param || '#buildinpublic' };
         } else if (type === 'masto_feed') {
-          newCol = { id: cid, label: param || 'Fediverse Public', protocol: 'ActivityPub', badge: 'badge-masto', sub: 'Federated Stream', query: param || 'public' };
+          newCol = { id: cid, label: chosenAcct ? chosenAcct : (param || 'Fediverse Public'), protocol: 'ActivityPub', badge: 'badge-masto', sub: chosenAcct ? 'Fediverse (' + chosenAcct + ')' : 'Federated Stream', query: param || 'public', account: chosenAcct };
         } else if (type === 'nostr_relay') {
-          newCol = { id: cid, label: param || 'Relay Pool', protocol: 'Nostr', badge: 'badge-nostr', sub: 'Relay Firehose', query: param || 'wss://relay.damus.io' };
+          newCol = { id: cid, label: chosenAcct ? chosenAcct : (param || 'Relay Pool'), protocol: 'Nostr', badge: 'badge-nostr', sub: chosenAcct ? 'Nostr (' + chosenAcct + ')' : 'Relay Firehose', query: param || 'wss://relay.damus.io', account: chosenAcct };
         } else if (type === 'outbox_queue') {
-          newCol = { id: cid, label: 'Outbox Ledger', protocol: 'SQLite WAL', badge: 'badge-queue', sub: 'Persistent Ledger', query: 'local_wal' };
+          newCol = { id: cid, label: 'Outbox Delivery Queue', protocol: 'SQLite WAL', badge: 'badge-queue', sub: 'Persistent Ledger', query: 'local_wal' };
         }
 
         activeDeckColumns.push(newCol);
@@ -1844,7 +2190,7 @@
     var btnOpenComposer = window.btnOpenComposer || document.getElementById('btn-open-composer');
     var composerDrawer = window.composerDrawer || document.getElementById('composer-drawer');
     if (btnOpenComposer && composerDrawer) {
-      btnOpenComposer.onclick = () => { composerDrawer.style.display = 'flex'; };
+      btnOpenComposer.onclick = () => { window.openComposer(); };
     }
     
     // --- Interactive Protocol Rocker Switch Handlers ---
@@ -1882,6 +2228,9 @@
 
 <script id="pennant-account-manager-script">
 (function() {
+  // Ephemeral In-Memory Vault for active session keys (never written to disk/localStorage)
+  window.PennantSessionVault = window.PennantSessionVault || new Map();
+
   function getAccounts() {
     try {
       return JSON.parse(localStorage.getItem('pennant_accounts') || '[]');
@@ -1891,7 +2240,13 @@
   }
 
   function saveAccounts(accounts) {
-    localStorage.setItem('pennant_accounts', JSON.stringify(accounts));
+    // SECURITY SANITIZER: Ensure no secret/nsec is EVER written to persistent localStorage
+    const sanitized = accounts.map(a => {
+      const copy = { bus: a.bus, handle: a.handle, authType: a.authType || 'token' };
+      if (a.pubkey) copy.pubkey = a.pubkey;
+      return copy;
+    });
+    localStorage.setItem('pennant_accounts', JSON.stringify(sanitized));
     renderAccounts();
   }
 
@@ -1907,8 +2262,9 @@
     accounts.forEach((acct, idx) => {
       const row = document.createElement('div');
       row.style.cssText = 'display:flex; justify-content:space-between; align-items:center; background:#111319; padding:8px 10px; border:1px solid #232832; border-radius:2px; font-size:12px; font-family:var(--font-mono);';
-      row.innerHTML = '<span><strong style="color:#00ffaa; text-transform:uppercase;">[' + acct.bus + ']</strong> ' + acct.handle + '</span>' +
-        '<button data-idx="' + idx + '" class="btn-remove-account" style="background:#ef444422; border:1px solid #ef4444; color:#ef4444; padding:2px 6px; font-size:10px; cursor:pointer;">DISCONNECT ✕</button>';
+      const secBadge = acct.authType === 'nip07' ? '<span style="color:#38bdf8; font-size:10px; margin-left:6px;">[NIP-07 ZERO CUSTODY]</span>' : '<span style="color:#00ffaa; font-size:10px; margin-left:6px;">[SECURED SESSION]</span>';
+      row.innerHTML = '<span><strong style="color:#00ffaa; text-transform:uppercase;">[' + acct.bus + ']</strong> ' + acct.handle + ' ' + secBadge + '</span>' +
+        '<button data-idx="' + idx + '" class="btn-remove-account" style="background:#ef444422; border:1px solid #ef4444; color:#ef4444; padding:2px 6px; font-size:10px; cursor:pointer;">DISCONNECT &#10005;</button>';
       roster.appendChild(row);
     });
 
@@ -1917,7 +2273,10 @@
         e.stopPropagation();
         const index = parseInt(this.getAttribute('data-idx'));
         const current = getAccounts();
-        current.splice(index, 1);
+        const removed = current.splice(index, 1);
+        if (removed && removed[0]) {
+          window.PennantSessionVault.delete(removed[0].handle);
+        }
         saveAccounts(current);
       });
     });
@@ -1928,36 +2287,863 @@
     const tray = document.getElementById('add-acct-tray');
     const cancelBtn = document.getElementById('btn-cancel-acct');
     const saveBtn = document.getElementById('btn-save-acct');
+    const nip07Btn = document.getElementById('btn-connect-nip07');
+    const busSelect = document.getElementById('input-acct-bus');
+    const nip07Box = document.getElementById('box-nip07-option');
+
+    function syncProtocolView() {
+      if (!busSelect || !nip07Box) return;
+      if (busSelect.value === 'nostr') {
+        nip07Box.style.display = 'flex';
+      } else {
+        nip07Box.style.display = 'none';
+      }
+    }
+
+    if (busSelect) busSelect.addEventListener('change', syncProtocolView);
 
     if (toggleBtn && tray) {
       toggleBtn.addEventListener('click', () => {
         tray.style.display = tray.style.display === 'flex' ? 'none' : 'flex';
+        syncProtocolView();
       });
     }
     if (cancelBtn && tray) {
-      cancelBtn.addEventListener('click', () => {
-        tray.style.display = 'none';
+      cancelBtn.addEventListener('click', () => { tray.style.display = 'none'; });
+    }
+
+    // NIP-07 ZERO CUSTODY CONNECT
+    if (nip07Btn) {
+      nip07Btn.addEventListener('click', async () => {
+        if (!window.nostr) {
+          alert('NIP-07 Signer extension not found. Please install Alby or nos2x, or unlock your extension.');
+          return;
+        }
+        try {
+          const pubkey = await window.nostr.getPublicKey();
+          const handle = 'nostr:' + pubkey.slice(0, 8) + '...' + pubkey.slice(-4);
+          const accounts = getAccounts();
+          if (accounts.some(a => a.pubkey === pubkey)) {
+            alert('This Nostr identity is already connected.');
+            return;
+          }
+          accounts.push({ bus: 'nostr', handle: handle, pubkey: pubkey, authType: 'nip07' });
+          saveAccounts(accounts);
+          tray.style.display = 'none';
+          alert('Nostr Identity connected securely via NIP-07. Zero key custody active.');
+        } catch(err) {
+          alert('NIP-07 connection declined: ' + err.message);
+        }
       });
     }
+
+    // STANDARD SAVE (STRIPS RAW NSEC FROM LOCALSTORAGE)
     if (saveBtn) {
       saveBtn.addEventListener('click', () => {
         const bus = document.getElementById('input-acct-bus').value;
         const handle = document.getElementById('input-acct-handle').value.trim();
         const secret = document.getElementById('input-acct-secret').value.trim();
+
         if (!handle || !secret) {
-          alert('Error: Handle and Secret/Password are required.');
+          alert('Error: Both an identifier and authentication credential are required.');
           return;
         }
+
+        // Store secret in volatile in-memory vault ONLY
+        window.PennantSessionVault.set(handle, { bus, secret });
+
         const accounts = getAccounts();
-        accounts.push({ bus, handle, secret });
+        accounts.push({ bus, handle, authType: 'ephemeral' });
         saveAccounts(accounts);
+
         document.getElementById('input-acct-handle').value = '';
         document.getElementById('input-acct-secret').value = '';
         tray.style.display = 'none';
       });
     }
+
     renderAccounts();
   });
+})();
+</script>
+
+
+<script id="tweetdeck-parity-script">
+(function() {
+  // Column Reordering (Shift Left/Right)
+  window.shiftColumn = function(colId, direction) {
+    if (typeof activeDeckColumns === 'undefined' || !activeDeckColumns) return;
+    const idx = activeDeckColumns.findIndex(c => c.id === colId);
+    if (idx < 0) return;
+    const targetIdx = idx + direction;
+    if (targetIdx < 0 || targetIdx >= activeDeckColumns.length) return;
+    const temp = activeDeckColumns[idx];
+    activeDeckColumns[idx] = activeDeckColumns[targetIdx];
+    activeDeckColumns[targetIdx] = temp;
+    if (typeof saveDeckColumns === 'function') saveDeckColumns();
+    if (typeof renderDeck === 'function') renderDeck();
+  };
+
+  // TweetDeck Keyboard Navigation
+  let activeCardIndex = -1;
+  window.addEventListener('keydown', (e) => {
+    const activeTag = document.activeElement ? document.activeElement.tagName.toLowerCase() : '';
+    if (activeTag === 'input' || activeTag === 'textarea' || activeTag === 'select') {
+      if (e.key === 'Escape') document.activeElement.blur();
+      return;
+    }
+
+    // N -> Open Composer
+    if (e.key === 'n' || e.key === 'N') {
+      e.preventDefault();
+      const compBtn = document.getElementById('btn-open-composer');
+      if (compBtn) compBtn.click();
+    }
+
+    // 1-9 -> Jump to Column
+    if (e.key >= '1' && e.key <= '9') {
+      const colNum = parseInt(e.key) - 1;
+      const cols = document.querySelectorAll('.deck-column:not(.hidden-col)');
+      if (cols[colNum]) cols[colNum].scrollIntoView({ behavior: 'smooth', inline: 'start' });
+    }
+
+    // J / K -> Card Navigation
+    const allCards = Array.from(document.querySelectorAll('.deck-column:not(.hidden-col) .card'));
+    if (allCards.length > 0) {
+      if (e.key === 'j' || e.key === 'J') {
+        e.preventDefault();
+        if (activeCardIndex < allCards.length - 1) activeCardIndex++;
+        allCards.forEach(c => c.classList.remove('card-kb-active'));
+        allCards[activeCardIndex].classList.add('card-kb-active');
+        allCards[activeCardIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+      if (e.key === 'k' || e.key === 'K') {
+        e.preventDefault();
+        if (activeCardIndex > 0) activeCardIndex--;
+        allCards.forEach(c => c.classList.remove('card-kb-active'));
+        allCards[activeCardIndex].classList.add('card-kb-active');
+        allCards[activeCardIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+      // R -> Reply to Selected Card
+      if ((e.key === 'r' || e.key === 'R') && activeCardIndex >= 0) {
+        const sel = allCards[activeCardIndex];
+        const authEl = sel.querySelector('.author-name');
+        if (authEl && typeof openReply === 'function') openReply(authEl.innerText.trim());
+      }
+      // L -> Like Selected Card
+      if ((e.key === 'l' || e.key === 'L') && activeCardIndex >= 0) {
+        const likeBtn = allCards[activeCardIndex].querySelector('.btn-deck-act:last-child');
+        if (likeBtn && typeof toggleLike === 'function') toggleLike(likeBtn);
+      }
+    }
+
+    // Escape -> Close all modals/drawers
+    if (e.key === 'Escape') {
+      ['composer-drawer', 'settings-drawer', 'col-builder-drawer', 'col-manager-drawer'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+      });
+    }
+  });
+})();
+</script>
+
+
+<script id="account-form-dynamic-script">
+(function() {
+  function updateAccountFormFields() {
+    const busEl = document.getElementById('input-acct-bus');
+    const lblHandle = document.getElementById('lbl-acct-handle');
+    const inputHandle = document.getElementById('input-acct-handle');
+    const lblSecret = document.getElementById('lbl-acct-secret');
+    const inputSecret = document.getElementById('input-acct-secret');
+    const helpSecret = document.getElementById('help-acct-secret');
+
+    if (!busEl || !lblHandle || !inputHandle || !lblSecret || !inputSecret || !helpSecret) return;
+
+    const bus = busEl.value;
+    if (bus === 'bluesky') {
+      lblHandle.innerText = 'Bluesky Handle';
+      inputHandle.placeholder = 'e.g. username.bsky.social';
+      lblSecret.innerText = 'App Password';
+      inputSecret.placeholder = 'xxxx-xxxx-xxxx-xxxx';
+      helpSecret.innerText = 'Do NOT use your main account password. Create an App Password in Bluesky Settings → App Passwords.';
+    } else if (bus === 'mastodon') {
+      lblHandle.innerText = 'Mastodon Handle & Instance';
+      inputHandle.placeholder = 'e.g. @username@mastodon.social';
+      lblSecret.innerText = 'Personal Access Token';
+      inputSecret.placeholder = 'Bearer token string';
+      helpSecret.innerText = 'Generate an Access Token with read + write scopes in Preferences → Development → New Application.';
+    } else if (bus === 'nostr') {
+      lblHandle.innerText = 'Display Name / NIP-05 (Optional)';
+      inputHandle.placeholder = 'e.g. woody or woody@domain.com';
+      lblSecret.innerText = 'Nostr Private Key (nsec)';
+      inputSecret.placeholder = 'nsec1... or 64-character hex private key';
+      helpSecret.innerText = 'Nostr accounts are cryptographic keys. Pennant keeps your nsec strictly local for message signing.';
+    }
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const busEl = document.getElementById('input-acct-bus');
+    if (busEl) busEl.addEventListener('change', updateAccountFormFields);
+  });
+  const busEl = document.getElementById('input-acct-bus');
+  if (busEl) busEl.addEventListener('change', updateAccountFormFields);
+})();
+</script>
+
+
+  <!-- Column Inspector / Parameter Modal -->
+  <div class="modal-overlay" id="col-inspector-modal" style="display:none;">
+    <div class="chassis-window" style="width: 520px; max-width: 92vw; background: #0c0e14; border: 1px solid #00ffaa66; box-shadow: 0 10px 30px rgba(0,0,0,0.8);">
+      <div class="window-top" style="display:flex; justify-content:space-between; align-items:center; padding:10px 14px; background:#111520; border-bottom:1px solid #1e2433;">
+        <span style="font-family:var(--font-masthead); font-size:12px; font-weight:700; color:#00ffaa; letter-spacing:0.5px;">// STREAM PARAMETER INSPECTOR</span>
+        <span style="cursor:pointer; color:var(--text-muted); font-size:12px;" onclick="closeColumnInspector()">[ESC]</span>
+      </div>
+      <div class="window-body" style="padding:16px; display:flex; flex-direction:column; gap:12px;">
+        <input type="hidden" id="inspect-col-id" />
+
+        <div style="display:flex; flex-direction:column; gap:4px;">
+          <label style="font-size:10px; color:#94a3b8; text-transform:uppercase; font-family:var(--font-col-header);">Column Display Label</label>
+          <input id="inspect-col-label" style="background:#111319; border:1px solid #2b313d; color:#f1f5f9; padding:8px; font-size:12px; font-family:var(--font-mono); border-radius:2px;" />
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:4px;">
+          <label style="font-size:10px; color:#94a3b8; text-transform:uppercase; font-family:var(--font-col-header);">Associated Account / Identity</label>
+          <select id="inspect-col-account" style="background:#111319; border:1px solid #2b313d; color:#00ffaa; padding:8px; font-size:12px; font-family:var(--font-mono); border-radius:2px;">
+            <option value="">Public / Unauthenticated Stream</option>
+          </select>
+          <span style="font-size:9.5px; color:#64748b; font-family:var(--font-mono);">Which authenticated identity provides session credentials for this stream.</span>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:4px;">
+          <label style="font-size:10px; color:#94a3b8; text-transform:uppercase; font-family:var(--font-col-header);">Stream Target / Parameter</label>
+          <input id="inspect-col-query" style="background:#111319; border:1px solid #2b313d; color:#f1f5f9; padding:8px; font-size:12px; font-family:var(--font-mono); border-radius:2px;" />
+          <span id="inspect-col-query-help" style="font-size:9.5px; color:#64748b; font-family:var(--font-mono);">Target query: Hashtag (#tag), Relay URL (wss://...), Server Instance (https://...), or local WAL.</span>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:4px;">
+          <label style="font-size:10px; color:#94a3b8; text-transform:uppercase; font-family:var(--font-col-header);">Protocol Archetype & Scope</label>
+          <input id="inspect-col-sub" style="background:#111319; border:1px solid #2b313d; color:#94a3b8; padding:8px; font-size:12px; font-family:var(--font-mono); border-radius:2px;" />
+        </div>
+
+        <div style="display:flex; justify-content:space-between; margin-top:10px; gap:8px;">
+          <button onclick="closeColumnInspector()" style="background:#2b313d; color:#fff; border:none; padding:8px 14px; font-family:var(--font-col-header); font-size:11px; cursor:pointer; border-radius:2px;">CANCEL</button>
+          <button onclick="saveColumnInspector()" style="flex:1; background:#00ffaa; color:#000; border:none; padding:8px; font-weight:bold; font-family:var(--font-col-header); font-size:11px; cursor:pointer; border-radius:2px;">SAVE PARAMETERS &#8599;</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+<script id="column-inspector-script">
+function openColumnInspector(colId) {
+  const col = activeDeckColumns.find(c => c.id === colId);
+  if (!col) return;
+
+  const modal = document.getElementById('col-inspector-modal');
+  const idInput = document.getElementById('inspect-col-id');
+  const labelInput = document.getElementById('inspect-col-label');
+  const acctSelect = document.getElementById('inspect-col-account');
+  const queryInput = document.getElementById('inspect-col-query');
+  const subInput = document.getElementById('inspect-col-sub');
+
+  idInput.value = col.id;
+  labelInput.value = col.label || '';
+  queryInput.value = col.query || '';
+  subInput.value = col.sub || '';
+
+  // Hydrate accounts dropdown
+  acctSelect.innerHTML = '<option value="">Public / Unauthenticated Stream</option>';
+  try {
+    const accounts = JSON.parse(localStorage.getItem('pennant_accounts') || '[]');
+    accounts.forEach(acct => {
+      const opt = document.createElement('option');
+      opt.value = acct.handle;
+      opt.innerText = '[' + (acct.bus || 'CORE').toUpperCase() + '] ' + acct.handle;
+      if (col.account === acct.handle) opt.selected = true;
+      acctSelect.appendChild(opt);
+    });
+  } catch(e) {}
+
+  modal.style.display = 'flex';
+}
+
+function closeColumnInspector() {
+  const modal = document.getElementById('col-inspector-modal');
+  if (modal) modal.style.display = 'none';
+}
+
+function saveColumnInspector() {
+  const colId = document.getElementById('inspect-col-id').value;
+  const col = activeDeckColumns.find(c => c.id === colId);
+  if (!col) return;
+
+  col.label = document.getElementById('inspect-col-label').value.trim() || col.label;
+  col.account = document.getElementById('inspect-col-account').value.trim();
+  col.query = document.getElementById('inspect-col-query').value.trim();
+  col.sub = document.getElementById('inspect-col-sub').value.trim();
+
+  saveDeckColumns();
+  renderDeck();
+  closeColumnInspector();
+}
+</script>
+
+
+<script id="pennant-live-stream-engine">
+(function() {
+  const nostrState = new Map(); // colId -> { ws, isPaused, buffer }
+
+  function renderCard(colId, post) {
+    const container = document.getElementById('cards-' + colId);
+    if (!container) return;
+    if (post.id && container.querySelector('[data-post-id="' + post.id + '"]')) return;
+
+    const card = document.createElement('div');
+    card.className = 'card';
+    if (post.id) card.setAttribute('data-post-id', post.id);
+
+    const timeStr = post.created_at ? new Date(post.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const authorHandle = post.authorHandle || post.author || 'Anonymous';
+    const authorName = post.authorName || authorHandle;
+    const bodyText = post.content || '';
+
+    // Media Deck Generator
+    let mediaHtml = '';
+    const images = Array.isArray(post.images) ? post.images.filter(Boolean) : [];
+    if (images.length > 0) {
+      const gridClass = 'grid-' + Math.min(images.length, 4);
+      mediaHtml = '<div class="card-media-deck ' + gridClass + '">';
+      images.slice(0, 4).forEach(img => {
+        const thumbUrl = typeof img === 'string' ? img : (img.thumb || img.url);
+        const fullUrl = typeof img === 'string' ? img : (img.fullsize || img.url || img.thumb);
+        const altText = (typeof img === 'object' && img.alt) ? img.alt.replace(/"/g, '&quot;') : '';
+        mediaHtml += '<img class="media-thumb" src="' + thumbUrl + '" alt="' + altText + '" loading="lazy" onclick="window.open(\'' + fullUrl + '\', \'_blank\')" />';
+      });
+      mediaHtml += '</div>';
+    }
+
+    card.innerHTML =
+      '<div class="card-meta" style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:6px;">' +
+        '<span class="author-name" style="font-weight:bold; color:#00ffaa; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:70%;">' + authorName + ' <span style="font-weight:normal; color:#64748b; font-size:10px;">' + authorHandle + '</span></span>' +
+        '<span style="color:#64748b;">' + timeStr + '</span>' +
+      '</div>' +
+      '<div style="font-size:12.5px; line-height:1.45; word-break:break-word; color:#e2e8f0; margin-bottom:4px;">' + bodyText + '</div>' +
+      mediaHtml +
+      '<div class="in-deck-actions" style="display:flex; gap:6px;">' +
+        '<button class="btn-deck-act" onclick="openReply(\'' + authorHandle.replace(/'/g, "\'") + '\')">&#8617; REPLY</button>' +
+        '<button class="btn-deck-act" onclick="this.classList.toggle(\'boosted\')">&#10227; BOOST</button>' +
+        '<button class="btn-deck-act" onclick="this.classList.toggle(\'liked\')">&#9733; LIKE</button>' +
+      '</div>';
+
+    container.prepend(card);
+    while (container.children.length > 40) {
+      container.removeChild(container.lastChild);
+    }
+  }
+
+  // 1. Mastodon Stream with Honest Status Feedback
+    async function hydrateMastodonColumn(col) {
+    const container = document.getElementById('cards-' + col.id);
+    if (!container) return;
+    try {
+      let raw = (col.query || 'fosstodon.org').trim();
+      let host = raw.replace('https://', '').replace('http://', '').split('/')[0];
+      if (!host || host.startsWith('@')) host = 'fosstodon.org';
+      const res = await fetch('https://' + host + '/api/v1/timelines/public?limit=15');
+      if (res.status === 422 || res.status === 401) {
+        container.innerHTML =
+          '<div class="card" style="border:1px solid #55278c; background:#181024;">' +
+            '<div class="card-meta"><span style="color:#c084fc; font-weight:bold;">FEDIVERSE AUTH REQUIRED</span><span>HTTP ' + res.status + '</span></div>' +
+            '<div style="font-size:11.5px; color:#cbd5e1; margin-top:6px; line-height:1.4;">' +
+              '<code>' + host + '</code> has disabled unauthenticated public firehoses to mitigate web scraping.<br><br>' +
+              'To view feeds from this server, click <strong>⚙ CONFIG / ABOUT &rarr; + CONNECT ACCOUNT</strong> and add your Mastodon access token.' +
+            '</div>' +
+          '</div>';
+        return;
+      }
+      if (!res.ok) {
+        container.innerHTML = '<div style="color:#94a3b8; font-size:11px; padding:10px;">Instance returned HTTP ' + res.status + '.</div>';
+        return;
+      }
+      const data = await res.json();
+      container.innerHTML = '';
+      data.reverse().forEach(status => {
+        // Strip basic wrapper HTML tags if needed, or let browser sanitize
+        renderCard(col.id, {
+          id: 'masto_' + status.id,
+          authorName: status.account.display_name || status.account.username,
+          authorHandle: '@' + status.account.acct,
+            content: status.content,
+            images: (status.media_attachments || []).map(m => m.preview_url || m.url),
+            created_at: status.created_at
+        });
+      });
+    } catch(err) {
+      container.innerHTML = '<div style="color:#94a3b8; font-size:11px; padding:10px;">Network error connecting to instance.</div>';
+    }
+  }
+
+  // 2. Bluesky Stream with Honest Status Feedback
+    async function hydrateBlueskyColumn(col) {
+    const container = document.getElementById('cards-' + col.id);
+    if (!container) return;
+    try {
+      let actor = (col.query || 'bsky.app').replace(/^@/, '').trim();
+      if (actor.startsWith('#') || !actor) actor = 'bsky.app';
+      const url = 'https://public.api.bsky.app/xrpc/app.bsky.feed.getAuthorFeed?actor=' + encodeURIComponent(actor) + '&limit=15';
+      const res = await fetch(url);
+      if (!res.ok) {
+        container.innerHTML =
+          '<div class="card" style="border:1px solid #1a4d7d; background:#0c1a29;">' +
+            '<div class="card-meta"><span style="color:#60a5fa; font-weight:bold;">ATPROTO FEED ERROR</span><span>HTTP ' + res.status + '</span></div>' +
+            '<div style="font-size:11.5px; color:#cbd5e1; margin-top:6px; line-height:1.4;">' +
+              'Could not load actor feed for <code>@' + actor + '</code>.<br><br>' +
+              'Ensure the handle exists on ATProto or connect your App Password in ⚙ CONFIG / ABOUT.' +
+            '</div>' +
+          '</div>';
+        return;
+      }
+      const data = await res.json();
+      container.innerHTML = '';
+      if (data.feed && data.feed.length > 0) {
+        data.feed.forEach(item => {
+          const post = item.post;
+          if (!post) return;
+          renderCard(col.id, {
+            id: 'bsky_' + (post.cid || Math.random()),
+            authorName: (post.author && (post.author.displayName || post.author.handle)) || 'Bluesky User',
+            authorHandle: '@' + (post.author ? post.author.handle : 'unknown'),
+            content: post.record ? post.record.text : '',
+            images: (function() {
+              const imgs = [];
+              const emb = post.embed;
+              if (emb) {
+                if (emb.images && Array.isArray(emb.images)) {
+                  emb.images.forEach(i => imgs.push({ thumb: i.thumb, fullsize: i.fullsize, alt: i.alt }));
+                } else if (emb.media && emb.media.images && Array.isArray(emb.media.images)) {
+                  emb.media.images.forEach(i => imgs.push({ thumb: i.thumb, fullsize: i.fullsize, alt: i.alt }));
+                } else if (emb.external && emb.external.thumb) {
+                  imgs.push({ thumb: emb.external.thumb, fullsize: emb.external.uri, alt: emb.external.title });
+                }
+              }
+              return imgs;
+            })(),
+            created_at: post.record ? post.record.createdAt : post.indexedAt
+          });
+        });
+      } else {
+        container.innerHTML = '<div style="color:#64748b; font-size:11px; padding:12px;">No posts found for this actor feed.</div>';
+      }
+    } catch(err) {
+      container.innerHTML = '<div style="color:#94a3b8; font-size:11px; padding:10px;">Network error reaching ATProto AppView.</div>';
+    }
+  }
+
+  // Persistent Nostr State Map
+    window.nostrUserPaused = window.nostrUserPaused || new Map();
+
+    window.toggleNostrPause = function(colId) {
+      const state = nostrState.get(colId);
+      const isCurrentlyPaused = window.nostrUserPaused.get(colId) || (state && state.isPaused);
+      const nextPaused = !isCurrentlyPaused;
+
+      window.nostrUserPaused.set(colId, nextPaused);
+      if (state) {
+        state.isPaused = nextPaused;
+      }
+
+      const btn = document.getElementById('btn-nostr-pause-' + colId);
+      if (btn) {
+        btn.innerText = nextPaused ? '▶ LIVE' : '⏸ PAUSE';
+        btn.style.color = nextPaused ? '#fbbf24' : '#00ffaa';
+        btn.title = nextPaused ? 'Firehose Paused. Click to resume live streaming.' : 'Live streaming. Click to pause firehose.';
+      }
+      console.log('[NOSTR] Column ' + colId + ' pause state permanently set to:', nextPaused);
+    };
+
+        function connectNostrColumn(col) {
+      // If already connected and active, do not tear down or wipe cards
+      if (nostrState.has(col.id) && nostrState.get(col.id).ws && nostrState.get(col.id).ws.readyState <= 1) {
+        return;
+      }
+      const container = document.getElementById('cards-' + col.id);
+      if (!container) return;
+
+      const userPrefPause = window.nostrUserPaused.has(col.id) ? window.nostrUserPaused.get(col.id) : false;
+
+      // Inject pause toggle button into column header if not present
+      const colHeader = document.querySelector('#col-' + col.id + ' .col-header-controls');
+      let pauseBtn = document.getElementById('btn-nostr-pause-' + col.id);
+      if (colHeader && !pauseBtn) {
+        pauseBtn = document.createElement('button');
+        pauseBtn.id = 'btn-nostr-pause-' + col.id;
+        pauseBtn.className = 'btn-col-shift';
+        pauseBtn.style.cssText = 'font-size:10px; font-weight:bold; margin-right:4px; padding:2px 6px; cursor:pointer;';
+        pauseBtn.onclick = () => window.toggleNostrPause(col.id);
+        colHeader.prepend(pauseBtn);
+      }
+
+      if (pauseBtn) {
+        pauseBtn.innerText = userPrefPause ? '▶ LIVE' : '⏸ PAUSE';
+        pauseBtn.style.color = userPrefPause ? '#fbbf24' : '#00ffaa';
+      }
+
+      if (nostrState.has(col.id)) {
+        try { nostrState.get(col.id).ws.close(); } catch(e) {}
+      }
+
+      const state = { ws: null, isPaused: userPrefPause, count: 0, autoPaused: userPrefPause };
+      nostrState.set(col.id, state);
+
+      const relays = [col.query || 'wss://relay.damus.io', 'wss://nos.lol', 'wss://relay.primal.net'];
+      let currentRelayIdx = 0;
+
+      function tryConnectRelay() {
+        if (currentRelayIdx >= relays.length) {
+          container.innerHTML = '<div style="color:#ef4444; font-size:11px; padding:8px;">All relays unreachable. Check local network connection.</div>';
+          return;
+        }
+        const relayUrl = relays[currentRelayIdx];
+        container.innerHTML = '<div style="color:#64748b; font-size:11px; padding:8px; font-family:var(--font-mono);">Connecting to ' + relayUrl + '...</div>';
+
+        try {
+          const ws = new WebSocket(relayUrl);
+          state.ws = ws;
+
+          ws.onopen = () => {
+            container.innerHTML = '';
+            const subId = 'pennant_' + col.id;
+            ws.send(JSON.stringify(["REQ", subId, { kinds: [1], limit: 20 }]));
+          };
+
+          ws.onmessage = (event) => {
+            if (state.isPaused || window.nostrUserPaused.get(col.id)) return;
+            try {
+              const msg = JSON.parse(event.data);
+              if (msg[0] === 'EVENT' && msg[2] && msg[2].kind === 1) {
+                const ev = msg[2];
+                const shortPub = ev.pubkey.slice(0, 8) + '...' + ev.pubkey.slice(-4);
+                renderCard(col.id, {
+                  id: 'nostr_' + ev.id,
+                  authorName: shortPub,
+                  authorHandle: 'npub:' + shortPub,
+                  content: ev.content.replace(/https?:\/\/[^\s]+\.(?:png|jpg|jpeg|gif|webp)(?:\?[^\s]*)?/gi, '').trim(),
+                  images: (ev.content.match(/https?:\/\/[^\s]+\.(?:png|jpg|jpeg|gif|webp)(?:\?[^\s]*)?/gi) || []),
+                  created_at: ev.created_at * 1000
+                });
+                state.count++;
+                if (state.count >= 20 && !state.autoPaused) {
+                  state.autoPaused = true;
+                  state.isPaused = true;
+                  window.nostrUserPaused.set(col.id, true);
+                  const b = document.getElementById('btn-nostr-pause-' + col.id);
+                  if (b) {
+                    b.innerText = '▶ LIVE';
+                    b.style.color = '#fbbf24';
+                  }
+                  console.log('[NOSTR] 20 notes loaded. Firehose locked paused.');
+                }
+              }
+            } catch(e) {}
+          };
+
+          ws.onerror = () => {
+            currentRelayIdx++;
+            tryConnectRelay();
+          };
+        } catch(err) {
+          currentRelayIdx++;
+          tryConnectRelay();
+        }
+      }
+
+      tryConnectRelay();
+    }
+
+  // 4. Honest SQLite WAL Ledger Queue (No Fake Placeholder Cards)
+    async function hydrateOutboxColumn(col) {
+    const container = document.getElementById('cards-' + col.id);
+    if (!container) return;
+
+    try {
+      const res = await fetch('/schedule');
+      if (!res.ok) throw new Error('Daemon HTTP ' + res.status);
+      const entries = await res.json();
+
+      container.innerHTML = '';
+      if (!Array.isArray(entries) || entries.length === 0) {
+        container.innerHTML =
+          '<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:32px 16px; text-align:center; color:#64748b; font-family:var(--font-mono);">' +
+            '<div style="font-size:18px; margin-bottom:8px; color:#4ade8044;">&#9744;</div>' +
+            '<div style="font-size:11px; font-weight:bold; color:#94a3b8; text-transform:uppercase;">Outbox Ledger Empty</div>' +
+            '<div style="font-size:10px; margin-top:4px;">0 pending broadcasts in SQLite WAL database (pennant.db).</div>' +
+          '</div>';
+        return;
+      }
+
+      entries.slice().reverse().forEach(entry => {
+        const card = document.createElement('div');
+        card.className = 'card';
+
+        const statusUpper = (entry.status || 'PENDING').toUpperCase();
+        let statusColor = '#94a3b8';
+        let borderColor = '#232832';
+        if (statusUpper === 'PENDING') { statusColor = '#fbbf24'; borderColor = '#78350f'; }
+        else if (statusUpper === 'PROCESSING') { statusColor = '#38bdf8'; borderColor = '#0369a1'; }
+        else if (statusUpper === 'PUBLISHED' || statusUpper === 'COMPLETED') { statusColor = '#4ade80'; borderColor = '#15803d'; }
+        else if (statusUpper === 'FAILED') { statusColor = '#f87171'; borderColor = '#991b1b'; }
+
+        card.style.borderColor = borderColor;
+
+        const targetsList = entry.targets ? entry.targets.split(',').map(t => t.trim().toUpperCase()).join(' · ') : 'ALL';
+        const displayTime = entry.scheduled_at ? new Date(entry.scheduled_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
+
+        let mediaMarkup = '';
+          if (entry.image_path) {
+            mediaMarkup = '<div style="margin-top:6px; border-radius:4px; overflow:hidden; border:1px solid #334155; background:#000; max-height:140px; display:flex; align-items:center; justify-content:center;">' +
+              '<img src="' + entry.image_path + '" style="width:100%; max-height:140px; object-fit:cover; display:block;" alt="Attached Media" />' +
+            '</div>';
+          }
+
+          card.innerHTML =
+            '<div class="card-meta">' +
+              '<span style="color:' + statusColor + '; font-weight:700; font-size:10px; letter-spacing:0.05em;">[' + statusUpper + '] #' + entry.id + '</span>' +
+              '<span style="color:#64748b; font-size:10px;">' + (displayTime || '') + '</span>' +
+            '</div>' +
+            '<div style="font-size:10px; color:#a78bfa; margin: 3px 0; font-family:var(--font-mono);">' + targetsList + ' &bull; ' + (entry.account || 'pennant') + '</div>' +
+            '<div style="font-size:12px; color:#e2e8f0; margin-top:4px; line-height:1.4; word-break:break-word;">' + (entry.message || '') + '</div>' +
+            mediaMarkup;
+
+        container.appendChild(card);
+      });
+    } catch(err) {
+      container.innerHTML =
+        '<div style="padding:16px; color:#94a3b8; font-size:11px; font-family:var(--font-mono);">' +
+          '<span style="color:#fbbf24;">// WAL LEDGER DISCONNECTED</span><br>' +
+          'Could not reach local daemon on /schedule.<br>' +
+          'Verify node pennant-launcher.js is running on port 7420.' +
+        '</div>';
+    }
+  }
+
+  // Public Hydration Dispatcher
+  window.hydrateAllDeckStreams = function() {
+    if (typeof activeDeckColumns === 'undefined' || !activeDeckColumns) return;
+    activeDeckColumns.forEach(col => {
+      if (col.protocol === 'ActivityPub') {
+        hydrateMastodonColumn(col);
+      } else if (col.protocol === 'ATProto') {
+        hydrateBlueskyColumn(col);
+      } else if (col.protocol === 'Nostr') {
+        connectNostrColumn(col);
+      } else if (col.protocol === 'SQLite WAL') {
+        hydrateOutboxColumn(col);
+      }
+    });
+  };
+
+  window.addEventListener('DOMContentLoaded', () => { setTimeout(window.hydrateAllDeckStreams, 200); });
+  setTimeout(window.hydrateAllDeckStreams, 200);
+
+    // Auto-poll Outbox Queue every 3 seconds to update PENDING -> PUBLISHED without manual refresh
+    if (!window.outboxPollTimer) {
+      window.outboxPollTimer = setInterval(() => {
+        if (typeof activeDeckColumns !== 'undefined' && activeDeckColumns) {
+          const outboxCol = activeDeckColumns.find(c => c.protocol === 'SQLite WAL');
+          if (outboxCol) hydrateOutboxColumn(outboxCol);
+        }
+      }, 3000);
+    }
+  })();
+</script>
+
+<script id="pennant-scheduler-controller">
+(function() {
+  const btnNow = document.getElementById('btn-mode-now');
+  const btnSched = document.getElementById('btn-mode-sched');
+  const tray = document.getElementById('sched-picker-tray');
+  const timeInput = document.getElementById('composer-schedule-time');
+  const prevLabel = document.getElementById('sched-preview-label');
+  const submitBtn = document.getElementById('btn-submit-broadcast');
+
+  function updatePreview() {
+    if (!timeInput || !prevLabel) return;
+    if (timeInput.value) {
+      const d = new Date(timeInput.value);
+      prevLabel.innerText = 'Dispatch Target: ' + d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' (Local Device Time)';
+      prevLabel.style.color = '#00ffaa';
+    } else {
+      prevLabel.innerText = 'Dispatch Target: Immediate (Next polling loop)';
+      prevLabel.style.color = '#38bdf8';
+    }
+  }
+
+  if (timeInput) timeInput.addEventListener('change', updatePreview);
+
+  window.setSchedulerMode = function(isScheduled) {
+    if (!btnNow || !btnSched || !tray) return;
+    if (isScheduled) {
+      btnNow.style.background = 'transparent';
+      btnNow.style.borderColor = 'transparent';
+      btnNow.style.color = '#94a3b8';
+
+      btnSched.style.background = '#00ffaa22';
+      btnSched.style.borderColor = '#00ffaa';
+      btnSched.style.color = '#00ffaa';
+
+      tray.style.display = 'flex';
+      if (!timeInput.value) {
+        window.applySchedPreset(60);
+      }
+      if (submitBtn) submitBtn.innerText = 'ENQUEUE SCHEDULED ↗';
+    } else {
+      btnSched.style.background = 'transparent';
+      btnSched.style.borderColor = 'transparent';
+      btnSched.style.color = '#94a3b8';
+
+      btnNow.style.background = '#00ffaa22';
+      btnNow.style.borderColor = '#00ffaa';
+      btnNow.style.color = '#00ffaa';
+
+      tray.style.display = 'none';
+      if (timeInput) timeInput.value = '';
+      if (submitBtn) submitBtn.innerText = 'TRANSMIT RECORD';
+    }
+    updatePreview();
+  };
+
+  if (btnNow) btnNow.addEventListener('click', () => window.setSchedulerMode(false));
+  if (btnSched) btnSched.addEventListener('click', () => window.setSchedulerMode(true));
+
+  window.applySchedPreset = function(minutesOrPreset) {
+    if (!timeInput) return;
+    const now = new Date();
+    if (typeof minutesOrPreset === 'number') {
+      now.setMinutes(now.getMinutes() + minutesOrPreset);
+    } else if (minutesOrPreset === 'tomorrow9') {
+      now.setDate(now.getDate() + 1);
+      now.setHours(9, 0, 0, 0);
+    }
+    // Format to local ISO for datetime-local (YYYY-MM-DDTHH:mm)
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const mins = String(now.getMinutes()).padStart(2, '0');
+    timeInput.value = year + '-' + month + '-' + day + 'T' + hours + ':' + mins;
+    updatePreview();
+  };
+
+  window.clearSchedPreset = function() {
+    if (timeInput) timeInput.value = '';
+    window.setSchedulerMode(false);
+  };
+})();
+</script>
+
+
+<script id="pennant-media-controller">
+(function() {
+  window.currentStagedMedia = null;
+
+  const fileInput = document.getElementById('media-file-input');
+  const btnSelect = document.getElementById('btn-trigger-file-select');
+  const dropzone = document.getElementById('composer-dropzone');
+  const dropOverlay = document.getElementById('drop-indicator-overlay');
+  const previewTray = document.getElementById('media-preview-tray');
+  const previewImg = document.getElementById('media-thumbnail-img');
+  const previewFilename = document.getElementById('media-preview-filename');
+  const previewFilesize = document.getElementById('media-preview-filesize');
+  const stagingBadge = document.getElementById('media-staging-badge');
+  const btnAlt = document.getElementById('btn-toggle-alt-text');
+  const altContainer = document.getElementById('alt-text-container');
+  const altInput = document.getElementById('composer-alt-text');
+  const btnDiscard = document.getElementById('btn-discard-media');
+
+  if (btnSelect && fileInput) {
+    btnSelect.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', (e) => {
+      if (fileInput.files && fileInput.files[0]) {
+        handleFileSelection(fileInput.files[0]);
+      }
+    });
+  }
+
+  if (dropzone) {
+    ['dragenter', 'dragover'].forEach(evt => {
+      dropzone.addEventListener(evt, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (dropOverlay) dropOverlay.style.display = 'flex';
+      });
+    });
+
+    ['dragleave', 'drop'].forEach(evt => {
+      dropzone.addEventListener(evt, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (dropOverlay) dropOverlay.style.display = 'none';
+      });
+    });
+
+    dropzone.addEventListener('drop', (e) => {
+      if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) {
+        handleFileSelection(e.dataTransfer.files[0]);
+      }
+    });
+  }
+
+  function handleFileSelection(file) {
+    window.currentStagedMedia = {
+      file: file,
+      name: file.name,
+      size: file.size,
+      type: file.type,
+      stagedPath: ''
+    };
+
+    if (previewFilename) previewFilename.innerText = file.name;
+    if (previewFilesize) previewFilesize.innerText = (file.size / (1024 * 1024)).toFixed(2) + ' MB';
+
+    // Generate local preview
+    if (file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        if (previewImg) {
+          previewImg.src = e.target.result;
+          previewImg.style.display = 'block';
+        }
+      };
+      reader.readAsDataURL(file);
+    } else {
+      if (previewImg) previewImg.style.display = 'none';
+    }
+
+    if (previewTray) previewTray.style.display = 'flex';
+    if (stagingBadge) stagingBadge.style.display = 'flex';
+  }
+
+  if (btnAlt && altContainer) {
+    btnAlt.addEventListener('click', () => {
+      const isVisible = altContainer.style.display === 'block';
+      altContainer.style.display = isVisible ? 'none' : 'block';
+      if (!isVisible && altInput) altInput.focus();
+    });
+  }
+
+  if (btnDiscard) {
+    btnDiscard.addEventListener('click', () => {
+      window.currentStagedMedia = null;
+      if (fileInput) fileInput.value = '';
+      if (previewTray) previewTray.style.display = 'none';
+      if (stagingBadge) stagingBadge.style.display = 'none';
+      if (altContainer) altContainer.style.display = 'none';
+      if (altInput) altInput.value = '';
+      if (previewImg) previewImg.src = '';
+    });
+  }
 })();
 </script>
 

@@ -1,6 +1,6 @@
 {
   "name": "pennant-social",
-  "version": "0.2.5",
+  "version": "0.2.8",
   "description": "Sovereign tri-protocol broadcast console and scheduler for ActivityPub, ATProto, and Nostr",
   "type": "module",
   "main": "pennant-launcher.js",

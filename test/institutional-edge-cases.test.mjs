@@ -28,13 +28,15 @@ console.log('    [+] PASS: WAL Mode verified. Durable broadcast queue & ledger t
 // -----------------------------------------------------------------------------
 console.log('\n>>> [2/5] Edge Case: High-Burst SQLite Transaction Contention (100 jobs)...');
 const insertStmt = db.prepare(`
-  INSERT INTO broadcast_queue (status, scheduled_for, payload_json, attempts, last_error, created_at)
-  VALUES (?, ?, ?, ?, ?, ?)
+  INSERT INTO broadcast_queue (account, message, status, scheduled_for, payload_json, attempts, last_error, created_at)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?)
 `);
 
 const runBurst = db.transaction(() => {
   for (let i = 0; i < 100; i++) {
     insertStmt.run(
+      'audit_stress_node',
+      `Stress payload #${i}`,
       'pending',
       new Date().toISOString(),
       JSON.stringify({ profileId: 'audit_stress_node', seq: i, message: `Stress payload #${i}` }),
