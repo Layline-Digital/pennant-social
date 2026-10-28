@@ -1599,6 +1599,66 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
       border-radius: 2px;
     }
 </style>
+<style id="ergo-tweetdeck-styles">
+    /* === Ergonomics & TweetDeck Parity Suite === */
+    .deck-column.col-dragging {
+      opacity: 0.45;
+      transform: scale(0.98);
+    }
+    .deck-column.col-drag-over {
+      border: 2px dashed #00ffaa !important;
+      box-shadow: 0 0 16px rgba(0, 255, 170, 0.35) !important;
+    }
+    .col-drag-handle {
+      cursor: grab;
+      user-select: none;
+      color: #64748b;
+      font-size: 13px;
+      padding: 0 4px;
+      line-height: 1;
+      display: inline-flex;
+      align-items: center;
+    }
+    .col-drag-handle:hover {
+      color: #00ffaa;
+    }
+    .col-drag-handle:active {
+      cursor: grabbing;
+    }
+
+    /* Keyboard Shortcuts HUD Modal */
+    #keyboard-shortcuts-modal .hud-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 10px;
+    }
+    .kb-shortcut-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 10px;
+      background: #0d1117;
+      border: 1px solid #232832;
+      border-radius: 2px;
+    }
+    .kb-key-badge {
+      background: #1f242d;
+      border: 1px solid #3b4252;
+      color: #00ffaa;
+      font-family: var(--font-mono, monospace);
+      font-weight: bold;
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 3px;
+      box-shadow: 0 2px 0 #111419;
+    }
+    .kb-key-desc {
+      font-family: var(--font-mono, monospace);
+      font-size: 11px;
+      color: #cbd5e1;
+    }
+</style>
 </head>
 <body style="background-color: #131519; margin: 0; padding: 0;">
   <header>
@@ -2144,6 +2204,7 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
           `;
         viewport.appendChild(el);
           if (typeof attachScrollLockListener === 'function') attachScrollLockListener(col.id);
+          if (typeof attachColumnDragListeners === 'function') attachColumnDragListeners(el, col.id);
       });
 
       document.querySelectorAll('.btn-close-col').forEach(btn => {
@@ -2785,6 +2846,13 @@ var composerDrawer = window.composerDrawer || document.getElementById('composer-
       return;
     }
 
+    // ? -> Open Keyboard Shortcuts HUD
+    if (e.key === '?' || (e.shiftKey && e.key === '/')) {
+      e.preventDefault();
+      const m = document.getElementById('keyboard-shortcuts-modal');
+      if (m) m.style.display = m.style.display === 'flex' ? 'none' : 'flex';
+    }
+
     // N -> Open Composer
     if (e.key === 'n' || e.key === 'N') {
       e.preventDefault();
@@ -2820,7 +2888,8 @@ var composerDrawer = window.composerDrawer || document.getElementById('composer-
       if ((e.key === 'r' || e.key === 'R') && activeCardIndex >= 0) {
         const sel = allCards[activeCardIndex];
         const authEl = sel.querySelector('.author-name');
-        if (authEl && typeof openReply === 'function') openReply(authEl.innerText.trim());
+        const cardColId = sel.getAttribute('data-col-id');
+        if (authEl && typeof openReply === 'function') openReply(authEl.innerText.trim(), cardColId);
       }
       // L -> Like Selected Card
       if ((e.key === 'l' || e.key === 'L') && activeCardIndex >= 0) {
@@ -3004,6 +3073,7 @@ function saveColumnInspector() {
     if (post.id && container.querySelector('[data-post-id="' + post.id + '"]')) return;
 
     const card = document.createElement('div');
+        card.setAttribute('data-col-id', colId);
     card.className = 'card';
     if (post.id) card.setAttribute('data-post-id', post.id);
 
@@ -3896,6 +3966,65 @@ function saveColumnInspector() {
     }
   };
 
+  
+  // === Ergonomics: Native Column Drag & Drop Reordering ===
+  let draggedColId = null;
+
+  window.attachColumnDragListeners = function(colEl, colId) {
+    const handle = colEl.querySelector('.col-drag-handle');
+    if (!handle) return;
+
+    handle.addEventListener('dragstart', (e) => {
+      draggedColId = colId;
+      colEl.classList.add('col-dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', colId);
+    });
+
+    handle.addEventListener('dragend', () => {
+      draggedColId = null;
+      colEl.classList.remove('col-dragging');
+      document.querySelectorAll('.deck-column').forEach(c => c.classList.remove('col-drag-over'));
+    });
+
+    colEl.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      if (!draggedColId || draggedColId === colId) return;
+      e.dataTransfer.dropEffect = 'move';
+      colEl.classList.add('col-drag-over');
+    });
+
+    colEl.addEventListener('dragleave', () => {
+      colEl.classList.remove('col-drag-over');
+    });
+
+    colEl.addEventListener('drop', (e) => {
+      e.preventDefault();
+      colEl.classList.remove('col-drag-over');
+      if (!draggedColId || draggedColId === colId) return;
+
+      const fromIdx = activeDeckColumns.findIndex(c => c.id === draggedColId);
+      const toIdx = activeDeckColumns.findIndex(c => c.id === colId);
+      if (fromIdx < 0 || toIdx < 0) return;
+
+      const [movedCol] = activeDeckColumns.splice(fromIdx, 1);
+      activeDeckColumns.splice(toIdx, 0, movedCol);
+
+      if (typeof saveDeckColumns === 'function') saveDeckColumns();
+      if (typeof renderDeck === 'function') renderDeck();
+    });
+  };
+
+  // Keyboard Shortcuts HUD Helpers
+  window.openKeyboardModal = function() {
+    const m = document.getElementById('keyboard-shortcuts-modal');
+    if (m) m.style.display = 'flex';
+  };
+  window.closeKeyboardModal = function() {
+    const m = document.getElementById('keyboard-shortcuts-modal');
+    if (m) m.style.display = 'none';
+  };
+
   // Global ESC listener for phase 1 modals
   window.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
@@ -3905,6 +4034,59 @@ function saveColumnInspector() {
   });
 })();
 </script>
+
+
+  <!-- Keyboard Shortcuts Cheat-Sheet HUD -->
+  <div class="modal-overlay" id="keyboard-shortcuts-modal" style="display:none; z-index:99999;">
+    <div class="chassis-window" style="width: 540px; max-width: 92vw; background: #0c0e14; border: 1px solid #00ffaa66; box-shadow: 0 10px 40px rgba(0,0,0,0.85);">
+      <div class="window-top" style="display:flex; justify-content:space-between; align-items:center; padding:10px 14px; background:#111520; border-bottom:1px solid #1e2433;">
+        <span style="font-family:var(--font-masthead); font-size:12px; font-weight:700; color:#00ffaa; letter-spacing:0.5px;">// COMMAND DECK SHORTCUT MATRIX [?]</span>
+        <span style="cursor:pointer; color:var(--text-muted); font-size:12px;" onclick="closeKeyboardModal()">[ESC]</span>
+      </div>
+      <div class="window-body" style="padding:16px;">
+        <div style="font-size:11px; color:#94a3b8; font-family:var(--font-mono); margin-bottom:10px;">
+          Operator hotkeys for zero-latency fleet management and stream triage:
+        </div>
+        <div class="hud-grid">
+          <div class="kb-shortcut-row">
+            <span class="kb-key-desc">New Broadcast / Composer</span>
+            <span class="kb-key-badge">N</span>
+          </div>
+          <div class="kb-shortcut-row">
+            <span class="kb-key-desc">Jump to Column 1–9</span>
+            <span class="kb-key-badge">1 – 9</span>
+          </div>
+          <div class="kb-shortcut-row">
+            <span class="kb-key-desc">Select Next Post</span>
+            <span class="kb-key-badge">J</span>
+          </div>
+          <div class="kb-shortcut-row">
+            <span class="kb-key-desc">Select Previous Post</span>
+            <span class="kb-key-badge">K</span>
+          </div>
+          <div class="kb-shortcut-row">
+            <span class="kb-key-desc">Reply to Focused Card</span>
+            <span class="kb-key-badge">R</span>
+          </div>
+          <div class="kb-shortcut-row">
+            <span class="kb-key-desc">Like Focused Card</span>
+            <span class="kb-key-badge">L</span>
+          </div>
+          <div class="kb-shortcut-row">
+            <span class="kb-key-desc">Close Modal / Drawer</span>
+            <span class="kb-key-badge">ESC</span>
+          </div>
+          <div class="kb-shortcut-row">
+            <span class="kb-key-desc">Toggle Shortcut Matrix</span>
+            <span class="kb-key-badge">?</span>
+          </div>
+        </div>
+        <div style="margin-top:16px; display:flex; justify-content:flex-end;">
+          <button onclick="closeKeyboardModal()" style="background:#00ffaa; color:#000; border:none; padding:7px 18px; font-family:var(--font-col-header); font-size:11px; font-weight:bold; cursor:pointer; border-radius:2px;">ACKNOWLEDGE &#10003;</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </body></html>
 

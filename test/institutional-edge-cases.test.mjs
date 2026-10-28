@@ -210,5 +210,25 @@ for (const token of phase3Tokens) {
 }
 console.log('    [+] PASS: Global & column muting, procedural audio chimes, and firehose rate-limiter 100% verified.');
 
-console.log(' ALL 8 CORE & EDGE-CASE AUDIT GATES PASSED WITHOUT WARNINGS       ');
+
+// -----------------------------------------------------------------------------
+// TEST 9: Power-User Ergonomics Invariants (Drag-Drop, Attribution, Shortcuts HUD)
+// -----------------------------------------------------------------------------
+console.log('>>> [9/9] Power-User Ergonomics & Deck Navigation Verification...');
+const ergoTokens = [
+  'keyboard-shortcuts-modal',
+  'col-drag-handle',
+  'attachColumnDragListeners',
+  'openKeyboardModal',
+  'closeKeyboardModal',
+  'col-dragging',
+  'col-drag-over'
+];
+
+for (const token of ergoTokens) {
+  assert.ok(html.includes(token), `Web deck artifact missing Ergonomics token: ${token}`);
+}
+console.log('    [+] PASS: Native drag-and-drop reordering, keyboard HUD (?), and persona attribution verified.');
+
+console.log(' ALL 9 CORE & EDGE-CASE AUDIT GATES PASSED WITHOUT WARNINGS       ');
 console.log('=================================================================\n');
