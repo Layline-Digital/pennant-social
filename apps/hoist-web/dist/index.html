@@ -1740,6 +1740,31 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
       border: 1px solid #4338ca;
     }
 </style>
+<style id="polish-tweetdeck-styles">
+    /* === Executive Polish Suite === */
+    @keyframes colFocusPulse {
+      0% { box-shadow: 0 0 0 2px #00ffaa, 0 0 20px rgba(0, 255, 170, 0.45); }
+      50% { box-shadow: 0 0 0 2px #38bdf8, 0 0 25px rgba(56, 189, 248, 0.55); }
+      100% { box-shadow: none; }
+    }
+    .deck-column.col-focused-pulse {
+      animation: colFocusPulse 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .btn-shortcuts-hud {
+      font-family: var(--font-mono, monospace) !important;
+      font-weight: 700 !important;
+      letter-spacing: 0.5px;
+      color: #00ffaa !important;
+      border-color: #00ffaa44 !important;
+      background: #0d121a !important;
+      padding: 6px 10px !important;
+    }
+    .btn-shortcuts-hud:hover {
+      background: #00ffaa22 !important;
+      border-color: #00ffaa !important;
+      box-shadow: 0 0 10px rgba(0,255,170,0.3) !important;
+    }
+</style>
 </head>
 <body style="background-color: #131519; margin: 0; padding: 0;">
   <header>
@@ -1772,6 +1797,7 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
         <button class="btn-density" data-density="minimal" onclick="setDeckDensity('minimal')">MIN</button>
       </div>
 
+        <button class="btn-header btn-shortcuts-hud" id="btn-open-shortcuts" onclick="openKeyboardModal()" title="Command Deck Shortcuts Matrix (?)">[ ? ]</button>
         <button class="btn-header" id="btn-open-col-builder">+ ADD COLUMN</button>
       <button class="btn-header" id="btn-open-settings">&#9881; CONFIG / ABOUT</button>
       <button class="btn-action" id="btn-open-composer">+ NEW BROADCAST</button>

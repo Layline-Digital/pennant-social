@@ -222,7 +222,9 @@ const ergoTokens = [
   'openKeyboardModal',
   'closeKeyboardModal',
   'col-dragging',
-  'col-drag-over'
+  'col-drag-over',
+  'btn-open-shortcuts',
+  'col-focused-pulse'
 ];
 
 for (const token of ergoTokens) {
