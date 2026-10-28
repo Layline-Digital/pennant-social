@@ -1659,6 +1659,87 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
       color: #cbd5e1;
     }
 </style>
+<style id="sprint5-tweetdeck-styles">
+    /* === Sprint 5: Chained Thread Composer & Global Search === */
+    .thread-spine-wrapper {
+      position: relative;
+      margin-top: 6px;
+      padding-left: 20px;
+    }
+    .thread-spine-line {
+      position: absolute;
+      left: 8px;
+      top: -10px;
+      bottom: 24px;
+      width: 2px;
+      background: linear-gradient(180deg, #00ffaa44 0%, #38bdf866 100%);
+      border-radius: 1px;
+    }
+    .thread-node-card {
+      position: relative;
+      background: #080a0f;
+      border: 1px solid #1c2331;
+      border-radius: 4px;
+      padding: 10px;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+    .thread-node-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+      font-family: var(--font-mono, monospace);
+      font-size: 10px;
+      color: #38bdf8;
+    }
+    .thread-node-textarea {
+      width: 100%;
+      min-height: 90px;
+      background: transparent;
+      border: none;
+      color: #f8fafc;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      font-size: 13.5px;
+      line-height: 1.5;
+      resize: vertical;
+      outline: none;
+      box-sizing: border-box;
+    }
+    .btn-add-thread-node {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #111520;
+      border: 1px dashed #00ffaa88;
+      color: #00ffaa;
+      font-family: var(--font-col-header);
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .btn-add-thread-node:hover {
+      background: #00ffaa18;
+      border-color: #00ffaa;
+      transform: translateY(-1px);
+    }
+    .btn-remove-node {
+      background: transparent;
+      border: none;
+      color: #ef4444;
+      cursor: pointer;
+      font-size: 12px;
+      padding: 2px 6px;
+    }
+    .badge-unified {
+      background: #1e1b4b;
+      color: #a5b4fc;
+      border: 1px solid #4338ca;
+    }
+</style>
 </head>
 <body style="background-color: #131519; margin: 0; padding: 0;">
   <header>
@@ -1716,6 +1797,7 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
             <option value="masto_feed">ActivityPub (Mastodon) - Federated Feed</option>
             <option value="nostr_relay">Nostr - Relay Firehose</option>
             <option value="outbox_queue">SQLite WAL - Outbox Queue</option>
+              <option value="unified_search">Unified Global Search (All Streams &amp; WAL)</option>
           </select>
         </div>
         <div style="display:flex; flex-direction:column; gap:6px;">
@@ -2048,7 +2130,21 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
               </div>
             </div>
 
-            <!-- Media Attachment Action Bar -->
+            
+          <!-- Sprint 5: Chained Multi-Post Thread Container -->
+          <div id="thread-chain-container" class="thread-spine-wrapper" style="display:none;">
+            <div class="thread-spine-line"></div>
+            <div id="thread-nodes-tray" style="display:flex; flex-direction:column; gap:8px;"></div>
+          </div>
+
+          <div style="display:flex; align-items:center; justify-content:space-between; margin:6px 0 10px 0;">
+            <button type="button" id="btn-add-thread-segment" class="btn-add-thread-node">
+              <span>+ ADD TO THREAD</span>
+            </button>
+            <span id="thread-count-badge" style="display:none; font-family:var(--font-mono); font-size:10px; color:#38bdf8;">THREAD: 1/1</span>
+          </div>
+
+<!-- Media Attachment Action Bar -->
             <div style="display: flex; justify-content: space-between; align-items: center; background: #0c0e14; border: 1px solid #1c2331; border-radius: 3px; padding: 6px 10px;">
               <div style="display: flex; align-items: center; gap: 8px;">
                 <input type="file" id="media-file-input" style="display: none;" accept="image/*,video/*" />
@@ -4023,6 +4119,155 @@ function saveColumnInspector() {
   window.closeKeyboardModal = function() {
     const m = document.getElementById('keyboard-shortcuts-modal');
     if (m) m.style.display = 'none';
+  };
+
+  
+  // === Sprint 5: Chained Multi-Post Thread Composer Engine ===
+  window.threadSegments = [];
+
+  window.updateThreadIndices = function() {
+    const tray = document.getElementById('thread-nodes-tray');
+    const spine = document.getElementById('thread-chain-container');
+    const countBadge = document.getElementById('thread-count-badge');
+    const submitBtn = document.getElementById('btn-submit-broadcast');
+    const totalPosts = 1 + window.threadSegments.length;
+
+    if (window.threadSegments.length > 0) {
+      if (spine) spine.style.display = 'block';
+      if (countBadge) {
+        countBadge.style.display = 'inline';
+        countBadge.innerText = 'THREAD: ' + totalPosts + ' POSTS';
+      }
+      if (submitBtn) {
+        submitBtn.innerText = 'TRANSMIT THREAD (' + totalPosts + ' POSTS) ↗';
+      }
+    } else {
+      if (spine) spine.style.display = 'none';
+      if (countBadge) countBadge.style.display = 'none';
+      if (submitBtn) {
+        submitBtn.innerText = 'TRANSMIT RECORD';
+      }
+    }
+
+    // Update node numbering
+    window.threadSegments.forEach((seg, idx) => {
+      const el = document.getElementById('thread-node-' + seg.id);
+      if (el) {
+        const title = el.querySelector('.thread-node-num');
+        if (title) title.innerText = '// THREAD POST [' + (idx + 2) + '/' + totalPosts + ']';
+      }
+    });
+  };
+
+  window.addThreadSegment = function() {
+    const tray = document.getElementById('thread-nodes-tray');
+    if (!tray) return;
+
+    const segId = 'seg_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6);
+    const segObj = { id: segId, text: '' };
+    window.threadSegments.push(segObj);
+
+    const totalPosts = 1 + window.threadSegments.length;
+    const nodeEl = document.createElement('div');
+    nodeEl.className = 'thread-node-card';
+    nodeEl.id = 'thread-node-' + segId;
+    nodeEl.innerHTML =
+      '<div class="thread-node-header">' +
+        '<span class="thread-node-num">// THREAD POST [' + totalPosts + '/' + totalPosts + ']</span>' +
+        '<div style="display:flex; align-items:center; gap:8px;">' +
+          '<span class="thread-node-counter" style="color:#64748b;">0/300</span>' +
+          '<button type="button" class="btn-remove-node" onclick="window.removeThreadSegment(\'' + segId + '\')" title="Remove thread segment">&#10005;</button>' +
+        '</div>' +
+      '</div>' +
+      '<textarea class="thread-node-textarea" placeholder="Continue the thread..." data-seg-id="' + segId + '"></textarea>';
+
+    tray.appendChild(nodeEl);
+
+    const ta = nodeEl.querySelector('textarea');
+    ta.addEventListener('input', () => {
+      segObj.text = ta.value;
+      const cnt = nodeEl.querySelector('.thread-node-counter');
+      if (cnt) {
+        cnt.innerText = ta.value.length + '/300';
+        cnt.style.color = ta.value.length > 300 ? '#ef4444' : '#64748b';
+      }
+    });
+
+    window.updateThreadIndices();
+    ta.focus();
+  };
+
+  window.removeThreadSegment = function(segId) {
+    const idx = window.threadSegments.findIndex(s => s.id === segId);
+    if (idx >= 0) {
+      window.threadSegments.splice(idx, 1);
+      const el = document.getElementById('thread-node-' + segId);
+      if (el) el.remove();
+      window.updateThreadIndices();
+    }
+  };
+
+  // Wire + ADD TO THREAD button on load
+  window.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('btn-add-thread-segment');
+    if (btn) btn.addEventListener('click', () => { window.addThreadSegment(); });
+  });
+
+  // === Sprint 5: Unified Global Search Hydration ===
+  window.hydrateGlobalSearchColumn = async function(col) {
+    const container = document.getElementById('cards-' + col.id);
+    if (!container) return;
+
+    const query = (col.query || '').toLowerCase().trim();
+    container.innerHTML = '<div style="padding:14px; color:#64748b; font-size:11px; font-family:var(--font-mono);">SEARCHING ACROSS ALL DECK FEEDS &amp; WAL ARCHIVES: <b>' + (col.query || 'ALL') + '</b>...</div>';
+
+    // 1. Gather all rendered cards across other columns in memory
+    const results = [];
+    const allCards = document.querySelectorAll('.deck-column:not(#col-' + col.id + ') .card');
+    allCards.forEach(c => {
+      const text = c.innerText.toLowerCase();
+      if (!query || text.includes(query)) {
+        const cloned = c.cloneNode(true);
+        results.push(cloned);
+      }
+    });
+
+    // 2. Query SQLite WAL /schedule for matching pending or archived jobs
+    try {
+      const res = await fetch('/schedule');
+      if (res.ok) {
+        const items = await res.json();
+        if (Array.isArray(items)) {
+          items.forEach(item => {
+            const msg = (item.message || '').toLowerCase();
+            const acct = (item.account || '').toLowerCase();
+            if (!query || msg.includes(query) || acct.includes(query)) {
+              const card = document.createElement('div');
+              card.className = 'card';
+              card.innerHTML =
+                '<div class="card-meta" style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:6px;">' +
+                  '<span style="font-weight:bold; color:#a5b4fc;">[WAL ARCHIVE] ' + item.account + '</span>' +
+                  '<span style="color:#64748b;">' + new Date(item.scheduled_at || item.created_at || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + '</span>' +
+                '</div>' +
+                '<div style="font-size:12.5px; line-height:1.45; color:#f1f5f9; margin-bottom:6px;">' + (item.message || '') + '</div>' +
+                '<div style="display:flex; justify-content:space-between; align-items:center;">' +
+                  '<span style="font-size:10px; color:#38bdf8; font-family:var(--font-mono);">STATUS: ' + (item.status || 'QUEUED').toUpperCase() + '</span>' +
+                  '<span class="protocol-badge badge-queue">SQLITE WAL</span>' +
+                '</div>';
+              results.push(card);
+            }
+          });
+        }
+      }
+    } catch(e) {}
+
+    container.innerHTML = '';
+    if (results.length === 0) {
+      container.innerHTML = '<div style="padding:16px; color:#64748b; font-size:11px; font-family:var(--font-mono);">No transmissions matching "' + query + '" found in memory or WAL.</div>';
+      return;
+    }
+
+    results.forEach(card => container.appendChild(card));
   };
 
   // Global ESC listener for phase 1 modals

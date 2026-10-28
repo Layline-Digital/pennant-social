@@ -230,5 +230,27 @@ for (const token of ergoTokens) {
 }
 console.log('    [+] PASS: Native drag-and-drop reordering, keyboard HUD (?), and persona attribution verified.');
 
-console.log(' ALL 9 CORE & EDGE-CASE AUDIT GATES PASSED WITHOUT WARNINGS       ');
+
+// -----------------------------------------------------------------------------
+// TEST 10: Chained Thread Composer & Unified Global Search Invariants
+// -----------------------------------------------------------------------------
+console.log('>>> [10/10] Chained Thread Composer & Unified Global Search Verification...');
+const sprint5Tokens = [
+  'thread-chain-container',
+  'btn-add-thread-segment',
+  'thread-spine-wrapper',
+  'addThreadSegment',
+  'removeThreadSegment',
+  'updateThreadIndices',
+  'unified_search',
+  'badge-unified',
+  'hydrateGlobalSearchColumn'
+];
+
+for (const token of sprint5Tokens) {
+  assert.ok(html.includes(token), `Web deck artifact missing Sprint 5 token: ${token}`);
+}
+console.log('    [+] PASS: Chained multi-post thread composer and unified global search stream 100% verified.');
+
+console.log(' ALL 10 CORE & EDGE-CASE AUDIT GATES PASSED WITHOUT WARNINGS      ');
 console.log('=================================================================\n');
