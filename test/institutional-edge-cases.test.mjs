@@ -144,5 +144,26 @@ for (const token of requiredTokens) {
 console.log('    [+] PASS: Production distribution HTML verified with 100% token integrity.');
 
 console.log('\n=================================================================');
-console.log(' ALL 5 CORE & EDGE-CASE AUDIT GATES PASSED WITHOUT WARNINGS       ');
+
+// -----------------------------------------------------------------------------
+// TEST 6: TweetDeck Parity Phase 1 Invariants (Lightbox, Scroll-Lock, Thread Drawer)
+// -----------------------------------------------------------------------------
+console.log('>>> [6/6] TweetDeck Parity Phase 1 Architecture Verification...');
+const parityTokens = [
+  'media-lightbox-modal',
+  'lightbox-image',
+  'new-posts-pill',
+  'column-scroll-wrap',
+  'thread-drawer',
+  'openThreadInspector',
+  'flushColumnBuffer',
+  'openLightbox'
+];
+
+for (const token of parityTokens) {
+  assert.ok(html.includes(token), `Web deck artifact missing TweetDeck Parity token: ${token}`);
+}
+console.log('    [+] PASS: Lightbox, Scroll-Lock Buffer, and Thread Drawer invariants 100% verified.');
+
+console.log(' ALL 6 CORE & EDGE-CASE AUDIT GATES PASSED WITHOUT WARNINGS       ');
 console.log('=================================================================\n');

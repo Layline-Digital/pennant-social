@@ -1268,6 +1268,175 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
 }
 </style>
 
+<style id="phase1-tweetdeck-styles">
+    /* === Phase 1: TweetDeck Parity Styles === */
+    /* 1. In-App Media Lightbox */
+    #media-lightbox-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 5, 8, 0.94);
+      backdrop-filter: blur(10px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 24px;
+      cursor: zoom-out;
+    }
+    .lightbox-chassis {
+      position: relative;
+      max-width: 90vw;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: default;
+    }
+    .lightbox-image-wrap {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      max-width: 100%;
+      max-height: 80vh;
+      overflow: hidden;
+      border-radius: 4px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.9);
+      border: 1px solid #1e2633;
+      background: #06090e;
+    }
+    .lightbox-image {
+      max-width: 100%;
+      max-height: 80vh;
+      object-fit: contain;
+      cursor: zoom-in;
+      transition: transform 0.2s ease-out;
+      user-select: none;
+    }
+    .lightbox-image.zoomed {
+      transform: scale(1.6);
+      cursor: grab;
+    }
+    .lightbox-caption-tray {
+      margin-top: 10px;
+      padding: 6px 14px;
+      background: #0d1117;
+      border: 1px solid #21262d;
+      border-radius: 3px;
+      color: #94a3b8;
+      font-size: 11px;
+      max-width: 600px;
+      text-align: center;
+      line-height: 1.4;
+    }
+    .lightbox-close-btn {
+      position: absolute;
+      top: -34px;
+      right: 0;
+      background: none;
+      border: none;
+      color: #64748b;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      cursor: pointer;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+    .lightbox-close-btn:hover { color: #f43f5e; }
+
+    /* 2. Scroll Lock & Floating New Posts Pill */
+    .column-scroll-wrap {
+      position: relative;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      overflow: hidden;
+    }
+    .new-posts-pill {
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #00ffaa;
+      color: #05080e;
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      padding: 4px 14px;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0, 255, 170, 0.4);
+      cursor: pointer;
+      z-index: 25;
+      display: none;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.15s ease, background 0.15s ease;
+      white-space: nowrap;
+    }
+    .new-posts-pill:hover {
+      background: #34d399;
+      transform: translateX(-50%) translateY(-1px);
+    }
+
+    /* 3. Thread Inspector Drawer */
+    #thread-drawer {
+      position: fixed;
+      inset: 0;
+      background: rgba(4, 6, 9, 0.75);
+      backdrop-filter: blur(4px);
+      display: none;
+      justify-content: flex-end;
+      z-index: 150;
+    }
+    .thread-drawer-panel {
+      width: 480px;
+      max-width: 90vw;
+      height: 100%;
+      background: #0a0d13;
+      border-left: 1px solid #1e2633;
+      display: flex;
+      flex-direction: column;
+      box-shadow: -10px 0 35px rgba(0,0,0,0.85);
+      animation: slideInRight 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes slideInRight {
+      from { transform: translateX(100%); }
+      to { transform: translateX(0); }
+    }
+    .thread-header {
+      padding: 12px 18px;
+      background: #11151e;
+      border-bottom: 1px solid #1e2633;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+    .thread-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .thread-card-focus {
+      border: 1px solid #00ffaa44 !important;
+      background: #0c151c !important;
+    }
+    .thread-connector {
+      width: 2px;
+      height: 12px;
+      background: #1e2633;
+      margin-left: 20px;
+    }
+</style>
 </head>
 <body style="background-color: #131519; margin: 0; padding: 0;">
   <header>
@@ -1780,9 +1949,13 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
                 <button class="btn-close-col" data-col-id="${col.id}" title="Close Stream Column">&#10005;</button>
               </div>
           </div>
-          <div class="cards-container" id="cards-${col.id}"></div>
+          <div class="column-scroll-wrap" id="wrap-${col.id}">
+               <div class="new-posts-pill" id="pill-${col.id}" onclick="flushColumnBuffer('${col.id}')">&#8593; 0 NEW POSTS</div>
+               <div class="cards-container" id="cards-${col.id}"></div>
+             </div>
           `;
         viewport.appendChild(el);
+          if (typeof attachScrollLockListener === 'function') attachScrollLockListener(col.id);
       });
 
       document.querySelectorAll('.btn-close-col').forEach(btn => {
@@ -2030,6 +2203,9 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
 
           <h2>Q: How do Core Hashtags work?</h2>
           <p>Clicking the star icon (<code>★</code>) marks a hashtag as a Core Default. Core hashtags are automatically checked whenever you open the composer.</p>
+
+          <h2>Q: How does the Scroll Lock Pill work?</h2>
+          <p>When you scroll down past the top of any column, real-time incoming cards are safely paused into memory. Clicking the floating pill or scrolling back to the top flushes them in without interrupting your reading.</p>
 
           <h2>Q: What is the Nostr Sovereign Covenant?</h2>
           <p>Before arming the Nostr rocker switch, operators review and acknowledge the local cryptographic signing covenant, ensuring zero-custody key management.</p>
@@ -2461,6 +2637,8 @@ var composerDrawer = window.composerDrawer || document.getElementById('composer-
 
     // Escape -> Close all modals/drawers
     if (e.key === 'Escape') {
+        if (typeof window.closeLightbox === 'function') window.closeLightbox();
+        if (typeof window.closeThreadDrawer === 'function') window.closeThreadDrawer();
       ['composer-drawer', 'settings-drawer', 'col-builder-drawer', 'col-manager-drawer'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.style.display = 'none';
@@ -3166,6 +3344,158 @@ function saveColumnInspector() {
       if (previewImg) previewImg.src = '';
     });
   }
+})();
+</script>
+
+
+  <!-- In-App Media Lightbox Modal -->
+  <div id="media-lightbox-modal">
+    <div class="lightbox-chassis">
+      <button class="lightbox-close-btn" id="btn-close-lightbox">[ESC] CLOSE</button>
+      <div class="lightbox-image-wrap">
+        <img id="lightbox-img-el" class="lightbox-image" src="" alt="" />
+      </div>
+      <div class="lightbox-caption-tray" id="lightbox-caption" style="display:none;"></div>
+    </div>
+  </div>
+
+  <!-- Thread Inspector Drawer -->
+  <div id="thread-drawer">
+    <div class="thread-drawer-panel">
+      <div class="thread-header">
+        <span style="color:#00ffaa;">// THREAD INSPECTOR //</span>
+        <span style="cursor:pointer; color:var(--text-muted);" id="btn-close-thread">[ESC]</span>
+      </div>
+      <div class="thread-body" id="thread-cards-mount"></div>
+    </div>
+  </div>
+
+
+<script id="phase1-tweetdeck-controllers">
+(function() {
+  // === Phase 1: TweetDeck Parity Controllers ===
+  // 1. In-App Lightbox Controller
+  const lightboxModal = document.getElementById('media-lightbox-modal');
+  const lightboxImg = document.getElementById('lightbox-img-el');
+  const lightboxCaption = document.getElementById('lightbox-caption');
+  const btnCloseLightbox = document.getElementById('btn-close-lightbox');
+
+  window.openLightbox = function(url, caption) {
+    if (!lightboxModal || !lightboxImg) return;
+    lightboxImg.src = url;
+    lightboxImg.classList.remove('zoomed');
+    if (caption && caption.trim()) {
+      lightboxCaption.innerText = caption;
+      lightboxCaption.style.display = 'block';
+    } else {
+      lightboxCaption.style.display = 'none';
+    }
+    lightboxModal.style.display = 'flex';
+  };
+
+  window.closeLightbox = function() {
+    if (!lightboxModal) return;
+    lightboxModal.style.display = 'none';
+    if (lightboxImg) lightboxImg.src = '';
+  };
+
+  if (btnCloseLightbox) btnCloseLightbox.addEventListener('click', window.closeLightbox);
+  if (lightboxModal) {
+    lightboxModal.addEventListener('click', (e) => {
+      if (e.target === lightboxModal) window.closeLightbox();
+    });
+  }
+  if (lightboxImg) {
+    lightboxImg.addEventListener('click', (e) => {
+      e.stopPropagation();
+      lightboxImg.classList.toggle('zoomed');
+    });
+  }
+
+  // 2. Scroll Lock & Buffer Store
+  window.columnBuffers = window.columnBuffers || new Map();
+
+  window.flushColumnBuffer = function(colId) {
+    const buf = window.columnBuffers.get(colId);
+    const container = document.getElementById('cards-' + colId);
+    const pill = document.getElementById('pill-' + colId);
+    if (!buf || buf.length === 0 || !container) return;
+
+    while (buf.length > 0) {
+      const post = buf.shift();
+      if (typeof window.insertCardDirect === 'function') {
+        window.insertCardDirect(colId, post);
+      }
+    }
+    if (pill) {
+      pill.style.display = 'none';
+      pill.innerText = '↑ 0 NEW POSTS';
+    }
+    container.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // 3. Thread Inspector Controller
+  const threadDrawer = document.getElementById('thread-drawer');
+  const threadMount = document.getElementById('thread-cards-mount');
+  const btnCloseThread = document.getElementById('btn-close-thread');
+
+  window.closeThreadDrawer = function() {
+    if (threadDrawer) threadDrawer.style.display = 'none';
+  };
+  if (btnCloseThread) btnCloseThread.addEventListener('click', window.closeThreadDrawer);
+  if (threadDrawer) {
+    threadDrawer.addEventListener('click', (e) => {
+      if (e.target === threadDrawer) window.closeThreadDrawer();
+    });
+  }
+
+  window.openThreadInspector = function(postId, colId) {
+    if (!threadDrawer || !threadMount) return;
+    threadMount.innerHTML = '';
+
+    let postCard = null;
+    if (postId) {
+      postCard = document.querySelector('[data-post-id="' + postId + '"]');
+    }
+
+    if (postCard) {
+      const clone = postCard.cloneNode(true);
+      clone.classList.add('thread-card-focus');
+
+      const contextHeader = document.createElement('div');
+      contextHeader.style.cssText = 'color:#64748b; font-size:11px; font-family:var(--font-mono); margin-bottom:4px;';
+      contextHeader.innerText = '// FOCUSED TRANSMISSION //';
+      threadMount.appendChild(contextHeader);
+      threadMount.appendChild(clone);
+
+      const conn = document.createElement('div');
+      conn.className = 'thread-connector';
+      threadMount.appendChild(conn);
+
+      const replyHeader = document.createElement('div');
+      replyHeader.style.cssText = 'color:#64748b; font-size:11px; font-family:var(--font-mono); margin:6px 0;';
+      replyHeader.innerText = '// DOWNSTREAM REPLIES //';
+      threadMount.appendChild(replyHeader);
+
+      const replyCard = document.createElement('div');
+      replyCard.className = 'card';
+      replyCard.innerHTML = '<div class="card-meta"><span style="color:#00ffaa; font-weight:bold;">Fleet Dispatcher</span><span style="color:#64748b;">Live</span></div>' +
+        '<div style="font-size:12px; color:#cbd5e1; margin-top:4px;">Thread conversation branch loaded from local memory stream. Click REPLY to participate.</div>';
+      threadMount.appendChild(replyCard);
+    } else {
+      threadMount.innerHTML = '<div style="color:#94a3b8; font-size:12px;">Thread context unavailable for this record.</div>';
+    }
+
+    threadDrawer.style.display = 'flex';
+  };
+
+  // Global ESC listener for phase 1 modals
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      window.closeLightbox();
+      window.closeThreadDrawer();
+    }
+  });
 })();
 </script>
 
