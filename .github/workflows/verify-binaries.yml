@@ -15,7 +15,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release download v0.2.0 --pattern "*universal.dmg" --repo Layline-Digital/pennant-social --dir ./dist-macos
+          gh release download v0.2.8 --pattern "*universal.dmg" --repo Layline-Digital/pennant-social --dir ./dist-macos
           ls -lh ./dist-macos
 
       - name: Mount DMG & Verify Architecture
@@ -54,7 +54,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           mkdir -p ./dist-linux
-          gh release download v0.2.0 --pattern "*.deb" --pattern "*.AppImage" --repo Layline-Digital/pennant-social --dir ./dist-linux
+          gh release download v0.2.8 --pattern "*.deb" --pattern "*.AppImage" --repo Layline-Digital/pennant-social --dir ./dist-linux
           ls -lh ./dist-linux
 
       - name: Install System Prerequisites

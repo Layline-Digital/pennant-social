@@ -1992,28 +1992,50 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
     manualModal.addEventListener('click', (e) => { if (e.target === manualModal) closeManual(); });
 
     document.getElementById('btn-open-inapp-manual').addEventListener('click', () => {
-      manualTitle.innerText = '// OPERATIONS MANUAL // PENNANT HOIST';
-      manualBody.innerHTML = `
-        <h2>1. Sovereign Architecture</h2>
-        <p>Pennant Hoist is a local-first broadcasting command deck engineered for ATProto (Bluesky), ActivityPub (Mastodon), and Nostr. Your signing keys and passwords remain locked in local memory (<code>SessionVault</code>) and are never exposed to remote telemetry.</p>
-        <h2>2. Media Airlock Pipeline</h2>
-        <p>Staged media pre-uploads directly to native hosts (Bluesky PDS, Mastodon, or Blossom) before final egress, so pressing <code>TRANSMIT RECORD</code> executes instantaneously.</p>
-        <h2>3. SQLite WAL Queue</h2>
-        <p>Scheduled transmissions persist across reboots via SQLite WAL mode with automated retry backoff.</p>
-      `;
-      manualModal.style.display = 'flex';
-    });
+        manualTitle.innerText = '// OPERATIONS MANUAL // PENNANT HOIST v0.2.8';
+        manualBody.innerHTML = `
+          <h2>1. Sovereign Architecture & Zero Telemetry</h2>
+          <p>Pennant Hoist is an institutional-grade, local-first broadcasting command deck for ATProto (Bluesky), ActivityPub (Mastodon), and Nostr. Your signing keys, tokens, and passphrases remain locked strictly in your local memory session (<code>SessionVault</code>) and are never exposed to remote telemetry or third-party cloud analytics.</p>
+
+          <h2>2. Deck Layout & Column Management</h2>
+          <p>• <b>Mounting Streams</b>: Click <code>+ ADD COLUMN</code> to attach timeline feeds, notifications, search streams, or your <b>Outbox Delivery Queue</b>.<br/>
+          • <b>Reordering Columns</b>: Click <code>◀</code> or <code>▶</code> on any column header to reposition the stream across your deck without recreating it.<br/>
+          • <b>Nostr Stream Controls</b>: Nostr firehose streams can be paused or resumed dynamically using the header pause button.</p>
+
+          <h2>3. Media Airlock Pipeline</h2>
+          <p>Attached images are processed through the local Media Airlock. Image payloads are staged to <code>.cache/staged_media/</code> to ensure zero command-line buffer bottlenecks, while BlurHash placeholders are computed to maintain layout stability (Zero Cumulative Layout Shift).</p>
+
+          <h2>4. Durable SQLite WAL Outbox</h2>
+          <p>All outgoing broadcasts are committed to an ACID-compliant SQLite WAL database (<code>pennant.db</code>). If an upstream relay or instance experiences downtime, exponential backoff retries preserve the broadcast until receipt confirmation is logged.</p>
+
+          <h2>5. Keyboard Shortcuts (Power Cockpit)</h2>
+          <p>• <code>N</code> — Open Composer drawer<br/>
+          • <code>Esc</code> — Dismiss any open modal, drawer, or inspector<br/>
+          • <code>1</code> – <code>9</code> — Scroll deck horizontally to focus column 1 through 9<br/>
+          • <code>J</code> / <code>K</code> — Move focus down / up across feed cards in active column<br/>
+          • <code>R</code> — Reply to focused card<br/>
+          • <code>L</code> — Like / favorite focused card</p>
+`;
+        manualModal.style.display = 'flex';
+      });
 
     document.getElementById('btn-open-inapp-faq').addEventListener('click', () => {
-      manualTitle.innerText = '// FAQ & TROUBLESHOOTING // PENNANT HOIST';
-      manualBody.innerHTML = `
-        <h2>Q: Why use Pennant Hoist?</h2>
-        <p>Pennant runs entirely on your local machine, avoiding cloud SaaS monthly subscription fees.</p>
-        <h2>Q: How do Core Hashtags work?</h2>
-        <p>Clicking the star icon (<code>&#9733;</code>) marks that hashtag as a Core Default, auto-checking it whenever you open the composer.</p>
-      `;
-      manualModal.style.display = 'flex';
-    });
+        manualTitle.innerText = '// FAQ & TROUBLESHOOTING // PENNANT HOIST v0.2.8';
+        manualBody.innerHTML = `
+          <h2>Q: Where are my keys and credentials stored?</h2>
+          <p>Credentials live in your local environment file (<code>.env.broadcaster</code>) and are hydrated into in-memory storage (<code>SessionVault</code>) upon startup. They never leave your device.</p>
+
+          <h2>Q: How does the Outbox Delivery Queue work?</h2>
+          <p>When you click <code>TRANSMIT RECORD</code>, jobs are enqueued into SQLite with status <code>pending</code>. The scheduler transitions them to <code>processing</code>, stages media to disk, broadcasts to your armed protocols, and logs the receipt as <code>dispatched</code>. If an endpoint fails, the error is recorded under <code>last_error</code>.</p>
+
+          <h2>Q: How do Core Hashtags work?</h2>
+          <p>Clicking the star icon (<code>★</code>) marks a hashtag as a Core Default. Core hashtags are automatically checked whenever you open the composer.</p>
+
+          <h2>Q: What is the Nostr Sovereign Covenant?</h2>
+          <p>Before arming the Nostr rocker switch, operators review and acknowledge the local cryptographic signing covenant, ensuring zero-custody key management.</p>
+`;
+        manualModal.style.display = 'flex';
+      });
 
     // Fixed Covenant Modal Controller (Zero Layout Disruption)
     const covenantModal = document.getElementById('covenant-modal');
