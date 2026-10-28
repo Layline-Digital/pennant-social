@@ -58,7 +58,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           projectPath: 'apps/hoist-desktop'
-          tagName: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || 'v0.2.8' }}
+          tagName: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || 'v0.2.9' }}
           releaseName: 'Pennant ${{ github.ref_name }}'
           releaseBody: 'Cross-platform production release binaries for Pennant.'
           releaseDraft: false

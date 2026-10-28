@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/Layline-Digital/pennant-social/releases/tag/v0.2.8"><img src="https://img.shields.io/badge/release-v0.2.8-blue.svg" alt="Release v0.2.8" /></a>
+  <a href="https://github.com/Layline-Digital/pennant-social/releases/tag/v0.2.9"><img src="https://img.shields.io/badge/release-v0.2.9-blue.svg" alt="Release v0.2.9" /></a>
   <a href="https://github.com/Layline-Digital/pennant-social/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License: MIT" /></a>
   <a href="https://app.pennant.laylinedigital.com"><img src="https://img.shields.io/badge/web_deck-live-success" alt="Web Deck" /></a>
   <a href="https://bsky.app/profile/laylinedigital.com"><img src="https://img.shields.io/badge/bluesky-@laylinedigital.com-0285FF" alt="Bluesky" /></a>

@@ -1,6 +1,6 @@
 {
   "name": "@pennant/core",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "description": "Pennant Hoist Core Engine - Multi-identity session vault, adaptive media airlock, and queuing",
   "type": "module",
   "main": "src/index.ts",

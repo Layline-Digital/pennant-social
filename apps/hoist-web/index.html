@@ -2302,7 +2302,7 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
     manualModal.addEventListener('click', (e) => { if (e.target === manualModal) closeManual(); });
 
     document.getElementById('btn-open-inapp-manual').addEventListener('click', () => {
-        manualTitle.innerText = '// OPERATIONS MANUAL // PENNANT HOIST v0.2.8';
+        manualTitle.innerText = '// OPERATIONS MANUAL // PENNANT HOIST v0.2.9';
         manualBody.innerHTML = `
           <h2>1. Sovereign Architecture & Zero Telemetry</h2>
           <p>Pennant Hoist is an institutional-grade, local-first broadcasting command deck for ATProto (Bluesky), ActivityPub (Mastodon), and Nostr. Your signing keys, tokens, and passphrases remain locked strictly in your local memory session (<code>SessionVault</code>) and are never exposed to remote telemetry or third-party cloud analytics.</p>
@@ -2330,7 +2330,7 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
       });
 
     document.getElementById('btn-open-inapp-faq').addEventListener('click', () => {
-        manualTitle.innerText = '// FAQ & TROUBLESHOOTING // PENNANT HOIST v0.2.8';
+        manualTitle.innerText = '// FAQ & TROUBLESHOOTING // PENNANT HOIST v0.2.9';
         manualBody.innerHTML = `
           <h2>Q: Where are my keys and credentials stored?</h2>
           <p>Credentials live in your local environment file (<code>.env.broadcaster</code>) and are hydrated into in-memory storage (<code>SessionVault</code>) upon startup. They never leave your device.</p>

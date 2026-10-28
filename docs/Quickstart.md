@@ -1,4 +1,4 @@
-# Quickstart Guide: Pennant Hoist v0.2.8
+# Quickstart Guide: Pennant Hoist v0.2.9
 
 Pennant Hoist is a local-first, sovereign multi-protocol command deck engineered for ATProto (Bluesky), ActivityPub (Mastodon), and Nostr.
 
@@ -6,17 +6,17 @@ Pennant Hoist is a local-first, sovereign multi-protocol command deck engineered
 
 ## 1. Desktop Installation (Pre-built Binaries)
 
-Official v0.2.8 release binaries are available directly from the [GitHub Releases](https://github.com/Layline-Digital/pennant-social/releases/tag/v0.2.8):
+Official v0.2.9 release binaries are available directly from the [GitHub Releases](https://github.com/Layline-Digital/pennant-social/releases/tag/v0.2.9):
 
 - **Windows (x64)**:
-  - `Pennant.Social_0.2.8_x64-setup.exe` (NSIS Installer)
-  - `Pennant.Social_0.2.8_x64_en-US.msi` (Enterprise MSI Package)
+  - `Pennant.Social_0.2.9_x64-setup.exe` (NSIS Installer)
+  - `Pennant.Social_0.2.9_x64_en-US.msi` (Enterprise MSI Package)
 - **macOS (Apple Silicon & Intel)**:
-  - `Pennant.Social_0.2.8_universal.dmg` (Universal Disk Image)
+  - `Pennant.Social_0.2.9_universal.dmg` (Universal Disk Image)
 - **Linux (x86_64)**:
-  - `Pennant.Social_0.2.8_amd64.AppImage` (Standalone executable)
-  - `Pennant.Social_0.2.8_amd64.deb` (Debian / Ubuntu package)
-  - `Pennant.Social-0.2.8-1.x86_64.rpm` (Fedora / RHEL package)
+  - `Pennant.Social_0.2.9_amd64.AppImage` (Standalone executable)
+  - `Pennant.Social_0.2.9_amd64.deb` (Debian / Ubuntu package)
+  - `Pennant.Social-0.2.9-1.x86_64.rpm` (Fedora / RHEL package)
 
 ---
 
