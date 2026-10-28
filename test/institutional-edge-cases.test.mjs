@@ -246,7 +246,9 @@ const sprint5Tokens = [
   'updateThreadIndices',
   'unified_search',
   'badge-unified',
-  'hydrateGlobalSearchColumn'
+  'hydrateGlobalSearchColumn',
+  'unified-search-input',
+  'onUnifiedSearchInput'
 ];
 
 for (const token of sprint5Tokens) {

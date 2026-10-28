@@ -2307,10 +2307,21 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
         
         el.innerHTML = `
           <div class="column-header">
-            <div>
-              <div class="col-title" title="${col.label}">${col.label}</div>
-              <div class="col-sub">${col.sub}</div>
-            </div>
+              <div style="display:flex; align-items:flex-start; gap:4px; min-width:0; flex:1;">
+                <span class="col-drag-handle" title="Drag to reorder column" draggable="true" data-col-id="${col.id}">&#10031;</span>
+                <div style="min-width:0; flex:1;">
+                  <div class="col-title" title="${col.label}">${col.label}</div>
+                  <div class="col-sub">${col.sub}</div>
+                  ${col.protocol === 'Unified Search' ? `
+                    <div style="margin-top: 5px;">
+                      <input type="text" class="unified-search-input" value="${col.query || ''}" placeholder="Filter streams & WAL archive..." 
+                             oninput="window.onUnifiedSearchInput('${col.id}', this.value)" 
+                             onclick="event.stopPropagation()"
+                             style="width: 95%; background: #080a0f; border: 1px solid #4338ca; color: #a5b4fc; font-family: var(--font-mono, monospace); font-size: 10.5px; padding: 3px 6px; border-radius: 2px; outline: none;" />
+                    </div>
+                  ` : ''}
+                </div>
+              </div>
             <div class="col-header-controls">
                 <button class="btn-col-shift" onclick="shiftColumn('${col.id}', -1)" title="Move Left">&#9664;</button>
                 <button class="btn-col-shift" onclick="shiftColumn('${col.id}', 1)" title="Move Right">&#9654;</button>
@@ -4238,6 +4249,25 @@ function saveColumnInspector() {
     const btn = document.getElementById('btn-add-thread-segment');
     if (btn) btn.addEventListener('click', () => { window.addThreadSegment(); });
   });
+
+  
+  // Unified Global Search Live Input Debouncer
+  let unifiedSearchTimer = null;
+  window.onUnifiedSearchInput = function(colId, queryVal) {
+    clearTimeout(unifiedSearchTimer);
+    unifiedSearchTimer = setTimeout(() => {
+      if (typeof activeDeckColumns === 'undefined') return;
+      const col = activeDeckColumns.find(c => c.id === colId);
+      if (col) {
+        col.query = queryVal;
+        col.label = 'Search: ' + (queryVal.trim() || 'All Transmissions');
+        if (typeof saveDeckColumns === 'function') saveDeckColumns();
+        if (typeof window.hydrateGlobalSearchColumn === 'function') {
+          window.hydrateGlobalSearchColumn(col);
+        }
+      }
+    }, 200);
+  };
 
   // === Sprint 5: Unified Global Search Hydration ===
   window.hydrateGlobalSearchColumn = async function(col) {
