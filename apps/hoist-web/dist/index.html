@@ -1437,6 +1437,136 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
       margin-left: 20px;
     }
 </style>
+<style id="phase2-tweetdeck-styles">
+    /* === Phase 2: TweetDeck Parity Styles === */
+    /* 1. Global Density Selector */
+    .density-rack {
+      display: flex;
+      align-items: center;
+      background: var(--socket, #090a0d);
+      border: 1px solid var(--border, #1e2633);
+      border-radius: 2px;
+      padding: 2px;
+      gap: 2px;
+    }
+    .btn-density {
+      background: transparent;
+      border: none;
+      color: var(--text-muted, #64748b);
+      font-family: var(--font-mono, monospace);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 2px;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      transition: all 0.12s ease;
+    }
+    .btn-density:hover {
+      color: #cbd5e1;
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .btn-density.active {
+      background: #1e2633;
+      color: #00ffaa;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+    }
+
+    /* Density Modifier Classes */
+    body.density-compact {
+      --col-width: 320px;
+    }
+    body.density-compact .card {
+      padding: 8px 10px !important;
+      font-size: 12px !important;
+      gap: 6px !important;
+    }
+    body.density-compact .card-media-deck .media-thumb {
+      height: 120px !important;
+    }
+    body.density-compact .btn-deck-act {
+      font-size: 9.5px !important;
+      padding: 3px 6px !important;
+    }
+
+    body.density-minimal {
+      --col-width: 270px;
+    }
+    body.density-minimal .card {
+      padding: 6px 8px !important;
+      font-size: 11.5px !important;
+      margin-bottom: 6px !important;
+    }
+    body.density-minimal .card-meta {
+      font-size: 10px !important;
+      margin-bottom: 3px !important;
+    }
+    body.density-minimal .card-media-deck .media-thumb {
+      height: 80px !important;
+    }
+    body.density-minimal .in-deck-actions {
+      display: none !important;
+    }
+    body.density-minimal .card:hover .in-deck-actions {
+      display: flex !important;
+    }
+
+    /* 2. Column Filter Bar */
+    .col-filter-bar {
+      padding: 6px 12px;
+      background: #0d1117;
+      border-bottom: 1px solid #1a2230;
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      animation: slideDownFilter 0.15s ease-out;
+    }
+    @keyframes slideDownFilter {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .col-filter-input {
+      flex: 1;
+      background: #06090e;
+      border: 1px solid #232d3d;
+      border-radius: 2px;
+      color: #f1f5f9;
+      font-family: var(--font-mono, monospace);
+      font-size: 11px;
+      padding: 4px 8px;
+      outline: none;
+    }
+    .col-filter-input:focus {
+      border-color: #00ffaa66;
+    }
+    .btn-filter-media {
+      background: #161d27;
+      border: 1px solid #283548;
+      color: #94a3b8;
+      font-family: var(--font-mono, monospace);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 2px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+    .btn-filter-media:hover {
+      color: #f1f5f9;
+    }
+    .btn-filter-media.active {
+      background: #00ffaa18;
+      border-color: #00ffaa;
+      color: #00ffaa;
+    }
+    .card.filter-hidden {
+      display: none !important;
+    }
+</style>
 </head>
 <body style="background-color: #131519; margin: 0; padding: 0;">
   <header>
@@ -1462,7 +1592,14 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
       </div>
     </div>
     <div class="header-actions">
-      <button class="btn-header" id="btn-open-col-builder">+ ADD COLUMN</button>
+      
+      <div class="density-rack" id="deck-density-rack">
+        <button class="btn-density active" data-density="comfort" onclick="setDeckDensity('comfort')">COMFORT</button>
+        <button class="btn-density" data-density="compact" onclick="setDeckDensity('compact')">COMPACT</button>
+        <button class="btn-density" data-density="minimal" onclick="setDeckDensity('minimal')">MIN</button>
+      </div>
+
+        <button class="btn-header" id="btn-open-col-builder">+ ADD COLUMN</button>
       <button class="btn-header" id="btn-open-settings">&#9881; CONFIG / ABOUT</button>
       <button class="btn-action" id="btn-open-composer">+ NEW BROADCAST</button>
     </div>
@@ -2203,6 +2340,9 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
 
           <h2>Q: How do Core Hashtags work?</h2>
           <p>Clicking the star icon (<code>★</code>) marks a hashtag as a Core Default. Core hashtags are automatically checked whenever you open the composer.</p>
+
+          <h2>Q: How do the Display Density Modes differ?</h2>
+          <p><b>Comfort</b> provides the standard expansive reading experience. <b>Compact</b> tightens card margins and thumbnails so more items fit vertically. <b>Minimal</b> produces a dense command view ideal for multi-monitor surveillance decks.</p>
 
           <h2>Q: How does the Scroll Lock Pill work?</h2>
           <p>When you scroll down past the top of any column, real-time incoming cards are safely paused into memory. Clicking the floating pill or scrolling back to the top flushes them in without interrupting your reading.</p>
@@ -3487,6 +3627,86 @@ function saveColumnInspector() {
     }
 
     threadDrawer.style.display = 'flex';
+  };
+
+  
+  // === Phase 2: TweetDeck Parity Controllers ===
+  // 1. Density State Controller
+  window.currentDensity = localStorage.getItem('pennant_deck_density') || 'comfort';
+
+  window.setDeckDensity = function(mode) {
+    window.currentDensity = mode;
+    localStorage.setItem('pennant_deck_density', mode);
+
+    document.body.classList.remove('density-compact', 'density-minimal');
+    if (mode === 'compact') document.body.classList.add('density-compact');
+    if (mode === 'minimal') document.body.classList.add('density-minimal');
+
+    document.querySelectorAll('.btn-density').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-density') === mode);
+    });
+  };
+
+  // Hydrate initial density
+  window.setDeckDensity(window.currentDensity);
+
+  // 2. Column Filter State Map
+  window.columnFilterStates = window.columnFilterStates || new Map(); // colId -> { query: '', mediaOnly: false }
+
+  window.toggleColFilter = function(colId) {
+    const bar = document.getElementById('filter-bar-' + colId);
+    const input = document.getElementById('filter-input-' + colId);
+    if (!bar) return;
+    const isHidden = bar.style.display === 'none' || !bar.style.display;
+    bar.style.display = isHidden ? 'flex' : 'none';
+    if (isHidden && input) input.focus();
+  };
+
+  window.toggleColMediaFilter = function(colId) {
+    if (!window.columnFilterStates.has(colId)) {
+      window.columnFilterStates.set(colId, { query: '', mediaOnly: false });
+    }
+    const state = window.columnFilterStates.get(colId);
+    state.mediaOnly = !state.mediaOnly;
+
+    const btn = document.getElementById('btn-filter-media-' + colId);
+    if (btn) btn.classList.toggle('active', state.mediaOnly);
+
+    window.applyColFilter(colId);
+  };
+
+  window.applyColFilter = function(colId) {
+    if (!window.columnFilterStates.has(colId)) {
+      window.columnFilterStates.set(colId, { query: '', mediaOnly: false });
+    }
+    const state = window.columnFilterStates.get(colId);
+    const input = document.getElementById('filter-input-' + colId);
+    if (input) state.query = input.value.trim().toLowerCase();
+
+    const container = document.getElementById('cards-' + colId);
+    if (!container) return;
+
+    const cards = container.querySelectorAll('.card');
+    cards.forEach(card => {
+      const text = (card.innerText || '').toLowerCase();
+      const hasMedia = !!card.querySelector('.card-media-deck');
+
+      let matchesQuery = true;
+      if (state.query) {
+        matchesQuery = text.includes(state.query);
+      }
+
+      let matchesMedia = true;
+      if (state.mediaOnly) {
+        matchesMedia = hasMedia;
+      }
+
+      if (matchesQuery && matchesMedia) {
+        card.classList.remove('filter-hidden');
+      } else {
+        card.classList.add('filter-hidden');
+      }
+    });
   };
 
   // Global ESC listener for phase 1 modals

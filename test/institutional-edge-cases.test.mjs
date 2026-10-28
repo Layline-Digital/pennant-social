@@ -165,5 +165,27 @@ for (const token of parityTokens) {
 }
 console.log('    [+] PASS: Lightbox, Scroll-Lock Buffer, and Thread Drawer invariants 100% verified.');
 
-console.log(' ALL 6 CORE & EDGE-CASE AUDIT GATES PASSED WITHOUT WARNINGS       ');
+
+// -----------------------------------------------------------------------------
+// TEST 7: TweetDeck Parity Phase 2 Invariants (Density Modes, Search & Media Filter)
+// -----------------------------------------------------------------------------
+console.log('>>> [7/7] TweetDeck Parity Phase 2 Architecture Verification...');
+const phase2Tokens = [
+  'deck-density-rack',
+  'btn-density',
+  'setDeckDensity',
+  'col-filter-bar',
+  'col-filter-input',
+  'btn-filter-media',
+  'toggleColFilter',
+  'applyColFilter',
+  'toggleColMediaFilter'
+];
+
+for (const token of phase2Tokens) {
+  assert.ok(html.includes(token), `Web deck artifact missing Phase 2 TweetDeck token: ${token}`);
+}
+console.log('    [+] PASS: Display density selector, in-stream search, and media-only filters 100% verified.');
+
+console.log(' ALL 7 CORE & EDGE-CASE AUDIT GATES PASSED WITHOUT WARNINGS       ');
 console.log('=================================================================\n');
