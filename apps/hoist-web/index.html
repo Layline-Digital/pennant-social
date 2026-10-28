@@ -1567,6 +1567,38 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
       display: none !important;
     }
 </style>
+<style id="phase3-tweetdeck-styles">
+    /* === Phase 3: TweetDeck Parity Styles === */
+    /* 1. Column Header Pulse Indicator */
+    .column-header.pulse-alert {
+      animation: colHeaderPulse 0.45s ease-out;
+    }
+    @keyframes colHeaderPulse {
+      0% {
+        box-shadow: inset 0 -2px 0 #00ffaa, 0 0 12px rgba(0, 255, 170, 0.45);
+      }
+      100% {
+        box-shadow: none;
+      }
+    }
+
+    /* 2. Inspector & Config Mute Badges */
+    .mute-tag-tray {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 4px;
+    }
+    .mute-tag {
+      background: #1f1624;
+      border: 1px solid #7f1d1d;
+      color: #fca5a5;
+      font-size: 10px;
+      font-family: var(--font-mono, monospace);
+      padding: 2px 6px;
+      border-radius: 2px;
+    }
+</style>
 </head>
 <body style="background-color: #131519; margin: 0; padding: 0;">
   <header>
@@ -1730,6 +1762,25 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
               <option value="430px">Wide (430px)</option>
             </select>
           </div>
+
+            <div class="config-row" style="margin-top:10px; display:flex; flex-direction:column; gap:4px;">
+              <span style="font-size:11px; color:#cbd5e1; font-family:var(--font-mono);">Global Keyword &amp; Author Mute List:</span>
+              <input id="cfg-global-mutes" placeholder="Comma-separated words, #tags, or @handles" style="background:#090a0d; border:1px solid #283347; color:#f1f5f9; padding:7px; font-size:11px; font-family:var(--font-mono); border-radius:2px;" />
+            </div>
+            <div class="config-row" style="margin-top:10px; display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:11px; color:#cbd5e1; font-family:var(--font-mono);">Master Stream Audio Chimes:</span>
+              <input type="checkbox" id="cfg-master-chime" style="accent-color:#00ffaa;" />
+            </div>
+            <div class="config-row" style="margin-top:10px; display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:11px; color:#cbd5e1; font-family:var(--font-mono);">Firehose Ingestion Throttle (Pacing):</span>
+              <select id="cfg-firehose-throttle" style="background:#090a0d; border:1px solid #283347; color:#00ffaa; padding:6px; font-size:11px; font-family:var(--font-mono); border-radius:2px;">
+                <option value="0">Realtime (Unthrottled)</option>
+                <option value="250">Smooth (250ms Batching)</option>
+                <option value="500" selected>Balanced (500ms Batching)</option>
+                <option value="1000">Surge Protected (1000ms Batching)</option>
+              </select>
+            </div>
+
         </div>
 
         <!-- Section 3: Official Channels & Verified Links -->
@@ -2341,6 +2392,9 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
           <h2>Q: How do Core Hashtags work?</h2>
           <p>Clicking the star icon (<code>★</code>) marks a hashtag as a Core Default. Core hashtags are automatically checked whenever you open the composer.</p>
 
+          <h2>Q: How does the Firehose Rate Limiter work?</h2>
+          <p>When monitoring high-volume firehoses (such as unauthenticated Nostr relays or Bluesky Jetstream), the rate limiter batches incoming transmissions into smooth intervals (250ms, 500ms, or 1000ms) to ensure 60fps rendering without UI stutter.</p>
+
           <h2>Q: How do the Display Density Modes differ?</h2>
           <p><b>Comfort</b> provides the standard expansive reading experience. <b>Compact</b> tightens card margins and thumbnails so more items fit vertically. <b>Minimal</b> produces a dense command view ideal for multi-monitor surveillance decks.</p>
 
@@ -2892,6 +2946,10 @@ function openColumnInspector(colId) {
   labelInput.value = col.label || '';
   queryInput.value = col.query || '';
   subInput.value = col.sub || '';
+    const mutesInput = document.getElementById('inspect-col-mutes');
+    if (mutesInput) mutesInput.value = col.mutes || '';
+    const chimeInput = document.getElementById('inspect-col-chime');
+    if (chimeInput) chimeInput.checked = !!col.chime;
 
   // Hydrate accounts dropdown
   acctSelect.innerHTML = '<option value="">Public / Unauthenticated Stream</option>';
@@ -2923,6 +2981,11 @@ function saveColumnInspector() {
   col.account = document.getElementById('inspect-col-account').value.trim();
   col.query = document.getElementById('inspect-col-query').value.trim();
   col.sub = document.getElementById('inspect-col-sub').value.trim();
+    const mutesEl = document.getElementById('inspect-col-mutes');
+    if (mutesEl) col.mutes = mutesEl.value.trim();
+    const chimeEl = document.getElementById('inspect-col-chime');
+    if (chimeEl) col.chime = chimeEl.checked;
+    saveDeckColumns();
 
   saveDeckColumns();
   renderDeck();
@@ -3707,6 +3770,130 @@ function saveColumnInspector() {
         card.classList.add('filter-hidden');
       }
     });
+  };
+
+  
+  // === Phase 3: TweetDeck Parity Controllers ===
+  // 1. Web Audio Chime Synthesizer
+  window.playStreamChime = function() {
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      if (!window._pennantAudioCtx) {
+        window._pennantAudioCtx = new AudioCtx();
+      }
+      const ctx = window._pennantAudioCtx;
+      if (ctx.state === 'suspended') {
+        ctx.resume();
+      }
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(880, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(1320, ctx.currentTime + 0.08);
+      gain.gain.setValueAtTime(0.04, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.09);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.1);
+    } catch (e) {}
+  };
+
+  // 2. Visual Alert & Chime Dispatcher
+  window.triggerColumnAlert = function(colId) {
+    const masterChime = localStorage.getItem('pennant_master_chime') === 'true';
+    const col = (typeof activeDeckColumns !== 'undefined') ? activeDeckColumns.find(c => c.id === colId) : null;
+    const colChime = col && col.chime;
+
+    if (masterChime || colChime) {
+      window.playStreamChime();
+    }
+
+    const colEl = document.getElementById('col-' + colId);
+    if (colEl) {
+      const hdr = colEl.querySelector('.column-header');
+      if (hdr) {
+        hdr.classList.remove('pulse-alert');
+        void hdr.offsetWidth; // re-trigger reflow
+        hdr.classList.add('pulse-alert');
+      }
+    }
+  };
+
+  // 3. Keyword & Author Mute Evaluator
+  window.isPostMuted = function(colId, post) {
+    const globalMutes = (localStorage.getItem('pennant_global_mutes') || '')
+      .split(',')
+      .map(s => s.trim().toLowerCase())
+      .filter(Boolean);
+
+    const col = (typeof activeDeckColumns !== 'undefined') ? activeDeckColumns.find(c => c.id === colId) : null;
+    const colMutes = (col && col.mutes ? col.mutes : '')
+      .split(',')
+      .map(s => s.trim().toLowerCase())
+      .filter(Boolean);
+
+    const allMutes = [...globalMutes, ...colMutes];
+    if (allMutes.length === 0) return false;
+
+    const content = (post.content || '').toLowerCase();
+    const authorHandle = (post.authorHandle || post.author || '').toLowerCase();
+    const authorName = (post.authorName || '').toLowerCase();
+
+    return allMutes.some(term => {
+      if (!term) return false;
+      return content.includes(term) || authorHandle.includes(term) || authorName.includes(term);
+    });
+  };
+
+  // 4. Firehose Ingestion Throttle & Batching
+  window.firehoseQueues = window.firehoseQueues || new Map();
+  window.firehoseTimers = window.firehoseTimers || new Map();
+
+  window.renderCardDirectOrBuffer = function(colId, post) {
+    const container = document.getElementById('cards-' + colId);
+    if (!container) return;
+
+    if (container.scrollTop > 50) {
+      if (!window.columnBuffers.has(colId)) window.columnBuffers.set(colId, []);
+      const buf = window.columnBuffers.get(colId);
+      buf.unshift(post);
+      const pill = document.getElementById('pill-' + colId);
+      if (pill) {
+        pill.style.display = 'flex';
+        pill.innerText = '↑ ' + buf.length + ' NEW POST' + (buf.length > 1 ? 'S' : '');
+      }
+      return;
+    }
+
+    window.insertCardDirect(colId, post);
+    window.triggerColumnAlert(colId);
+  };
+
+  window.enqueueFirehoseCard = function(colId, post) {
+    const throttleMs = parseInt(localStorage.getItem('pennant_firehose_throttle') || '500', 10);
+    if (throttleMs <= 0) {
+      window.renderCardDirectOrBuffer(colId, post);
+      return;
+    }
+
+    if (!window.firehoseQueues.has(colId)) {
+      window.firehoseQueues.set(colId, []);
+    }
+    window.firehoseQueues.get(colId).push(post);
+
+    if (!window.firehoseTimers.has(colId)) {
+      const timer = setTimeout(() => {
+        window.firehoseTimers.delete(colId);
+        const queue = window.firehoseQueues.get(colId) || [];
+        window.firehoseQueues.set(colId, []);
+        for (const p of queue) {
+          window.renderCardDirectOrBuffer(colId, p);
+        }
+      }, throttleMs);
+      window.firehoseTimers.set(colId, timer);
+    }
   };
 
   // Global ESC listener for phase 1 modals

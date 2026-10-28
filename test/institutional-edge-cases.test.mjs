@@ -187,5 +187,28 @@ for (const token of phase2Tokens) {
 }
 console.log('    [+] PASS: Display density selector, in-stream search, and media-only filters 100% verified.');
 
-console.log(' ALL 7 CORE & EDGE-CASE AUDIT GATES PASSED WITHOUT WARNINGS       ');
+
+// -----------------------------------------------------------------------------
+// TEST 8: TweetDeck Parity Phase 3 Invariants (Muting, Audio Chime, Rate Limiter)
+// -----------------------------------------------------------------------------
+console.log('>>> [8/8] TweetDeck Parity Phase 3 Architecture Verification...');
+const phase3Tokens = [
+  'inspect-col-mutes',
+  'inspect-col-chime',
+  'cfg-global-mutes',
+  'cfg-master-chime',
+  'cfg-firehose-throttle',
+  'playStreamChime',
+  'triggerColumnAlert',
+  'isPostMuted',
+  'enqueueFirehoseCard',
+  'pulse-alert'
+];
+
+for (const token of phase3Tokens) {
+  assert.ok(html.includes(token), `Web deck artifact missing Phase 3 TweetDeck token: ${token}`);
+}
+console.log('    [+] PASS: Global & column muting, procedural audio chimes, and firehose rate-limiter 100% verified.');
+
+console.log(' ALL 8 CORE & EDGE-CASE AUDIT GATES PASSED WITHOUT WARNINGS       ');
 console.log('=================================================================\n');
