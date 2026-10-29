@@ -27,3 +27,7 @@ dist-cli/
 *.zip
 *.tgz
 daemon-*.log
+
+pennant.db*
+*.db-wal
+*.db-shm
