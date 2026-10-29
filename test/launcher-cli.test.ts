@@ -72,6 +72,21 @@ async function runLauncherCliTests() {
   assert.strictEqual(customEnvFlags.port, 8910, 'PORT env override must take precedence');
   assert.strictEqual(customEnvFlags.host, '192.168.1.100', 'HOST env override must take precedence');
 
+  
+  // Test --status and --health parsing
+  const statusFlags = parseLauncherFlags(['--status']);
+  assert.strictEqual(statusFlags.isStatusCheck, true, 'isStatusCheck should be true when --status passed');
+
+  const healthFlags = parseLauncherFlags(['--health']);
+  assert.strictEqual(healthFlags.isStatusCheck, true, 'isStatusCheck should be true when --health passed');
+
+  // Test custom --host parsing
+  const customHostFlags = parseLauncherFlags(['--host=0.0.0.0']);
+  assert.strictEqual(customHostFlags.host, '0.0.0.0', 'host should parse --host=0.0.0.0');
+
+  const spaceHostFlags = parseLauncherFlags(['--host', '192.168.1.100']);
+  assert.strictEqual(spaceHostFlags.host, '192.168.1.100', 'host should parse --host 192.168.1.100');
+
   console.log('[+] PASS: CLI flag parsing and loopback isolation rules validated.');
 
   // 6. Test Default Browser Opener Dispatch Logic

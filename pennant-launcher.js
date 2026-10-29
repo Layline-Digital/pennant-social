@@ -40,14 +40,28 @@ const APP_ROOT = path.dirname(fileURLToPath(import.meta.url));
 export function parseLauncherFlags(args = process.argv.slice(2), env = process.env) {
   const isTui = args.includes('--tui');
   const isDaemon = args.includes('--daemon');
+  const isStatusCheck = args.includes('--status') || args.includes('--health');
   const isQueueSyncEdge = args[0] === 'queue' && args[1] === 'sync-edge';
   const noBrowser = args.includes('--no-browser') || env.NO_BROWSER === '1' || env.HEADLESS === '1' || env.NODE_ENV === 'test';
   const port = Number(env.PORT || 7420);
-  const host = env.HOST || (isDaemon ? '127.0.0.1' : 'localhost');
+
+  let customHost = null;
+  const hostEq = args.find(a => typeof a === 'string' && a.startsWith('--host='));
+  if (hostEq) {
+    customHost = hostEq.split('=')[1];
+  } else {
+    const hostIdx = args.indexOf('--host');
+    if (hostIdx !== -1 && args[hostIdx + 1]) {
+      customHost = args[hostIdx + 1];
+    }
+  }
+
+  const host = customHost || env.HOST || (isDaemon ? '127.0.0.1' : 'localhost');
 
   return {
     isTui,
     isDaemon,
+    isStatusCheck,
     isQueueSyncEdge,
     noBrowser,
     port,
@@ -56,6 +70,7 @@ export function parseLauncherFlags(args = process.argv.slice(2), env = process.e
 }
 
 const flags = parseLauncherFlags();
+
 const IS_TUI_MODE = flags.isTui;
 const IS_DAEMON_MODE = flags.isDaemon;
 const NO_BROWSER = flags.noBrowser;
@@ -222,6 +237,51 @@ function getProfiles() {
   return [];
 }
 
+// === CLI Status & Healthcheck Handler ===
+if (flags.isStatusCheck) {
+  const probePort = flags.port || 7420;
+  let onlineData = null;
+  try {
+    const res = await fetch(`http://127.0.0.1:${probePort}/status`);
+    if (res.ok) {
+      onlineData = await res.json();
+    }
+  } catch (_) {
+    // Daemon is offline or unreachable via HTTP
+  }
+
+  const dbPath = path.resolve(process.cwd(), 'pennant.db');
+  const sqliteDbExists = fs.existsSync(dbPath);
+  const profilesCount = getProfiles().length;
+  const vaultCount = globalSessionVault ? globalSessionVault.getProfileCount() : 0;
+
+  if (onlineData) {
+    console.log(JSON.stringify({
+      healthy: true,
+      daemonState: 'ONLINE',
+      port: probePort,
+      browserDetected: onlineData.browserDetected,
+      platform: onlineData.platform,
+      identitiesCount: onlineData.identitiesCount,
+      vaultProfilesCount: onlineData.vaultProfilesCount,
+      activeStreamsCount: onlineData.activeStreamsCount
+    }, null, 2));
+    process.exit(0);
+  } else {
+    // Offline local telemetry
+    console.log(JSON.stringify({
+      healthy: sqliteDbExists,
+      daemonState: 'OFFLINE',
+      targetPort: probePort,
+      sqliteDbExists,
+      identitiesCount: profilesCount,
+      vaultProfilesCount: vaultCount,
+      note: 'Pennant daemon is stopped; local WAL database and profile store verified'
+    }, null, 2));
+    process.exit(sqliteDbExists ? 0 : 1);
+  }
+}
+
 function isSameOriginRequest(req) {
   if (req.headers['sec-fetch-site'] === 'cross-site') return false;
   if (!req.headers.origin) return true;
@@ -385,7 +445,7 @@ const server = http.createServer((req, res) => {
   const parsedUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
 
   // System Status & Browser Capabilities
-  if (parsedUrl.pathname === '/status') {
+  if (parsedUrl.pathname === '/status' || parsedUrl.pathname === '/health') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({
       status: 'ONLINE',

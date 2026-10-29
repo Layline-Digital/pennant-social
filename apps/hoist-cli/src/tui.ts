@@ -208,7 +208,9 @@ export class HoistTUI {
           const codeColor = (code === 200 || code === 201) ? '\x1b[32m' : '\x1b[31m';
           const proto = (entry.protocol || entry.target || '').toUpperCase().slice(0, 4);
           const target = entry.profile_id || entry.account || '';
-          rightContent = fit(codeColor + '[' + code + ']\x1b[0m ' + fit(proto, 4) + ' ' + target, 31);
+            const isThread = (entry.message || entry.payload_json || '').includes('[1/') || (entry.message || '').includes('[2/');
+            const threadTag = isThread ? '\x1b[35m[THRD]\x1b[0m ' : '';
+            rightContent = fit(codeColor + '[' + code + ']\x1b[0m ' + threadTag + fit(proto, 4) + ' ' + target, 31);
         } else if (recentLedger.length === 0 && i === 4) {
           rightContent = fit('\x1b[90mNo dispatches recorded.\x1b[0m', 31);
         } else {
@@ -224,7 +226,7 @@ export class HoistTUI {
     }
 
     out += '└───' + '─'.repeat(37) + '┘ └───' + '─'.repeat(30) + '┘\n\n';
-    out += 'Commands: [r] Refresh   [q] Quit  |  Web Console: http://localhost:7420\n';
+    out += 'Commands: [r] Refresh   [q] Quit   [h] Health Check  |  Web Console: http://localhost:' + (process.env.PORT || 7420) + '\n';
 
     process.stdout.write(out);
   }
