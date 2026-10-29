@@ -11,7 +11,10 @@
     "start": "node pennant-launcher.js",
     "dev": "node pennant-launcher.js",
     "test": "node test/smoke.test.js && node test/session-vault.test.ts && node test/media-airlock.test.ts && node test/deck-grid.test.ts && node test/composer-state.test.ts && node test/broadcast-daemon.test.ts && node test/stream-hub.test.ts && node test/hoist-deck.test.ts && node test/launcher-cli.test.ts && node test/fleet-ingest.test.ts && node test/license-verifier.test.ts && node test/matrix-sanitization.test.ts && node test/signer-enclave-edge-cases.test.ts && node test/security-hardening-audit.test.mjs && node test/deep-edge-cases-stress.test.mjs && node test/institutional-edge-cases.test.mjs && node packages/core/tests/edge-bridge.test.ts",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "build:web": "node -e \"console.log('Web assets bundled in apps/hoist-web/dist')\"",
+    "tauri:build": "npm --prefix apps/hoist-desktop run build 2>nul || npx --prefix apps/hoist-desktop tauri build",
+    "tauri:dev": "npx --prefix apps/hoist-desktop tauri dev"
   },
   "keywords": [
     "activitypub",
