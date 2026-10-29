@@ -4,15 +4,15 @@ param(
   [Parameter(Mandatory=$true)][string]$Message,
   [Parameter(Mandatory=$false)][string]$Source = "fleet-worker",
   [Parameter(Mandatory=$false)][string]$Url = "",
-  [Parameter(Mandatory=$false)][string[]]$Targets = @("mastodon", "bluesky", "nostr"),
+  [Parameter(Mandatory=$false)][string[]]$Targets = @("mastodon", "bluesky", "nostr", "matrix"),
   [Parameter(Mandatory=$false)][string]$ScheduledFor = "",
   [Parameter(Mandatory=$false)][string]$ApiKey = "",
   [switch]$DryRun
 )
 
 $targetEndpoint = "http://127.0.0.1:7420/api/ingest/fleet"
-$key = if ($ApiKey) { $ApiKey } else {$env:PENNANT_FLEET_INGEST_KEY }
-if (-not $key) {$key = "ps_ingest_dev_key" }
+$key = if ($ApiKey) { $ApiKey } else { $env:PENNANT_FLEET_INGEST_KEY }
+if (-not $key) { $key = "ps_ingest_dev_key" }
 
 $payload = @{
   source       = $Source
@@ -30,16 +30,19 @@ if ($DryRun) {
 }
 
 try {
-  $resp = Invoke-RestMethod -Uri$targetEndpoint -Method Post `
-    -Headers @{ "Authorization" = "Bearer $key"; "Content-Type" = "application/json" } `
-    -Body $payload -TimeoutSec 3
+  $headers = @{
+    "Authorization" = "Bearer $key"
+    "Content-Type"  = "application/json"
+  }
+  $resp = Invoke-RestMethod -Uri $targetEndpoint -Method Post -Headers $headers -Body $payload -TimeoutSec 5
   Write-Host "[SUCCESS] Enqueued via Pennant Daemon: QueueID $($resp.queueId)" -ForegroundColor Green
+  return $resp
 } catch {
-  Write-Warning "[-] Pennant daemon unreachable at $targetEndpoint. Falling back to direct CLI broadcast..."
-  $scriptPath = Join-Path$PSScriptRoot "..\Publish-FleetBroadcast.ps1"
+  Write-Warning "[-] Pennant daemon call failed: $_"
+  $scriptPath = Join-Path $PSScriptRoot "..\Publish-FleetBroadcast.ps1"
   if (Test-Path $scriptPath) {
-    & $scriptPath -Account $ProfileId -Message$Message -Url $Url -Targets ($Targets -join ",")
+    & $scriptPath -Account $ProfileId -Message $Message -Url $Url -Targets ($Targets -join ",")
   } else {
-    Write-Error "Could not find Publish-FleetBroadcast.ps1 for fallback."
+    Write-Error "Could not reach Pennant daemon and Publish-FleetBroadcast.ps1 fallback not found."
   }
 }

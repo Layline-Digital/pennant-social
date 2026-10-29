@@ -461,7 +461,7 @@ const server = http.createServer((req, res) => {
 
 
     // Downstream Fleet Ingestion Harness Route
-    if (parsedUrl.pathname === '/api/ingest/fleet') {
+    if (parsedUrl.pathname === '/api/ingest/fleet' || parsedUrl.pathname === '/api/ingest/broadcast') {
       try {
         handleFleetIngestRequest(req, res, db, broadcastDaemon);
       } catch (err) {
