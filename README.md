@@ -5,11 +5,11 @@
 </p>
 
 <p align="center">
-  <strong>Pennant Hoist: Sovereign Local-First Command Deck for ATProto, ActivityPub & Nostr</strong>
+  <strong>Pennant Hoist: Sovereign Local-First Command Deck for ATProto, ActivityPub, Nostr & Matrix</strong>
 </p>
 
 <p align="center">
-  <a href="https://github.com/Layline-Digital/pennant-social/releases/tag/v0.2.9"><img src="https://img.shields.io/badge/release-v0.2.9-blue.svg" alt="Release v0.2.9" /></a>
+  <a href="https://github.com/Layline-Digital/pennant-social/releases/tag/v0.3.0"><img src="https://img.shields.io/badge/release-v0.3.0-blue.svg" alt="Release v0.3.0" /></a>
   <a href="https://github.com/Layline-Digital/pennant-social/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License: MIT" /></a>
   <a href="https://app.pennant.laylinedigital.com"><img src="https://img.shields.io/badge/web_deck-live-success" alt="Web Deck" /></a>
   <a href="https://bsky.app/profile/laylinedigital.com"><img src="https://img.shields.io/badge/bluesky-@laylinedigital.com-0285FF" alt="Bluesky" /></a>
@@ -20,26 +20,26 @@
 
 # Pennant Hoist
 
-A local-first desktop command deck for broadcasting across Bluesky, Mastodon, and Nostr simultaneously.
+A local-first quad-protocol desktop and web command deck for broadcasting across ATProto (Bluesky), ActivityPub (Mastodon), Nostr, and Matrix simultaneously.
 
 ## Features
-- Sovereign key storage on local loopback (127.0.0.1:7420)
-- Media airlock with background pre-staging and zero cloud hosting costs
-- Embedded SQLite WAL outbox queue with automated retry backoff
-- 2D virtualized multi-column operations deck
+- **Quad-Protocol Dispatch:** Concurrent publishing and media staging for ATProto (Bluesky), ActivityPub (Mastodon), Nostr, and Matrix rooms.
+- **Loopback Isolation:** Sovereign credential store and HTTP dispatch daemon bound to `127.0.0.1:7420`.
+- **Media Airlock:** Client-side SHA-256 hashing and background pre-staging directly to native protocol hosts (PDS, Mastodon, Blossom, Matrix MXC).
+- **SQLite WAL Outbox:** Embedded `better-sqlite3` WAL queue and delivery ledger with T-10m pre-staging and automated retry backoff.
+- **2D Virtualized Operations Deck:** Multi-column Svelte + Tauri v2 command deck with per-protocol composer constraints.
 
 ## Documentation
-- 🚀 **[Quickstart Guide](docs/Quickstart.md)** — Installation (Windows NSIS/MSI) and source boot in under 2 minutes.
-- 🔐 **[Protocol Setup & Key Configuration](docs/Protocols.md)** — Step-by-step credentials for Bluesky, Mastodon, and Nostr (NIP-05/NIP-07).
-- 📦 **[Media Airlock & Storage Engine](docs/Airlock-and-Storage.md)** — Client-side SHA-256 pre-staging, direct PDS/Blossom dispatch, and SQLite WAL queues.
-- 🛠️ **[Troubleshooting & FAQ](docs/Troubleshooting.md)** — Storage locations, relay retries, WebView2 setup, and zero-telemetry auditing.
+- **[Quickstart Guide](docs/Quickstart.md)** — Desktop installer targets and running from source (`npm run dev`).
+- **[Protocol Setup & Key Configuration](docs/Protocols.md)** — Credentials for Bluesky (App Passwords), Mastodon (OAuth tokens), Nostr (`nsec1` / NIP-46 bunker URIs), and Matrix (homeserver, room ID, access token).
+- **[Media Airlock & Storage Engine](docs/Airlock-and-Storage.md)** — Client-side SHA-256 pre-staging, direct PDS/Blossom/MXC dispatch, and SQLite WAL queues.
+- **[Troubleshooting & FAQ](docs/Troubleshooting.md)** — Local storage, relay retries, and configuration backups.
 
 ## Architecture & Sovereignty
-- **Local-First Runtime:** Dispatch daemon runs on 127.0.0.1:7420.
-- **Hardware Custody:** Private signing keys (
-sec) and app passwords remain in a local, memory-scrubbed vault.
-- **SQLite WAL Durability:** Scheduled dispatches survive workstation restarts without remote cloud dependencies.
-- **Adaptive Constraints:** Real-time grapheme and label tracking across ATProto (300 graphemes), Mastodon (500 chars), and Nostr.
+- **Local-First Runtime:** Dispatch daemon binds strictly to `127.0.0.1:7420` (with optional Tauri v2 desktop shell).
+- **Local Key Custody:** Private signing keys (`nsec1`), app passwords, and bearer tokens stay in local memory (`SessionVault` / `SignerEnclave` with NIP-01/BIP-340 local signing and buffer zeroization).
+- **SQLite WAL Durability:** Scheduled dispatches and ledger records persist in a local SQLite WAL database (`broadcast_queue` and `broadcast_ledger`) without remote cloud dependencies.
+- **Adaptive Constraints:** Real-time grapheme, character, and HTML sanitization tracking across ATProto (300 graphemes), Mastodon (500 chars), Nostr, and Matrix.
 
 ## License
 Open Core licensed under the MIT License.

@@ -1,6 +1,8 @@
 # Fail-Closed Security Policy
 *.env
 *.env.*
+.env*
+.env.broadcaster
 !.env.broadcaster.example
 *.secret
 *.key
