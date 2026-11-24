@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" data-theme="slate">
 <head>
   <meta charset="UTF-8">
@@ -568,7 +568,7 @@
           status.style.display = 'none';
 
           try {
-            const res = await fetch('https://pennant-relay-worker.aewoodyard.workers.dev/api/v1/subscribe', {
+            const res = await fetch('#', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ email: email, product: 'pennant', source: 'about_menu' })
@@ -594,3 +594,4 @@
 
 </body>
 </html>
+
